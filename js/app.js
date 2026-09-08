@@ -1,0 +1,1341 @@
+// Kyrie Typo - 核心交互、按键事件与界面渲染中枢
+
+document.addEventListener('DOMContentLoaded', () => {
+  // DOM 元素引用
+  const tabPractice = document.getElementById('tabPractice');
+  const tabChallenge = document.getElementById('tabChallenge');
+  const tabTutorial = document.getElementById('tabTutorial');
+  const btnLogo = document.getElementById('btnLogo');
+
+  const wordArena = document.getElementById('wordArena');
+  const tutorialArena = document.getElementById('tutorialArena');
+  const challengeHudContent = document.getElementById('challengeHudContent');
+  const practiceHudContent = document.getElementById('practiceHudContent');
+  const tutorialHudContent = document.getElementById('tutorialHudContent');
+  const consoleTimerTrack = document.getElementById('consoleTimerTrack');
+
+  const challengeCountdownOverlay = document.getElementById('challengeCountdownOverlay');
+  const countdownNum = document.getElementById('countdownNum');
+  const countdownTip = document.getElementById('countdownTip');
+
+  const exitConfirmModal = document.getElementById('exitConfirmModal');
+  const exitCurrentScore = document.getElementById('exitCurrentScore');
+  const exitCurrentLives = document.getElementById('exitCurrentLives');
+  const btnExitResume = document.getElementById('btnExitResume');
+  const btnExitLeave = document.getElementById('btnExitLeave');
+
+  const wordEmoji = document.getElementById('wordEmoji');
+  const bubblesContainer = document.getElementById('bubblesContainer');
+  const chinesePill = document.getElementById('chinesePill');
+  const chineseText = document.getElementById('chineseText');
+  const fingerBadge = document.getElementById('fingerBadge');
+
+  const scoreVal = document.getElementById('scoreVal');
+  const comboBadge = document.getElementById('comboBadge');
+  const timerFill = document.getElementById('timerFill');
+  const heart1 = document.getElementById('heart1');
+  const heart2 = document.getElementById('heart2');
+  const heart3 = document.getElementById('heart3');
+
+  // 教程元素
+  const stepChips = document.querySelectorAll('.step-chip');
+  const tutorialBadge = document.getElementById('tutorialBadge');
+  const tutorialTitle = document.getElementById('tutorialTitle');
+  const tutorialDesc = document.getElementById('tutorialDesc');
+  const tutorialPromptBox = document.getElementById('tutorialPromptBox');
+  const tutorialHint = document.getElementById('tutorialHint');
+  const btnNextStep = document.getElementById('btnNextStep');
+
+  // 结算弹窗元素
+  const reportModal = document.getElementById('reportModal');
+  const resScore = document.getElementById('resScore');
+  const resWords = document.getElementById('resWords');
+  const resCombo = document.getElementById('resCombo');
+  const resFastest = document.getElementById('resFastest');
+  const resSpeed = document.getElementById('resSpeed');
+  const wrongWordsBox = document.getElementById('wrongWordsBox');
+  const wrongTags = document.getElementById('wrongTags');
+  const btnRestartChallenge = document.getElementById('btnRestartChallenge');
+  const reportRankBadge = document.getElementById('reportRankBadge');
+  const reportRankIcon = document.getElementById('reportRankIcon');
+  const reportRankText = document.getElementById('reportRankText');
+  const btnOpenLeaderboardFromReport = document.getElementById('btnOpenLeaderboardFromReport');
+
+  // 排行榜弹窗元素
+  const btnOpenLeaderboard = document.getElementById('btnOpenLeaderboard');
+  const leaderboardModal = document.getElementById('leaderboardModal');
+  const btnCloseLeaderboard = document.getElementById('btnCloseLeaderboard');
+  const btnCloseLeaderboardBottom = document.getElementById('btnCloseLeaderboardBottom');
+  const playerNicknameInput = document.getElementById('playerNicknameInput');
+  const btnSaveNickname = document.getElementById('btnSaveNickname');
+  const nameSaveTip = document.getElementById('nameSaveTip');
+  const leaderboardList = document.getElementById('leaderboardList');
+  const btnClearScores = document.getElementById('btnClearScores');
+  let lastPlayedRecordId = null;
+
+  // 打字手速仪表盘元素
+  const speedBadge = document.getElementById('speedBadge');
+  const speedAnimalIcon = document.getElementById('speedAnimalIcon');
+  const speedVal = document.getElementById('speedVal');
+  const speedTierLbl = document.getElementById('speedTierLbl');
+
+  // 音频切换
+  const btnToggleSound = document.getElementById('btnToggleSound');
+  const btnToggleSpeech = document.getElementById('btnToggleSpeech');
+
+  // 开场动画元素
+  const mimimiSplash = document.getElementById('mimimiSplash');
+  const mimimiStars = document.getElementById('mimimiStars');
+  const btnStartGame = document.getElementById('btnStartGame');
+  const splashWarriorCard = document.getElementById('splashWarriorCard');
+  const warriorRegisterBox = document.getElementById('warriorRegisterBox');
+  const warriorGreetingBox = document.getElementById('warriorGreetingBox');
+  const splashWarriorInput = document.getElementById('splashWarriorInput');
+  const warriorCurrentName = document.getElementById('warriorCurrentName');
+  const btnEditHeroName = document.getElementById('btnEditHeroName');
+  const mimimiClickTip = document.getElementById('mimimiClickTip');
+  let splashTimer = null;
+
+  // 键盘布局切换元素 (默认 PC)
+  const btnLayoutPC = document.getElementById('btnLayoutPC');
+  const btnLayoutMac = document.getElementById('btnLayoutMac');
+  const tutorialDeckPill = document.getElementById('tutorialDeckPill');
+  const lblBackspace = document.getElementById('lblBackspace');
+  const lblEnter = document.getElementById('lblEnter');
+  const kbdBottomRow = document.getElementById('kbdBottomRow');
+  let currentKeyboardLayout = 'pc'; // 默认 PC
+
+  let currentActiveTab = 'practice'; // 'practice' | 'challenge' | 'tutorial'
+
+  // ================= Mimimi 风格单次开场弹射动画 =================
+  function updateSplashWarriorCard() {
+    if (!splashWarriorCard) return;
+    const hasRegistered = window.scoreStorage && window.scoreStorage.hasCustomName();
+    if (hasRegistered) {
+      const currentName = window.scoreStorage.getPlayerName();
+      if (warriorGreetingBox) warriorGreetingBox.style.display = 'flex';
+      if (warriorRegisterBox) warriorRegisterBox.style.display = 'none';
+      if (warriorCurrentName) warriorCurrentName.textContent = currentName;
+      if (btnStartGame) btnStartGame.textContent = '🚀 开始打字冒险 ➔';
+      if (mimimiClickTip) mimimiClickTip.textContent = '✨ 敲击键盘任意键或点击开始 ✨';
+    } else {
+      if (warriorGreetingBox) warriorGreetingBox.style.display = 'none';
+      if (warriorRegisterBox) warriorRegisterBox.style.display = 'flex';
+      if (splashWarriorInput) splashWarriorInput.value = '';
+      if (btnStartGame) btnStartGame.textContent = '🚀 注册并启程冒险 ➔';
+      if (mimimiClickTip) mimimiClickTip.textContent = '✨ 起好勇士名字后按回车或点击启程 ✨';
+      setTimeout(() => {
+        if (splashWarriorInput && mimimiSplash && !mimimiSplash.classList.contains('hidden')) {
+          splashWarriorInput.focus();
+        }
+      }, 700);
+    }
+  }
+
+  function playMimimiAnimation() {
+    if (!mimimiSplash) return;
+    if (splashTimer) clearTimeout(splashTimer);
+
+    mimimiSplash.classList.remove('hidden');
+    updateSplashWarriorCard();
+
+    // 重新触发字符关键帧物理弹跳
+    const chars = mimimiSplash.querySelectorAll('.m-char');
+    chars.forEach(c => {
+      c.style.animation = 'none';
+      void c.offsetHeight;
+      c.style.animation = '';
+    });
+
+    const badge = mimimiSplash.querySelector('.mimimi-badge');
+    if (badge) {
+      badge.style.animation = 'none';
+      void badge.offsetHeight;
+      badge.style.animation = '';
+    }
+
+    if (splashWarriorCard) {
+      splashWarriorCard.style.animation = 'none';
+      void splashWarriorCard.offsetHeight;
+      splashWarriorCard.style.animation = '';
+    }
+
+    spawnStarsBurst();
+
+    // 尝试轻和弦音效（若浏览器策略限制，用户点击/按键进入时会百分之百触发）
+    window.soundFX.playSimpleIntro();
+  }
+
+  function spawnStarsBurst() {
+    if (!mimimiStars) return;
+    mimimiStars.innerHTML = '';
+    const starEmojis = ['⭐', '✨', '🌟', '💥', '🎉', '💫'];
+
+    for (let i = 0; i < 16; i++) {
+      const star = document.createElement('span');
+      star.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
+      star.style.position = 'absolute';
+      star.style.fontSize = `${Math.random() * 1.6 + 1.1}rem`;
+      star.style.left = '50%';
+      star.style.top = '48%';
+      star.style.userSelect = 'none';
+      star.style.pointerEvents = 'none';
+
+      const angle = (i / 16) * 360 + (Math.random() * 20 - 10);
+      const dist = Math.random() * 200 + 140;
+      const rad = (angle * Math.PI) / 180;
+      const tx = Math.cos(rad) * dist;
+      const ty = Math.sin(rad) * dist;
+
+      star.style.transform = 'translate(-50%, -50%) scale(0)';
+      star.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease';
+
+      mimimiStars.appendChild(star);
+
+      setTimeout(() => {
+        star.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(${Math.random() * 0.8 + 0.8}) rotate(${Math.random() * 360}deg)`;
+        star.style.opacity = '0.9';
+      }, 200);
+
+      setTimeout(() => {
+        star.style.opacity = '0';
+      }, 1100);
+    }
+  }
+
+  function closeMimimiSplash() {
+    if (splashTimer) clearTimeout(splashTimer);
+    if (mimimiSplash) {
+      mimimiSplash.classList.add('hidden');
+    }
+  }
+
+  // 统一解散开场画面并触发灵动上升和弦
+  function dismissSplashAndEnter() {
+    if (!mimimiSplash || mimimiSplash.classList.contains('hidden')) return;
+    window.soundFX.playSimpleIntro();
+    closeMimimiSplash();
+  }
+
+  // 保存勇士名字并启程
+  function saveWarriorNameAndEnter() {
+    if (warriorRegisterBox && warriorRegisterBox.style.display !== 'none' && splashWarriorInput) {
+      const inputVal = splashWarriorInput.value.trim();
+      const savedName = window.scoreStorage ? window.scoreStorage.setPlayerName(inputVal || 'Kyrie') : (inputVal || 'Kyrie');
+      if (warriorCurrentName) warriorCurrentName.textContent = savedName;
+      if (playerNicknameInput) playerNicknameInput.value = savedName;
+    }
+    dismissSplashAndEnter();
+  }
+
+  // 点击“修改勇士名字”
+  if (btnEditHeroName) {
+    btnEditHeroName.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (warriorGreetingBox) warriorGreetingBox.style.display = 'none';
+      if (warriorRegisterBox) warriorRegisterBox.style.display = 'flex';
+      if (splashWarriorInput) {
+        splashWarriorInput.value = window.scoreStorage ? window.scoreStorage.getPlayerName() : 'Kyrie';
+        splashWarriorInput.focus();
+        splashWarriorInput.select();
+      }
+      if (btnStartGame) btnStartGame.textContent = '🚀 保存并启程冒险 ➔';
+      if (mimimiClickTip) mimimiClickTip.textContent = '✨ 按回车或点击按钮完成修改并开始 ✨';
+    });
+  }
+
+  // 输入框回车快速开始
+  if (splashWarriorInput) {
+    splashWarriorInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveWarriorNameAndEnter();
+      }
+    });
+  }
+
+  // 点击勇士卡片内部不触发背景关闭
+  if (splashWarriorCard) {
+    splashWarriorCard.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  // 点击“开始打字冒险”按钮切入游戏
+  if (btnStartGame) {
+    btnStartGame.addEventListener('click', (e) => {
+      e.stopPropagation();
+      saveWarriorNameAndEnter();
+    });
+  }
+
+  // 点击开场屏幕任意处切入游戏
+  if (mimimiSplash) {
+    mimimiSplash.addEventListener('pointerdown', (e) => {
+      if (e.target && e.target.closest('#splashWarriorCard')) return;
+      const isInputting = warriorRegisterBox && warriorRegisterBox.style.display !== 'none';
+      const hasCustom = window.scoreStorage && window.scoreStorage.hasCustomName();
+      if (!hasCustom || isInputting) {
+        if (splashWarriorInput) splashWarriorInput.focus();
+        return;
+      }
+      dismissSplashAndEnter();
+    });
+  }
+
+  // 点击顶部 Logo 随时重温弹射动画与和弦
+  btnLogo.addEventListener('click', () => {
+    playMimimiAnimation();
+  });
+
+  // ================= 键盘 PC / Mac 布局切换引擎（默认 PC） =================
+  function setKeyboardLayout(layout) {
+    currentKeyboardLayout = layout;
+    window.keyboardGuide.setLayout(layout);
+
+    const iconEnter = document.getElementById('iconEnter');
+
+    if (layout === 'pc') {
+      btnLayoutPC.classList.add('active');
+      btnLayoutMac.classList.remove('active');
+      if (lblBackspace) lblBackspace.textContent = 'Backspace';
+      if (lblEnter) lblEnter.textContent = 'Enter';
+      if (iconEnter) iconEnter.textContent = '↵';
+
+      // 渲染 PC 底栏（规范结构，绝不溢出）
+      kbdBottomRow.innerHTML = `
+        <div class="apple-key k-func k-ctrl" data-key="Control"><span class="func-icon">Ctrl</span></div>
+        <div class="apple-key k-func k-win" data-key="Meta"><span class="func-icon">⊞</span><span class="func-label">Win</span></div>
+        <div class="apple-key k-func k-alt" data-key="Alt"><span class="func-icon">Alt</span></div>
+        <div class="apple-key k-func k-space" data-key=" " data-finger="thumb">
+          <span class="space-title">Space</span>
+          <span class="space-sub">空格跳跳床</span>
+        </div>
+        <div class="apple-key k-func k-alt" data-key="Alt"><span class="func-icon">Alt</span></div>
+        <div class="apple-key k-func k-win" data-key="Meta"><span class="func-icon">⊞</span><span class="func-label">Win</span></div>
+        <div class="apple-key k-func k-ctrl" data-key="Control"><span class="func-icon">Ctrl</span></div>
+      `;
+    } else {
+      btnLayoutMac.classList.add('active');
+      btnLayoutPC.classList.remove('active');
+      if (lblBackspace) lblBackspace.textContent = 'delete';
+      if (lblEnter) lblEnter.textContent = 'return';
+      if (iconEnter) iconEnter.textContent = '↩';
+
+      // 渲染 Mac 底栏（图标居上、名称居下，完美贴合苹果键盘原生美感）
+      kbdBottomRow.innerHTML = `
+        <div class="apple-key k-func k-ctrl" data-key="Control"><span class="func-icon">⌃</span><span class="func-label">control</span></div>
+        <div class="apple-key k-func k-opt" data-key="Alt"><span class="func-icon">⌥</span><span class="func-label">option</span></div>
+        <div class="apple-key k-func k-cmd" data-key="Meta"><span class="func-icon">⌘</span><span class="func-label">command</span></div>
+        <div class="apple-key k-func k-space" data-key=" " data-finger="thumb">
+          <span class="space-title">Space</span>
+          <span class="space-sub">空格跳跳床</span>
+        </div>
+        <div class="apple-key k-func k-cmd" data-key="Meta"><span class="func-icon">⌘</span><span class="func-label">command</span></div>
+        <div class="apple-key k-func k-opt" data-key="Alt"><span class="func-icon">⌥</span><span class="func-label">option</span></div>
+      `;
+    }
+
+    // 为重新渲染的底栏键绑定点击事件
+    bindKeyElementsEvents();
+
+    if (currentActiveTab === 'tutorial') {
+      if (window.keyboardGuide.activeGuideTab === 'quest') {
+        renderTutorialStep();
+      } else if (window.keyboardGuide.activeGuideTab === 'funckeys') {
+        renderFuncKeysGrid();
+      }
+    }
+  }
+
+  btnLayoutPC.addEventListener('click', () => {
+    window.soundFX.playTabSwitch();
+    setKeyboardLayout('pc');
+    showModeToast('💻', '已切换为 💻 PC (Windows) 键盘模式');
+  });
+
+  btnLayoutMac.addEventListener('click', () => {
+    window.soundFX.playTabSwitch();
+    setKeyboardLayout('mac');
+    showModeToast('🍎', '已切换为 🍎 Mac (苹果) 键盘模式');
+  });
+
+  // 模式切换提示气泡
+  const modeSwitchToast = document.getElementById('modeSwitchToast');
+  const toastIcon = document.getElementById('toastIcon');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer = null;
+
+  function showModeToast(icon, message) {
+    if (!modeSwitchToast) return;
+    if (toastTimer) clearTimeout(toastTimer);
+
+    toastIcon.textContent = icon;
+    toastMsg.textContent = message;
+    modeSwitchToast.classList.add('show');
+
+    toastTimer = setTimeout(() => {
+      modeSwitchToast.classList.remove('show');
+    }, 1500);
+  }
+
+  // ================= 极速挑战 3, 2, 1 倒计时与中途离开确认控制 =================
+  let isCountdownActive = false;
+  let countdownTimerId = null;
+  let pendingSwitchMode = null;
+
+  function cancelChallengeCountdown() {
+    if (countdownTimerId) {
+      clearTimeout(countdownTimerId);
+      countdownTimerId = null;
+    }
+    isCountdownActive = false;
+    if (challengeCountdownOverlay) {
+      challengeCountdownOverlay.style.display = 'none';
+    }
+  }
+
+  function startChallengeCountdown(onComplete) {
+    cancelChallengeCountdown();
+    if (!challengeCountdownOverlay || !countdownNum) {
+      if (typeof onComplete === 'function') onComplete();
+      return;
+    }
+
+    isCountdownActive = true;
+    challengeCountdownOverlay.style.display = 'flex';
+
+    // Step 1: "3"
+    countdownNum.textContent = '3';
+    countdownNum.className = 'countdown-num-art';
+    if (countdownTip) countdownTip.textContent = '双手放好 · 准备冲刺！';
+    if (window.soundFX && window.soundFX.playCountdownPip) {
+      window.soundFX.playCountdownPip(3);
+    }
+
+    // Step 2: "2" (1.0s)
+    countdownTimerId = setTimeout(() => {
+      countdownNum.textContent = '2';
+      countdownNum.className = 'countdown-num-art';
+      if (countdownTip) countdownTip.textContent = '锁定键盘 · 瞄准字母！';
+      if (window.soundFX && window.soundFX.playCountdownPip) {
+        window.soundFX.playCountdownPip(2);
+      }
+
+      // Step 3: "1" (2.0s)
+      countdownTimerId = setTimeout(() => {
+        countdownNum.textContent = '1';
+        countdownNum.className = 'countdown-num-art';
+        if (countdownTip) countdownTip.textContent = '深呼吸 · 马上开跑！';
+        if (window.soundFX && window.soundFX.playCountdownPip) {
+          window.soundFX.playCountdownPip(1);
+        }
+
+        // Step 4: "🚀 GO!" (3.0s)
+        countdownTimerId = setTimeout(() => {
+          countdownNum.textContent = '🚀 GO!';
+          countdownNum.className = 'countdown-num-art num-go';
+          if (countdownTip) countdownTip.textContent = '冲啊小勇士！';
+          if (window.soundFX && window.soundFX.playCountdownPip) {
+            window.soundFX.playCountdownPip('GO');
+          }
+
+          // Step 5: 正式启动挑战走秒 (3.6s)
+          countdownTimerId = setTimeout(() => {
+            challengeCountdownOverlay.style.display = 'none';
+            isCountdownActive = false;
+            countdownTimerId = null;
+            if (typeof onComplete === 'function') onComplete();
+          }, 600);
+
+        }, 1000);
+      }, 1000);
+    }, 1000);
+  }
+
+  // 离开确认弹窗按钮绑定
+  if (btnExitResume) {
+    btnExitResume.addEventListener('click', () => {
+      if (exitConfirmModal) exitConfirmModal.style.display = 'none';
+      if (window.typoGame) window.typoGame.resumeChallengeTimer();
+      pendingSwitchMode = null;
+    });
+  }
+
+  if (btnExitLeave) {
+    btnExitLeave.addEventListener('click', () => {
+      if (exitConfirmModal) exitConfirmModal.style.display = 'none';
+      const target = pendingSwitchMode || 'practice';
+      pendingSwitchMode = null;
+      switchTab(target, false, true); // force switch
+    });
+  }
+
+  // ================= 1. 界面标签页切换（中途保护、重置与倒计时起跑） =================
+  function switchTab(mode, isInitial = false, force = false) {
+    // 0. 中途退出极速挑战防护：如果正在激战中且非强制，给出拦截确认
+    if (!force && !isInitial && currentActiveTab === 'challenge' && mode !== 'challenge') {
+      if (window.typoGame && window.typoGame.isInActiveChallenge()) {
+        // 立即冻结挑战倒计时（绝不让用户在读提示时扣心）
+        window.typoGame.pauseChallengeTimer();
+
+        // 弹窗提示
+        if (exitConfirmModal) {
+          if (exitCurrentScore) exitCurrentScore.textContent = window.typoGame.score || 0;
+          if (exitCurrentLives) exitCurrentLives.textContent = window.typoGame.lives || 3;
+          pendingSwitchMode = mode;
+          exitConfirmModal.style.display = 'flex';
+        }
+        return;
+      }
+    }
+
+    // 取消任何正在进行的倒计时
+    cancelChallengeCountdown();
+
+    // 播放 Tab 切换清脆音效
+    if (!isInitial) {
+      window.soundFX.playTabSwitch();
+    }
+
+    // 1. 先关闭任何已弹出的结算与确认弹窗
+    if (reportModal) reportModal.style.display = 'none';
+    if (exitConfirmModal) exitConfirmModal.style.display = 'none';
+
+    // 2. 清除键盘所有高亮与按压状态
+    document.querySelectorAll('.apple-key.highlight-target').forEach(el => el.classList.remove('highlight-target'));
+    document.querySelectorAll('.apple-key.pressed').forEach(el => el.classList.remove('pressed'));
+
+    // 3. 彻底重置游戏引擎所有计时器、发音与数据并释放所有按钮焦点
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
+    window.typoGame.resetAll();
+
+    currentActiveTab = mode;
+    [tabPractice, tabChallenge, tabTutorial].forEach(t => t.classList.remove('active'));
+
+    if (mode === 'practice') {
+      tabPractice.classList.add('active');
+      wordArena.style.display = 'flex';
+      tutorialArena.style.display = 'none';
+      if (challengeHudContent) challengeHudContent.style.display = 'none';
+      if (practiceHudContent) practiceHudContent.style.display = 'flex';
+      if (tutorialHudContent) tutorialHudContent.style.display = 'none';
+      if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
+      if (speedBadge) speedBadge.style.display = 'flex';
+      if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
+      window.typoGame.startPracticeMode();
+    } else if (mode === 'challenge') {
+      tabChallenge.classList.add('active');
+      wordArena.style.display = 'flex';
+      tutorialArena.style.display = 'none';
+      if (challengeHudContent) challengeHudContent.style.display = 'flex';
+      if (practiceHudContent) practiceHudContent.style.display = 'none';
+      if (tutorialHudContent) tutorialHudContent.style.display = 'none';
+      if (consoleTimerTrack) consoleTimerTrack.style.display = 'block';
+      if (speedBadge) speedBadge.style.display = 'flex';
+      if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
+      // 启动挑战：装载单词与界面，但先不走秒
+      window.typoGame.startChallengeMode(false);
+      // 启动 3, 2, 1 动感倒计时，结束后再正式开始计时
+      startChallengeCountdown(() => {
+        window.typoGame.startChallengeTimer();
+      });
+    } else if (mode === 'tutorial') {
+      tabTutorial.classList.add('active');
+      wordArena.style.display = 'none';
+      tutorialArena.style.display = 'flex';
+      if (challengeHudContent) challengeHudContent.style.display = 'none';
+      if (practiceHudContent) practiceHudContent.style.display = 'none';
+      if (tutorialHudContent) tutorialHudContent.style.display = 'flex';
+      if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
+      if (speedBadge) speedBadge.style.display = 'none';
+      if (tutorialDeckPill) tutorialDeckPill.style.display = 'inline-flex';
+      switchGuideSubTab(window.keyboardGuide.activeGuideTab || 'posture');
+    }
+  }
+
+  tabPractice.addEventListener('click', () => switchTab('practice'));
+  tabChallenge.addEventListener('click', () => switchTab('challenge'));
+  tabTutorial.addEventListener('click', () => switchTab('tutorial'));
+
+  // ================= 2. 单词与字母气泡渲染 =================
+  function renderWord(wordObj, currentHitIdx) {
+    wordEmoji.textContent = wordObj.emoji;
+    chineseText.textContent = wordObj.chinese;
+
+    bubblesContainer.innerHTML = '';
+    const word = wordObj.word;
+
+    for (let i = 0; i < word.length; i++) {
+      const bubble = document.createElement('div');
+      bubble.className = 'letter-bubble';
+      bubble.id = `bubble-${i}`;
+      bubble.textContent = word[i];
+
+      if (i < currentHitIdx) {
+        bubble.classList.add('hit');
+      } else if (i === currentHitIdx) {
+        bubble.classList.add('active');
+      }
+      bubblesContainer.appendChild(bubble);
+    }
+
+    updateFingerPrompt(word[currentHitIdx]);
+    highlightTargetKeyboardKey(word[currentHitIdx]);
+  }
+
+  // 更新手指推荐与键盘高亮
+  function updateFingerPrompt(char) {
+    if (!char) {
+      fingerBadge.textContent = '🎉 完成！';
+      fingerBadge.style.backgroundColor = '#10B981';
+      return;
+    }
+    const info = window.keyboardGuide.getFingerForChar(char);
+    fingerBadge.textContent = `👉 ${info.name}`;
+    fingerBadge.style.backgroundColor = info.color;
+  }
+
+  function highlightTargetKeyboardKey(char) {
+    // 移除之前的高亮
+    document.querySelectorAll('.apple-key.highlight-target').forEach(el => el.classList.remove('highlight-target'));
+    if (!char) return;
+
+    let selector = `.apple-key[data-key="${char.toLowerCase()}"]`;
+    if (char === ' ') selector = '.apple-key[data-key=" "]';
+    if (char.toLowerCase() === 'enter') selector = '.apple-key[data-key="Enter"]';
+    if (char.toLowerCase() === 'backspace' || char.toLowerCase() === 'delete') selector = '.apple-key[data-key="Backspace"]';
+
+    const keyEl = document.querySelector(selector);
+    if (keyEl) {
+      keyEl.classList.add('highlight-target');
+    }
+  }
+
+  // 中文释义点击：发音朗读
+  chinesePill.addEventListener('click', () => {
+    const wordObj = window.typoGame.getCurrentWordObj();
+    if (wordObj) {
+      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+    }
+  });
+
+  // ================= 3. 游戏引擎回调绑定 =================
+  let lastTenseTickTime = 0;
+  let tenseBeatIndex = 0;
+
+  window.typoGame.onWordChange = (wordObj, charIdx) => {
+    lastTenseTickTime = 0;
+    tenseBeatIndex = 0;
+    renderWord(wordObj, charIdx);
+  };
+
+  window.typoGame.onLetterHit = (hitIdx, char) => {
+    const bubble = document.getElementById(`bubble-${hitIdx}`);
+    if (bubble) {
+      bubble.classList.remove('active');
+      bubble.classList.add('hit');
+      bubble.classList.add('squish');
+      setTimeout(() => bubble.classList.remove('squish'), 250);
+    }
+
+    const nextIdx = hitIdx + 1;
+    const nextBubble = document.getElementById(`bubble-${nextIdx}`);
+    if (nextBubble) {
+      nextBubble.classList.add('active');
+    }
+
+    const wordObj = window.typoGame.getCurrentWordObj();
+    if (wordObj && nextIdx < wordObj.word.length) {
+      updateFingerPrompt(wordObj.word[nextIdx]);
+      highlightTargetKeyboardKey(wordObj.word[nextIdx]);
+    } else {
+      highlightTargetKeyboardKey(null);
+    }
+  };
+
+  window.typoGame.onLetterMiss = (charIdx) => {
+    const bubble = document.getElementById(`bubble-${charIdx}`);
+    if (bubble) {
+      bubble.classList.add('shake');
+      setTimeout(() => bubble.classList.remove('shake'), 350);
+    }
+  };
+
+  window.typoGame.onTimerTick = (timeLeft, maxTime) => {
+    const pct = Math.max(0, (timeLeft / maxTime) * 100);
+    timerFill.style.width = `${pct}%`;
+
+    // 倒计时进入最后 2.4 秒进入紧迫加速倒数
+    if (timeLeft <= 2.4) {
+      timerFill.classList.add('danger');
+
+      // 三阶动态紧迫感与加速节拍 (Accelerando)
+      let intervalMs = 380;
+      let urgencyLevel = 1;
+
+      if (timeLeft <= 0.8) {
+        intervalMs = 150; // 阶梯 3 (<0.8s): 极速绝杀高潮，急促蜂鸣冲刺！
+        urgencyLevel = 3;
+        timerFill.classList.add('critical');
+      } else if (timeLeft <= 1.5) {
+        intervalMs = 240; // 阶梯 2 (0.8s~1.5s): 步步紧逼，明显加快！
+        urgencyLevel = 2;
+        timerFill.classList.remove('critical');
+      } else {
+        timerFill.classList.remove('critical');
+      }
+
+      const now = performance.now();
+      if (now - lastTenseTickTime >= intervalMs) {
+        lastTenseTickTime = now;
+        tenseBeatIndex++;
+        const isTick = (tenseBeatIndex % 2 === 1);
+        window.soundFX.playTenseTick(urgencyLevel, isTick);
+      }
+    } else {
+      timerFill.classList.remove('danger');
+      timerFill.classList.remove('critical');
+      lastTenseTickTime = 0;
+      tenseBeatIndex = 0;
+    }
+  };
+
+  window.typoGame.onScoreChange = (score) => {
+    scoreVal.textContent = score;
+  };
+
+  window.typoGame.onComboChange = (combo) => {
+    if (!comboBadge) return;
+    if (combo >= 2) {
+      comboBadge.style.display = 'inline-flex';
+      if (combo >= 12) {
+        comboBadge.textContent = `👑 ${combo} Combo! 狂热超神`;
+      } else if (combo >= 8) {
+        comboBadge.textContent = `🚀 ${combo} Combo! 势不可挡`;
+      } else if (combo >= 5) {
+        comboBadge.textContent = `⚡ ${combo} Combo! 极速疾风`;
+      } else if (combo >= 3) {
+        comboBadge.textContent = `🔥 ${combo} Combo! 渐入佳境`;
+      } else {
+        comboBadge.textContent = `🔥 ${combo} Combo!`;
+      }
+      comboBadge.classList.remove('combo-pop');
+      void comboBadge.offsetWidth;
+      comboBadge.classList.add('combo-pop');
+    } else {
+      comboBadge.style.display = 'none';
+    }
+  };
+
+  window.typoGame.onLivesChange = (lives) => {
+    const hearts = [heart1, heart2, heart3];
+    hearts.forEach((h, idx) => {
+      if (idx < lives) {
+        h.classList.remove('lost');
+        h.textContent = '💖';
+      } else {
+        h.classList.add('lost');
+        h.textContent = '💔';
+      }
+    });
+  };
+
+  window.typoGame.onGameOver = (report) => {
+    resScore.textContent = report.score;
+    resWords.textContent = report.wordsCount;
+    resCombo.textContent = report.maxCombo;
+    resFastest.textContent = report.fastestTime > 0 ? `${report.fastestTime}s (${report.fastestWord})` : '-';
+    if (resSpeed) {
+      const tierIcon = report.tier ? report.tier.icon : '🐢';
+      resSpeed.textContent = `${tierIcon} ${report.wpm} WPM`;
+    }
+
+    if (report.wrongWords && report.wrongWords.length > 0) {
+      wrongWordsBox.style.display = 'flex';
+      wrongTags.innerHTML = report.wrongWords.map(w => `<span class="wrong-tag">${w.emoji} ${w.word} (${w.chinese})</span>`).join('');
+    } else {
+      wrongWordsBox.style.display = 'none';
+    }
+
+    // 稳定存储至 LocalStorage 并更新排行榜名次
+    if (window.scoreStorage) {
+      const saveRes = window.scoreStorage.saveScore(report);
+      lastPlayedRecordId = saveRes.record ? saveRes.record.id : null;
+
+      if (reportRankBadge) {
+        reportRankBadge.style.display = 'inline-flex';
+        if (saveRes.isNewBest) {
+          if (reportRankIcon) reportRankIcon.textContent = '🏆';
+          if (reportRankText) reportRankText.textContent = '🎉 刷新历史最高纪录！荣登第 1 名！';
+        } else if (saveRes.rank <= 10) {
+          if (reportRankIcon) reportRankIcon.textContent = '🎖️';
+          if (reportRankText) reportRankText.textContent = `🌟 荣耀上榜！名列历史第 ${saveRes.rank} 名！`;
+        } else {
+          if (reportRankIcon) reportRankIcon.textContent = '💪';
+          if (reportRankText) reportRankText.textContent = `本次得分已记录！当前位列第 ${saveRes.rank} 名`;
+        }
+      }
+    }
+
+    reportModal.style.display = 'flex';
+  };
+
+  // 监听打字手速与段位更新
+  window.typoGame.onSpeedUpdate = (wpm, tierInfo, cpm) => {
+    if (speedVal) speedVal.textContent = wpm;
+    if (speedAnimalIcon) speedAnimalIcon.textContent = tierInfo.icon;
+    if (speedTierLbl) {
+      const detailStr = wpm > 0 ? `${tierInfo.tier} · ${cpm} 键/分` : `${tierInfo.tier} · 准备就绪`;
+      speedTierLbl.textContent = detailStr;
+      speedTierLbl.style.color = tierInfo.color || '#38BDF8';
+    }
+    if (speedBadge) {
+      speedBadge.classList.remove('speed-bounce');
+      void speedBadge.offsetWidth;
+      speedBadge.classList.add('speed-bounce');
+    }
+  };
+
+  btnRestartChallenge.addEventListener('click', () => {
+    reportModal.style.display = 'none';
+    window.typoGame.startChallengeMode();
+  });
+
+  // ================= 荣耀排行榜交互与渲染逻辑 =================
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function renderLeaderboard(highlightId = null) {
+    if (!leaderboardList || !window.scoreStorage) return;
+
+    if (playerNicknameInput) {
+      playerNicknameInput.value = window.scoreStorage.getPlayerName();
+    }
+
+    const scores = window.scoreStorage.getScores();
+
+    if (!scores || scores.length === 0) {
+      leaderboardList.innerHTML = `
+        <div class="empty-leaderboard">
+          <span class="empty-icon">🎮</span>
+          <div class="empty-title">暂无荣耀排行记录</div>
+          <div class="empty-desc">前往【极速挑战】冲刺一次，即可把你的得分永久记录在荣耀榜上！✨</div>
+        </div>
+      `;
+      return;
+    }
+
+    leaderboardList.innerHTML = scores.slice(0, 20).map((item, index) => {
+      const rank = index + 1;
+      let badgeHtml = rank;
+      let rankClass = '';
+
+      if (rank === 1) {
+        badgeHtml = '🥇';
+        rankClass = 'rank-1';
+      } else if (rank === 2) {
+        badgeHtml = '🥈';
+        rankClass = 'rank-2';
+      } else if (rank === 3) {
+        badgeHtml = '🥉';
+        rankClass = 'rank-3';
+      }
+
+      const isNewHighlight = item.id === highlightId ? 'highlight-new' : '';
+
+      return `
+        <div class="rank-card ${rankClass} ${isNewHighlight}">
+          <div class="rank-left-group">
+            <div class="rank-badge-col">${badgeHtml}</div>
+            <div class="rank-meta-info">
+              <div class="rank-player-name">
+                <span>${escapeHtml(item.name || 'Kyrie')}</span>
+                <span title="${escapeHtml(item.tierName || '')}">${item.tierIcon || '🐢'}</span>
+              </div>
+              <div class="rank-stats-pills">
+                <span class="stat-tag-wpm">⚡ ${item.wpm || 0} WPM</span>
+                <span class="stat-tag-combo">🔥 ${item.maxCombo || 0} 连击</span>
+                <span class="stat-tag-words">🎯 ${item.wordsCount || 0} 词</span>
+              </div>
+            </div>
+          </div>
+          <div class="rank-right-group">
+            <div class="rank-score-val">⭐ ${item.score || 0}</div>
+            <div class="rank-date-str">${escapeHtml(item.dateStr || '')}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openLeaderboard(highlightId = null) {
+    window.soundFX.playTabSwitch();
+    renderLeaderboard(highlightId);
+    if (leaderboardModal) {
+      leaderboardModal.style.display = 'flex';
+    }
+  }
+
+  function closeLeaderboard() {
+    if (leaderboardModal) {
+      leaderboardModal.style.display = 'none';
+    }
+  }
+
+  // 绑定排行榜事件监听
+  if (btnOpenLeaderboard) {
+    btnOpenLeaderboard.addEventListener('click', () => openLeaderboard());
+  }
+
+  if (btnOpenLeaderboardFromReport) {
+    btnOpenLeaderboardFromReport.addEventListener('click', () => {
+      reportModal.style.display = 'none';
+      openLeaderboard(lastPlayedRecordId);
+    });
+  }
+
+  if (btnCloseLeaderboard) {
+    btnCloseLeaderboard.addEventListener('click', closeLeaderboard);
+  }
+
+  if (btnCloseLeaderboardBottom) {
+    btnCloseLeaderboardBottom.addEventListener('click', closeLeaderboard);
+  }
+
+  if (leaderboardModal) {
+    leaderboardModal.addEventListener('click', (e) => {
+      if (e.target === leaderboardModal) {
+        closeLeaderboard();
+      }
+    });
+  }
+
+  if (btnSaveNickname && playerNicknameInput) {
+    btnSaveNickname.addEventListener('click', () => {
+      const newName = window.scoreStorage.setPlayerName(playerNicknameInput.value);
+      playerNicknameInput.value = newName;
+      if (warriorCurrentName) warriorCurrentName.textContent = newName;
+      if (nameSaveTip) {
+        nameSaveTip.classList.add('show');
+        setTimeout(() => nameSaveTip.classList.remove('show'), 1600);
+      }
+      renderLeaderboard();
+    });
+    playerNicknameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        btnSaveNickname.click();
+      }
+    });
+  }
+
+  if (btnClearScores) {
+    btnClearScores.addEventListener('click', () => {
+      if (confirm('确定要清空所有荣耀得分记录吗？清空后将无法找回哦。')) {
+        window.scoreStorage.clearScores();
+        lastPlayedRecordId = null;
+        renderLeaderboard();
+      }
+    });
+  }
+
+  // ================= 4. 少儿键盘与指法启蒙教学中枢逻辑 =================
+  const btnGuidePosture = document.getElementById('btnGuidePosture');
+  const btnGuideHands = document.getElementById('btnGuideHands');
+  const btnGuideQuest = document.getElementById('btnGuideQuest');
+  const btnGuideFuncKeys = document.getElementById('btnGuideFuncKeys');
+
+  const viewGuidePosture = document.getElementById('viewGuidePosture');
+  const viewGuideHands = document.getElementById('viewGuideHands');
+  const viewGuideQuest = document.getElementById('viewGuideQuest');
+  const viewGuideFuncKeys = document.getElementById('viewGuideFuncKeys');
+
+  const btnSpeakPosture = document.getElementById('btnSpeakPosture');
+  const detailFingerText = document.getElementById('detailFingerText');
+  const detailFingerIcon = document.getElementById('detailFingerIcon');
+
+  const graduationCert = document.getElementById('graduationCert');
+  const certHeroName = document.getElementById('certHeroName');
+  const certDateStr = document.getElementById('certDateStr');
+  const btnReplayQuest = document.getElementById('btnReplayQuest');
+
+  const funcKeysGrid = document.getElementById('funcKeysGrid');
+  const funcKeysLayoutTip = document.getElementById('funcKeysLayoutTip');
+
+  function switchGuideSubTab(tabName) {
+    window.keyboardGuide.setGuideTab(tabName);
+
+    const tabs = [
+      { id: btnGuidePosture, view: viewGuidePosture, name: 'posture' },
+      { id: btnGuideHands, view: viewGuideHands, name: 'hands' },
+      { id: btnGuideQuest, view: viewGuideQuest, name: 'quest' },
+      { id: btnGuideFuncKeys, view: viewGuideFuncKeys, name: 'funckeys' }
+    ];
+
+    tabs.forEach(t => {
+      const isActive = (t.name === tabName);
+      if (t.id) t.id.classList.toggle('active', isActive);
+      if (t.view) t.view.style.display = isActive ? 'flex' : 'none';
+    });
+
+    clearFingerKeyboardHighlights();
+
+    if (tabName === 'quest') {
+      renderTutorialStep();
+    } else if (tabName === 'funckeys') {
+      renderFuncKeysGrid();
+      highlightTargetKeyboardKey(null);
+    } else {
+      highlightTargetKeyboardKey(null);
+    }
+  }
+
+  if (btnGuidePosture) btnGuidePosture.addEventListener('click', () => { window.soundFX.playTabSwitch(); switchGuideSubTab('posture'); });
+  if (btnGuideHands) btnGuideHands.addEventListener('click', () => { window.soundFX.playTabSwitch(); switchGuideSubTab('hands'); });
+  if (btnGuideQuest) btnGuideQuest.addEventListener('click', () => { window.soundFX.playTabSwitch(); switchGuideSubTab('quest'); });
+  if (btnGuideFuncKeys) btnGuideFuncKeys.addEventListener('click', () => { window.soundFX.playTabSwitch(); switchGuideSubTab('funckeys'); });
+
+  // 播放手型口诀语音
+  if (btnSpeakPosture) {
+    btnSpeakPosture.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const text = "手心里抱小苹果，手指弯弯像小爪；指尖立在键帽上，手腕悬平不贴桌！";
+      window.speechEngine.speakChinese(text);
+    });
+  }
+
+  // 双手指法地图点击与联动
+  function pulseHandFinger(fingerKey) {
+    document.querySelectorAll(`.finger-unit[data-finger="${fingerKey}"]`).forEach(el => {
+      el.classList.remove('bouncing');
+      void el.offsetHeight;
+      el.classList.add('bouncing');
+      setTimeout(() => el.classList.remove('bouncing'), 400);
+    });
+  }
+
+  function highlightFingerKeysOnKeyboard(fingerKey) {
+    clearFingerKeyboardHighlights();
+    const info = window.keyboardGuide.fingerColors[fingerKey];
+    if (!info) return;
+
+    info.keys.forEach(k => {
+      let sel = `.apple-key[data-key="${k.toLowerCase()}"]`;
+      if (k === ' ') sel = '.apple-key[data-key=" "]';
+      if (k.toLowerCase() === 'enter') sel = '.apple-key[data-key="Enter"]';
+      if (k.toLowerCase() === 'backspace' || k.toLowerCase() === 'delete') sel = '.apple-key[data-key="Backspace"]';
+      document.querySelectorAll(sel).forEach(keyEl => {
+        keyEl.classList.add('highlight-target');
+      });
+    });
+  }
+
+  function clearFingerKeyboardHighlights() {
+    document.querySelectorAll('.apple-key.highlight-target').forEach(el => el.classList.remove('highlight-target'));
+  }
+
+  document.querySelectorAll('.finger-unit').forEach(unit => {
+    unit.addEventListener('click', () => {
+      const fingerKey = unit.getAttribute('data-finger');
+      highlightFingerKeysOnKeyboard(fingerKey);
+      pulseHandFinger(fingerKey);
+
+      const rhyme = window.keyboardGuide.fingerRhythms[fingerKey] || '按键专属手指';
+      if (detailFingerText) {
+        detailFingerText.innerHTML = `<strong>${unit.getAttribute('title') || ''}</strong>：${rhyme}`;
+      }
+      if (detailFingerIcon) {
+        detailFingerIcon.textContent = '🎯';
+      }
+    });
+  });
+
+  // 渲染功能键小图鉴
+  function renderFuncKeysGrid() {
+    if (!funcKeysGrid) return;
+    const isMac = (currentKeyboardLayout === 'mac');
+    if (funcKeysLayoutTip) {
+      funcKeysLayoutTip.textContent = isMac ? '当前适配：🍎 Mac (苹果) 键盘' : '当前适配：💻 PC (Windows) 标准键盘';
+    }
+    const data = window.keyboardGuide.getFuncKeysData(currentKeyboardLayout);
+    funcKeysGrid.innerHTML = data.map(item => `
+      <div class="funckey-item-card">
+        <div class="funckey-card-top">
+          <div class="funckey-badge">
+            <span>${item.symbol}</span>
+            <span>${item.key}</span>
+          </div>
+          <button class="funckey-btn-try" data-action="${item.actionKey}" type="button">试按一下 ⚡</button>
+        </div>
+        <div class="funckey-name-title">${item.name}</div>
+        <p class="funckey-desc-text">${item.desc}</p>
+      </div>
+    `).join('');
+
+    funcKeysGrid.querySelectorAll('.funckey-btn-try').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const action = btn.getAttribute('data-action');
+        triggerVirtualKeyPress(action);
+        window.soundFX.playKeyPop(2);
+        setTimeout(() => triggerVirtualKeyRelease(action), 220);
+      });
+    });
+  }
+
+  // 闯关关卡渲染
+  function renderTutorialStep() {
+    const step = window.keyboardGuide.getCurrentStepData();
+    if (!step) return;
+
+    if (graduationCert) graduationCert.style.display = 'none';
+    if (tutorialTitle) tutorialTitle.innerHTML = step.title;
+    if (tutorialBadge) tutorialBadge.textContent = `🏷️ ${step.badge}`;
+    if (tutorialDesc) tutorialDesc.innerHTML = step.desc;
+    if (tutorialPromptBox) tutorialPromptBox.innerHTML = step.interactivePrompt;
+    if (tutorialHint) tutorialHint.textContent = `💡 ${step.tip}`;
+    if (btnNextStep) btnNextStep.style.display = 'none';
+
+    stepChips.forEach(chip => {
+      const s = parseInt(chip.getAttribute('data-step'), 10);
+      chip.classList.toggle('active', s === window.keyboardGuide.currentStep);
+      chip.classList.toggle('done', s < window.keyboardGuide.currentStep);
+    });
+
+    const targetKey = step.targets[step.currentTargetIdx];
+    highlightTargetKeyboardKey(targetKey);
+    if (targetKey) {
+      const fInfo = window.keyboardGuide.getFingerForChar(targetKey);
+      if (fInfo && fInfo.finger) pulseHandFinger(fInfo.finger);
+    }
+  }
+
+  stepChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const s = parseInt(chip.getAttribute('data-step'), 10);
+      window.keyboardGuide.goToStep(s);
+      renderTutorialStep();
+    });
+  });
+
+  if (btnNextStep) {
+    btnNextStep.addEventListener('click', () => {
+      if (window.keyboardGuide.currentStep < window.keyboardGuide.totalSteps) {
+        window.keyboardGuide.goToStep(window.keyboardGuide.currentStep + 1);
+        renderTutorialStep();
+      }
+    });
+  }
+
+  if (btnReplayQuest) {
+    btnReplayQuest.addEventListener('click', () => {
+      window.keyboardGuide.goToStep(1);
+      renderTutorialStep();
+    });
+  }
+
+  // 全局点击按钮后立即释放焦点（防止用户敲击空格时被浏览器默认当成“点击当前聚焦按钮”而重置游戏）
+  document.addEventListener('click', (e) => {
+    const btn = e.target && e.target.closest ? e.target.closest('button') : null;
+    if (btn) {
+      btn.blur();
+    }
+  });
+
+  // ================= 5. 全局物理按键与虚拟键盘联动 =================
+  window.addEventListener('keydown', (e) => {
+    // 若正在输入框（如修改玩家称号昵称）中输入，允许正常敲击空格和字符
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+      return;
+    }
+
+    // 彻底阻止浏览器默认行为：
+    if (e.key === ' ' || e.code === 'Space' || e.key === 'Tab') {
+      e.preventDefault();
+    }
+
+    if (e.repeat) return; // 忽略长按重复
+    const key = e.key;
+
+    // 若开场动画尚未关闭
+    if (mimimiSplash && !mimimiSplash.classList.contains('hidden')) {
+      const isInputting = warriorRegisterBox && warriorRegisterBox.style.display !== 'none';
+      const hasCustom = window.scoreStorage && window.scoreStorage.hasCustomName();
+      if (!hasCustom || isInputting) {
+        if (splashWarriorInput && document.activeElement !== splashWarriorInput) {
+          splashWarriorInput.focus();
+        }
+        return;
+      }
+      dismissSplashAndEnter();
+      return;
+    }
+
+    // 若退出二次确认弹窗处于打开状态
+    if (exitConfirmModal && exitConfirmModal.style.display === 'flex') {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        exitConfirmModal.style.display = 'none';
+        if (window.typoGame) window.typoGame.resumeChallengeTimer();
+        pendingSwitchMode = null;
+      }
+      return;
+    }
+
+    // 若极速挑战 3, 2, 1 倒计时正在进行中，忽略打字判定
+    if (isCountdownActive) {
+      return;
+    }
+
+    // 虚拟键盘按压下沉视觉反馈
+    triggerVirtualKeyPress(key);
+
+    if (currentActiveTab === 'tutorial') {
+      // 触发双手地图对应手指跳动
+      const fInfo = window.keyboardGuide.getFingerForChar(key);
+      if (fInfo && fInfo.finger) {
+        pulseHandFinger(fInfo.finger);
+      }
+
+      if (window.keyboardGuide.activeGuideTab === 'quest') {
+        const res = window.keyboardGuide.handleKeyPress(key);
+        if (res.success) {
+          window.soundFX.playKeyPop(2);
+          if (res.stepFinished) {
+            window.soundFX.playFanfare();
+            if (res.isFinal) {
+              if (graduationCert) {
+                graduationCert.style.display = 'flex';
+                if (certHeroName) {
+                  certHeroName.textContent = window.scoreStorage ? window.scoreStorage.getPlayerName() : 'Kyrie';
+                }
+                if (certDateStr) {
+                  const now = new Date();
+                  certDateStr.textContent = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}`;
+                }
+              }
+              tutorialPromptBox.innerHTML = `🎉 恭喜你全部通关！荣获<strong>【全能盲打小勇士】</strong>最高荣誉证书！`;
+              btnNextStep.style.display = 'none';
+              highlightTargetKeyboardKey(null);
+            } else {
+              tutorialPromptBox.innerHTML = `🎉 太棒啦！你已经完成了本关卡！解锁了 <strong>${res.badge}</strong>！`;
+              btnNextStep.style.display = 'inline-block';
+              highlightTargetKeyboardKey(null);
+            }
+          } else {
+            highlightTargetKeyboardKey(res.nextKey);
+            if (res.nextKey) {
+              const nextFInfo = window.keyboardGuide.getFingerForChar(res.nextKey);
+              if (nextFInfo && nextFInfo.finger) pulseHandFinger(nextFInfo.finger);
+            }
+          }
+        } else {
+          window.soundFX.playKeyWrong();
+        }
+      }
+    } else {
+      // 单词探索或极速挑战模式
+      if (key.length === 1 && /[a-zA-Z]/.test(key)) {
+        window.typoGame.handleKeyInput(key);
+      }
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    triggerVirtualKeyRelease(e.key);
+  });
+
+  function triggerVirtualKeyPress(key) {
+    let selector = `.apple-key[data-key="${key.toLowerCase()}"]`;
+    if (key === ' ') selector = '.apple-key[data-key=" "]';
+    if (key === 'Enter') selector = '.apple-key[data-key="Enter"]';
+    if (key === 'Backspace') selector = '.apple-key[data-key="Backspace"]';
+    if (key === 'Tab') selector = '.apple-key[data-key="Tab"]';
+    if (key === 'CapsLock') selector = '.apple-key[data-key="CapsLock"]';
+    if (key === 'Shift') selector = '.apple-key[data-key="Shift"]';
+    if (key === 'Control') selector = '.apple-key[data-key="Control"]';
+    if (key === 'Alt') selector = '.apple-key[data-key="Alt"]';
+    if (key === 'Meta') selector = '.apple-key[data-key="Meta"]';
+
+    document.querySelectorAll(selector).forEach(el => el.classList.add('pressed'));
+  }
+
+  function triggerVirtualKeyRelease(key) {
+    let selector = `.apple-key[data-key="${key.toLowerCase()}"]`;
+    if (key === ' ') selector = '.apple-key[data-key=" "]';
+    if (key === 'Enter') selector = '.apple-key[data-key="Enter"]';
+    if (key === 'Backspace') selector = '.apple-key[data-key="Backspace"]';
+    if (key === 'Tab') selector = '.apple-key[data-key="Tab"]';
+    if (key === 'CapsLock') selector = '.apple-key[data-key="CapsLock"]';
+    if (key === 'Shift') selector = '.apple-key[data-key="Shift"]';
+    if (key === 'Control') selector = '.apple-key[data-key="Control"]';
+    if (key === 'Alt') selector = '.apple-key[data-key="Alt"]';
+    if (key === 'Meta') selector = '.apple-key[data-key="Meta"]';
+
+    document.querySelectorAll(selector).forEach(el => el.classList.remove('pressed'));
+  }
+
+  // 支持直接点击虚拟键盘（支持重绘后动态绑定）
+  function bindKeyElementsEvents() {
+    document.querySelectorAll('.apple-key').forEach(keyEl => {
+      if (keyEl._hasTypoListener) return;
+      keyEl._hasTypoListener = true;
+      keyEl.addEventListener('click', () => {
+        const keyVal = keyEl.getAttribute('data-key');
+        if (!keyVal) return;
+
+        keyEl.classList.add('pressed');
+        setTimeout(() => keyEl.classList.remove('pressed'), 120);
+
+        if (currentActiveTab === 'tutorial') {
+          const res = window.keyboardGuide.handleKeyPress(keyVal);
+          if (res.success) {
+            window.soundFX.playKeyPop(2);
+            if (res.stepFinished) {
+              window.soundFX.playFanfare();
+              tutorialPromptBox.innerHTML = `🎉 太棒啦！你已经完成了本关卡！解锁了 <strong>${res.badge}</strong>！`;
+              btnNextStep.style.display = 'inline-block';
+              highlightTargetKeyboardKey(null);
+            } else {
+              highlightTargetKeyboardKey(res.nextKey);
+            }
+          }
+        } else {
+          if (keyVal.length === 1 && /[a-zA-Z]/.test(keyVal)) {
+            window.typoGame.handleKeyInput(keyVal);
+          }
+        }
+      });
+    });
+  }
+
+  // 初始化绑定所有静态按键
+  bindKeyElementsEvents();
+
+  // 音频控制
+  btnToggleSound.addEventListener('click', () => {
+    const isMuted = window.soundFX.toggleMute();
+    btnToggleSound.textContent = isMuted ? '🔇' : '🔊';
+  });
+
+  btnToggleSpeech.addEventListener('click', () => {
+    const isEnabled = window.speechEngine.toggleSpeech();
+    btnToggleSpeech.textContent = isEnabled ? '🗣️' : '🤫';
+  });
+
+  // 1. 默认应用 PC (Windows) 键盘模式
+  setKeyboardLayout('pc');
+
+  // 2. 默认从“单词探索”模式启动（跳过初始 Toast）
+  switchTab('practice', true);
+
+  // 3. 页面初次加载：单次播放 Mimimi 招牌弹射动画（1.3秒后自动淡出进入主界面）
+  playMimimiAnimation();
+});
+
+

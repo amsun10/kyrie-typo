@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kyrie's Topo - 儿童双语打字与键盘启蒙</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌨️</text></svg>">
+</head>
+<body>
+
+  <!-- Mimimi 风格单次开场动画（动感弹射，绝无二次弹窗，丝滑淡入游戏） -->
+  <div class="mimimi-splash-overlay" id="mimimiSplash" title="点击可跳过动画直接进入">
+    <div class="mimimi-sunburst"></div>
+    <div class="mimimi-stage">
+      <div class="mimimi-stars-burst" id="mimimiStars"></div>
+      <div class="mimimi-logo-title" id="mimimiTitle">
+        <span class="m-part m-kyrie">
+          <span class="m-char" style="--d: 0s;">K</span>
+          <span class="m-char" style="--d: 0.04s;">y</span>
+          <span class="m-char" style="--d: 0.08s;">r</span>
+          <span class="m-char" style="--d: 0.12s;">i</span>
+          <span class="m-char" style="--d: 0.16s;">e</span>
+          <span class="m-char" style="--d: 0.20s;">'</span>
+          <span class="m-char" style="--d: 0.24s;">s</span>
+        </span>
+        <span class="m-part m-typo">
+          <span class="m-char" style="--d: 0.30s;">T</span>
+          <span class="m-char" style="--d: 0.35s;">o</span>
+          <span class="m-char" style="--d: 0.40s;">p</span>
+          <span class="m-char" style="--d: 0.45s;">o</span>
+        </span>
+      </div>
+      <div class="mimimi-badge">🎮 KIDS TYPING STUDIO 🕹️</div>
+      <!-- 勇士注册/欢迎卡片 -->
+      <div class="splash-warrior-card" id="splashWarriorCard">
+        <div class="warrior-register-box" id="warriorRegisterBox">
+          <div class="warrior-prompt-text">✨ 欢迎新勇士！为你的角色起个名字吧：</div>
+          <div class="warrior-input-group">
+            <span class="warrior-input-icon">🛡️</span>
+            <input type="text" id="splashWarriorInput" class="splash-warrior-input" maxlength="10" placeholder="例如：Kyrie / 乐乐 / Leo" autocomplete="off" spellcheck="false" value="">
+          </div>
+        </div>
+        <div class="warrior-greeting-box" id="warriorGreetingBox" style="display: none;">
+          <span class="warrior-badge-icon">👑</span>
+          <span class="warrior-welcome-text">欢迎回来，打字小勇士</span>
+          <strong class="warrior-current-name" id="warriorCurrentName">Kyrie</strong>
+          <button class="btn-edit-hero-name" id="btnEditHeroName" type="button" title="点击修改勇士名字">✏️ 改名</button>
+        </div>
+      </div>
+      <button class="mimimi-start-btn" id="btnStartGame">🚀 开始打字冒险 ➔</button>
+      <div class="mimimi-click-tip" id="mimimiClickTip">✨ 敲击键盘任意键或点击开始 ✨</div>
+    </div>
+  </div>
+
+  <!-- 顶部导航栏 (清爽留白，模式按钮已移至底部居中) -->
+  <header class="header-bar">
+    <div class="logo-container" id="btnLogo" title="Kyrie's Topo 少儿双语打字">
+      <span class="logo-icon">⌨️</span>
+      <div class="logo-text-mimimi">
+        <span class="l-part l-kyrie">
+          <span class="l-char">K</span><span class="l-char">y</span><span class="l-char">r</span><span class="l-char">i</span><span class="l-char">e</span><span class="l-char">'</span><span class="l-char">s</span>
+        </span>
+        <span class="l-part l-typo">
+          <span class="l-char">T</span><span class="l-char">o</span><span class="l-char">p</span><span class="l-char">o</span>
+        </span>
+      </div>
+      <span class="logo-subtitle">少儿双语打字</span>
+    </div>
+
+    <div class="status-controls">
+      <button class="leaderboard-btn" id="btnOpenLeaderboard" title="查看得分排行榜">
+        <span class="btn-icon">🏆</span>
+        <span class="btn-text">排行榜</span>
+      </button>
+      <button class="icon-btn" id="btnToggleSpeech" title="开启/关闭语音朗读">🗣️</button>
+      <button class="icon-btn" id="btnToggleSound" title="开启/关闭音效">🔊</button>
+    </div>
+  </header>
+
+
+  <!-- 模式切换状态提示横幅 (Toast Notice) -->
+  <div class="mode-switch-toast" id="modeSwitchToast">
+    <span class="toast-icon" id="toastIcon">🔄</span>
+    <span class="toast-msg" id="toastMsg">已重置所有游戏进度与倒计时</span>
+  </div>
+
+  <!-- 主舞台 -->
+  <main class="main-stage">
+
+
+    <!-- 全局统一顶层模式指挥中枢 (合并了原模式切换 Dock 与 游戏 HUD) -->
+    <div class="top-command-console" id="topCommandConsole">
+      <!-- 左侧：3大核心模式切换胶囊 -->
+      <nav class="mode-capsule-deck">
+        <button class="mode-cap-btn active" id="tabPractice" data-mode="practice">
+          <span>📖</span> 单词探索
+        </button>
+        <button class="mode-cap-btn" id="tabChallenge" data-mode="challenge">
+          <span>⚡</span> 极速挑战
+        </button>
+        <button class="mode-cap-btn" id="tabTutorial" data-mode="tutorial">
+          <span>🍎</span> 键盘启蒙
+        </button>
+      </nav>
+
+      <!-- 右侧：情境自适应状态舱 -->
+      <div class="console-status-deck" id="consoleStatusDeck">
+        <!-- 1. 单词探索模式专属提示 -->
+        <div class="console-status-practice" id="practiceHudContent">
+          <span class="practice-zen-tag">💖 无限练习 · 随心探索</span>
+          <span class="practice-status-sep">·</span>
+          <span class="practice-tip-text">✨ 敲对字母即获连击 ✨</span>
+        </div>
+
+        <!-- 2. 极速挑战专属生命值与得分 -->
+        <div class="console-status-challenge" id="challengeHudContent" style="display: none;">
+          <div class="lives-container" id="livesBox">
+            <span class="heart-icon" id="heart1">💖</span>
+            <span class="heart-icon" id="heart2">💖</span>
+            <span class="heart-icon" id="heart3">💖</span>
+          </div>
+          <div class="score-display">⭐ 得分: <span id="scoreVal">0</span></div>
+        </div>
+
+        <!-- 3. 键盘启蒙模式专属提示 -->
+        <div class="console-status-tutorial" id="tutorialHudContent" style="display: none;">
+          <span class="tutorial-zen-tag">🌱 筑基小营 · 循序渐进练指法</span>
+        </div>
+      </div>
+
+      <!-- 极速挑战倒计时能量光槽 (紧贴控制台底部的微光流动条) -->
+      <div class="console-timer-track" id="consoleTimerTrack" style="display: none;">
+        <div class="console-timer-fill" id="timerFill"></div>
+      </div>
+    </div>
+
+    <!-- 模式 1 & 2：单词打字展示区 -->
+    <section class="word-arena" id="wordArena">
+      <!-- 核心大字卡片 -->
+      <div class="word-card" id="wordCard">
+        <!-- 极速挑战 3, 2, 1 起跑倒计时全息遮罩 -->
+        <div class="challenge-countdown-overlay" id="challengeCountdownOverlay" style="display: none;">
+          <div class="countdown-badge-box">
+            <div class="countdown-pulse-ring"></div>
+            <div class="countdown-num-art" id="countdownNum">3</div>
+          </div>
+          <div class="countdown-sub-tip" id="countdownTip">双手就绪 · 准备冲刺！</div>
+        </div>
+
+        <!-- 连击高能勋章 (单词探索与极速挑战双模式共享) -->
+        <div class="combo-badge" id="comboBadge">🔥 2 Combo!</div>
+        <div class="word-emoji-badge" id="wordEmoji">🐱</div>
+        
+        <!-- 超大 Q 弹字母容器 -->
+        <div class="word-bubbles-container" id="bubblesContainer">
+          <!-- 由 JS 动态渲染超大气泡字母 -->
+        </div>
+
+        <!-- 常用中文意思（大字、清晰易懂） -->
+        <div class="chinese-definition-pill" id="chinesePill" title="点击朗读中文与英文">
+          <span class="speaker-btn">🔊</span>
+          <span class="chinese-text" id="chineseText">猫咪</span>
+        </div>
+
+        <!-- 手指指法温馨提示 -->
+        <div class="finger-tip-bar" id="fingerTipBar">
+          <span>推荐手指：</span>
+          <span class="finger-badge" id="fingerBadge" style="background-color: #38BDF8;">👉 左手食指</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 模式 3：少儿键盘与指法启蒙教学中枢 -->
+    <section class="tutorial-arena" id="tutorialArena">
+      <!-- 启蒙子模式切换导航胶囊栏 -->
+      <div class="guide-nav-bar">
+        <button class="guide-nav-btn active" id="btnGuidePosture" data-guide-tab="posture">
+          <span class="gnav-icon">🐱</span>
+          <span class="gnav-title">小猫爪手型与坐姿</span>
+        </button>
+        <button class="guide-nav-btn" id="btnGuideHands" data-guide-tab="hands">
+          <span class="gnav-icon">🤚</span>
+          <span class="gnav-title">双手指法地图</span>
+        </button>
+        <button class="guide-nav-btn" id="btnGuideQuest" data-guide-tab="quest">
+          <span class="gnav-icon">🚀</span>
+          <span class="gnav-title">6 阶闯关训练营</span>
+        </button>
+        <button class="guide-nav-btn" id="btnGuideFuncKeys" data-guide-tab="funckeys">
+          <span class="gnav-icon">✨</span>
+          <span class="gnav-title">魔法功能键图鉴</span>
+        </button>
+      </div>
+
+      <!-- 子模块 1：小猫爪手型与坐姿秘诀 -->
+      <div class="guide-view-panel" id="viewGuidePosture">
+        <!-- 核心手型特写卡片 -->
+        <div class="posture-hero-card">
+          <div class="hero-posture-badge">🐱 核心打字手法秘诀</div>
+          <h2 class="hero-posture-title">“手心里抱苹果 · 小猫爪爪”手型</h2>
+          
+          <div class="posture-visual-row">
+            <!-- 卡通手型图示 -->
+            <div class="posture-hand-illustration">
+              <div class="hand-shape-diagram">
+                <span class="diagram-apple">🍎</span>
+                <span class="diagram-hand">🐾</span>
+              </div>
+              <div class="diagram-caption">五指自然成拱形 · 掌心留空抱苹果</div>
+            </div>
+
+            <div class="posture-mnemonics-box">
+              <div class="mnemonic-quote-row">
+                <span class="quote-symbol">“</span>
+                <p class="mnemonic-rhyme" id="postureRhymeText">手心里抱小苹果，手指弯弯像小爪；指尖立在键帽上，手腕悬平不贴桌！</p>
+                <button class="btn-speech-rhyme" id="btnSpeakPosture" title="点击播放手型口诀语音">
+                  <span class="rhyme-speaker-icon">🔊</span>
+                  <span class="rhyme-speaker-text">听口诀</span>
+                </button>
+              </div>
+
+              <div class="posture-key-points">
+                <div class="point-pill"><span class="pill-dot" style="background: #38BDF8;"></span><strong>关节微拱</strong>：第一指关节自然弯起，绝不趴平</div>
+                <div class="point-pill"><span class="pill-dot" style="background: #10B981;"></span><strong>肉垫触键</strong>：用指尖软肉轻击键帽中央</div>
+                <div class="point-pill"><span class="pill-dot" style="background: #F59E0B;"></span><strong>悬平手腕</strong>：手腕悬浮放松像弹琴，绝不下塌</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 对比网格：正确的标准 vs 常见错误 -->
+        <div class="posture-compare-grid">
+          <!-- 正确手型 -->
+          <div class="compare-card is-correct">
+            <div class="compare-header">
+              <span class="compare-status-icon">✅</span>
+              <span class="compare-title">正确：圆拱小猫爪</span>
+            </div>
+            <div class="compare-desc">
+              五根手指自然弯曲立起，掌心拱起成空心，手指像小弹簧一样灵动，打字飞快还不累！
+            </div>
+            <div class="compare-tag">手心里像握着一颗小乒乓球</div>
+          </div>
+
+          <!-- 常见错误 1 -->
+          <div class="compare-card is-wrong">
+            <div class="compare-header">
+              <span class="compare-status-icon">❌</span>
+              <span class="compare-title">错误：平摊趴趴手</span>
+            </div>
+            <div class="compare-desc">
+              手指伸得笔直，用大面积指腹“啪啪”拍打按键。极易误触旁边邻近按键，手指迅速酸累！
+            </div>
+            <div class="compare-tag">千万不要让手指趴在键盘上</div>
+          </div>
+
+          <!-- 常见错误 2 -->
+          <div class="compare-card is-wrong">
+            <div class="compare-header">
+              <span class="compare-status-icon">❌</span>
+              <span class="compare-title">错误：塌腕死压桌面</span>
+            </div>
+            <div class="compare-desc">
+              手腕死死按在桌子边沿，手指向上硬抠键帽。手腕承受重压阻碍血液循环，易致手部疲劳！
+            </div>
+            <div class="compare-tag">手腕和小臂应保持平直放松</div>
+          </div>
+
+          <!-- 挺拔小松树坐姿 -->
+          <div class="compare-card is-correct">
+            <div class="compare-header">
+              <span class="compare-status-icon">🌲</span>
+              <span class="compare-title">坐姿：挺拔小松树</span>
+            </div>
+            <div class="compare-desc">
+              背部挺直靠好椅背，双脚平稳踏地。双眼距屏幕保持一臂远（约 50 厘米），保护少儿视力！
+            </div>
+            <div class="compare-tag">不含胸驼背 · 眼睛平视屏幕</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 子模块 2：双手指法交互地图 -->
+      <div class="guide-view-panel" id="viewGuideHands" style="display: none;">
+        <div class="hands-interactive-card">
+          <div class="hands-header">
+            <div class="hands-title-group">
+              <span class="hands-icon">🤚</span>
+              <h2 class="hands-title">双手指法彩色地图</h2>
+            </div>
+            <div class="hands-hint">
+              💡 敲击物理按键，或点击下方手指，看看哪根手指在跳舞！
+            </div>
+          </div>
+
+          <!-- 动态双手图示容器 -->
+          <div class="hands-display-stage">
+            <!-- 左手 -->
+            <div class="hand-box left-hand" id="leftHandContainer">
+              <div class="hand-label">👈 左手小分队</div>
+              <div class="hand-fingers-row">
+                <!-- 左手小指 -->
+                <div class="finger-unit" data-finger="leftPinky" style="--fc: #FF6584;" title="左手小拇指">
+                  <div class="finger-tip">粉</div>
+                  <div class="finger-name">小指</div>
+                  <div class="finger-keys-tag">A Q Z 1</div>
+                </div>
+                <!-- 左手无名指 -->
+                <div class="finger-unit" data-finger="leftRing" style="--fc: #FFA45B;" title="左手无名指">
+                  <div class="finger-tip">橙</div>
+                  <div class="finger-name">无名指</div>
+                  <div class="finger-keys-tag">S W X 2</div>
+                </div>
+                <!-- 左手中指 -->
+                <div class="finger-unit" data-finger="leftMiddle" style="--fc: #10B981;" title="左手中指">
+                  <div class="finger-tip">绿</div>
+                  <div class="finger-name">中指</div>
+                  <div class="finger-keys-tag">D E C 3</div>
+                </div>
+                <!-- 左手食指 -->
+                <div class="finger-unit main-finger" data-finger="leftIndex" style="--fc: #38BDF8;" title="左手食指（负责 F 雷达）">
+                  <div class="finger-radar-tag">📡 F雷达</div>
+                  <div class="finger-tip">蓝</div>
+                  <div class="finger-name">食指</div>
+                  <div class="finger-keys-tag">F R V G T B</div>
+                </div>
+                <!-- 左手大拇指 -->
+                <div class="finger-unit thumb-finger" data-finger="thumb" style="--fc: #A855F7;" title="大拇指（空格跳跳床）">
+                  <div class="finger-tip">紫</div>
+                  <div class="finger-name">大拇指</div>
+                  <div class="finger-keys-tag">Space</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 右手 -->
+            <div class="hand-box right-hand" id="rightHandContainer">
+              <div class="hand-label">👉 右手小分队</div>
+              <div class="hand-fingers-row">
+                <!-- 右手大拇指 -->
+                <div class="finger-unit thumb-finger" data-finger="thumb" style="--fc: #A855F7;" title="大拇指（空格跳跳床）">
+                  <div class="finger-tip">紫</div>
+                  <div class="finger-name">大拇指</div>
+                  <div class="finger-keys-tag">Space</div>
+                </div>
+                <!-- 右手食指 -->
+                <div class="finger-unit main-finger" data-finger="rightIndex" style="--fc: #38BDF8;" title="右手食指（负责 J 雷达）">
+                  <div class="finger-radar-tag">📡 J雷达</div>
+                  <div class="finger-tip">蓝</div>
+                  <div class="finger-name">食指</div>
+                  <div class="finger-keys-tag">J U M H Y N</div>
+                </div>
+                <!-- 右手中指 -->
+                <div class="finger-unit" data-finger="rightMiddle" style="--fc: #10B981;" title="右手中指">
+                  <div class="finger-tip">绿</div>
+                  <div class="finger-name">中指</div>
+                  <div class="finger-keys-tag">K I , 8</div>
+                </div>
+                <!-- 右手无名指 -->
+                <div class="finger-unit" data-finger="rightRing" style="--fc: #FFA45B;" title="右手无名指">
+                  <div class="finger-tip">橙</div>
+                  <div class="finger-name">无名指</div>
+                  <div class="finger-keys-tag">L O . 9</div>
+                </div>
+                <!-- 右手小指 -->
+                <div class="finger-unit" data-finger="rightPinky" style="--fc: #FF6584;" title="右手小拇指">
+                  <div class="finger-tip">粉</div>
+                  <div class="finger-name">小指</div>
+                  <div class="finger-keys-tag">; P / Enter</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 当前手指说明详情条 -->
+          <div class="finger-detail-pill" id="activeFingerDetail">
+            <span class="detail-icon" id="detailFingerIcon">✨</span>
+            <span class="detail-text" id="detailFingerText">点击上方任意手指，查看负责按键，并在下方键盘点亮责任区！</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 子模块 3：6 阶闯关训练营 -->
+      <div class="guide-view-panel" id="viewGuideQuest" style="display: none;">
+        <div class="tutorial-card">
+          <div class="tutorial-step-indicator">
+            <div class="step-chips" id="stepChips">
+              <div class="step-chip active" data-step="1">1</div>
+              <div class="step-chip" data-step="2">2</div>
+              <div class="step-chip" data-step="3">3</div>
+              <div class="step-chip" data-step="4">4</div>
+              <div class="step-chip" data-step="5">5</div>
+              <div class="step-chip" data-step="6">6</div>
+            </div>
+            <div class="pill-status" id="tutorialBadge">🏷️ 探险家徽章</div>
+          </div>
+
+          <h2 class="tutorial-title" id="tutorialTitle">第 1 关：摸一摸！找到 F 和 J 的小雷达 📡</h2>
+          
+          <div class="tutorial-desc" id="tutorialDesc">
+            无论是 PC 还是 Mac 键盘，都有两颗键藏着特别的秘密！闭上眼睛摸一摸，你能找到表面有一条小横杠凸起的键吗？那就是 F 键和 J 键！这是左右手食指安家的小锚点！
+          </div>
+
+          <div class="tutorial-prompt-box" id="tutorialPromptBox">
+            请在键盘上依次按下 <span class="target-key-pill">F</span> 键和 <span class="target-key-pill">J</span> 键！
+          </div>
+
+          <div class="tutorial-actions">
+            <span id="tutorialHint" style="font-weight: 700; color: #94A3B8;">💡 提示：左手食指找 F，右手食指找 J 噢！</span>
+            <button class="big-action-btn" id="btnNextStep" style="display: none;">闯入下一关 ➔</button>
+          </div>
+
+          <!-- 关卡全部完成时的毕业证书展板 -->
+          <div class="graduation-certificate" id="graduationCert" style="display: none;">
+            <div class="cert-ribbon">🏆 荣誉证书 CERTIFICATE 🏆</div>
+            <div class="cert-body">
+              <div class="cert-hero-icon">👑</div>
+              <h3 class="cert-title">少儿键盘盲打全能小勇士</h3>
+              <p class="cert-recipient">授予打字小勇士：<strong id="certHeroName">Kyrie</strong></p>
+              <p class="cert-congrats">
+                恭喜你成功掌握了<strong>小猫爪手型、基准十指安家、盲打归巢原则与核心功能键</strong>！你已经正式迈入盲打高手的行列啦！
+              </p>
+              <div class="cert-meta-row">
+                <span class="cert-seal">🏅 TOP TYPER SEAL</span>
+                <span class="cert-date" id="certDateStr">2026.09</span>
+              </div>
+            </div>
+            <button class="btn-cert-replay" id="btnReplayQuest">🔄 重新挑战训练营</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 子模块 4：魔法功能键图鉴 -->
+      <div class="guide-view-panel" id="viewGuideFuncKeys" style="display: none;">
+        <div class="funckeys-guide-card">
+          <div class="funckeys-header">
+            <div class="funckeys-title-group">
+              <span class="funckeys-icon">✨</span>
+              <h2 class="funckeys-title" id="funcKeysPanelTitle">键盘的超能力功能键小图鉴</h2>
+            </div>
+            <div class="funckeys-layout-tip" id="funcKeysLayoutTip">当前适配：💻 PC (Windows) 标准键盘</div>
+          </div>
+
+          <div class="funckeys-grid" id="funcKeysGrid">
+            <!-- 由 JS 动态渲染 PC 或 Mac 专属功能键卡片 -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3D 虚拟键盘 (支持 PC Windows / Mac 苹果双模式，默认 PC) -->
+    <section class="keyboard-section">
+      <!-- 3D 虚拟键盘控制台工具栏 (一体化胶囊甲板，去冗余对称美化) -->
+      <div class="kbd-toolbar" id="kbdToolbar">
+        <!-- 键盘布局切换 (PC / Mac) -->
+        <div class="kbd-type-toggle">
+          <button class="kbd-type-btn active" id="btnLayoutPC" data-layout="pc">💻 PC (Windows)</button>
+          <button class="kbd-type-btn" id="btnLayoutMac" data-layout="mac">🍎 Mac (苹果)</button>
+        </div>
+
+        <!-- 键盘右侧动态状态舱 (打字模式展示Q版测速，启蒙模式展示指法联动) -->
+        <div class="kbd-deck-status" id="kbdDeckStatus">
+          <!-- 打字模式：Q版实时测速与动物段位 -->
+          <div class="typing-speed-badge" id="speedBadge" title="实时打字速度与手速段位">
+            <span class="speed-animal-icon" id="speedAnimalIcon">🐢</span>
+            <div class="speed-meta">
+              <div class="speed-num-row">
+                <span class="speed-val" id="speedVal">0</span>
+                <span class="speed-unit">WPM</span>
+              </div>
+              <span class="speed-tier-lbl" id="speedTierLbl">稳步小乌龟 · 准备就绪</span>
+            </div>
+          </div>
+
+          <!-- 启蒙模式：专属触感与指法指引标签 -->
+          <div class="tutorial-deck-pill" id="tutorialDeckPill" style="display: none;">
+            <span class="deck-pill-icon">✨</span>
+            <span class="deck-pill-text">3D 机械触感键盘 · 指法实时联动中</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="apple-keyboard-chassis" id="appleKeyboard">
+        <!-- Row 1: 数字行与退格 -->
+        <div class="kbd-row">
+          <div class="apple-key" data-key="`"><span class="key-char">~</span><span class="key-sub">`</span></div>
+          <div class="apple-key" data-key="1" data-finger="leftPinky"><span class="key-char">1</span><span class="key-sub">!</span></div>
+          <div class="apple-key" data-key="2" data-finger="leftRing"><span class="key-char">2</span><span class="key-sub">@</span></div>
+          <div class="apple-key" data-key="3" data-finger="leftMiddle"><span class="key-char">3</span><span class="key-sub">#</span></div>
+          <div class="apple-key" data-key="4" data-finger="leftIndex"><span class="key-char">4</span><span class="key-sub">$</span></div>
+          <div class="apple-key" data-key="5" data-finger="leftIndex"><span class="key-char">5</span><span class="key-sub">%</span></div>
+          <div class="apple-key" data-key="6" data-finger="rightIndex"><span class="key-char">6</span><span class="key-sub">^</span></div>
+          <div class="apple-key" data-key="7" data-finger="rightIndex"><span class="key-char">7</span><span class="key-sub">&</span></div>
+          <div class="apple-key" data-key="8" data-finger="rightMiddle"><span class="key-char">8</span><span class="key-sub">*</span></div>
+          <div class="apple-key" data-key="9" data-finger="rightRing"><span class="key-char">9</span><span class="key-sub">(</span></div>
+          <div class="apple-key" data-key="0" data-finger="rightPinky"><span class="key-char">0</span><span class="key-sub">)</span></div>
+          <div class="apple-key" data-key="-" data-finger="rightPinky"><span class="key-char">-</span><span class="key-sub">_</span></div>
+          <div class="apple-key" data-key="=" data-finger="rightPinky"><span class="key-char">=</span><span class="key-sub">+</span></div>
+          <div class="apple-key k-func k-delete" id="keyBackspace" data-key="Backspace" data-finger="rightPinky">
+            <span class="func-icon">⌫</span>
+            <span class="func-label" id="lblBackspace">Backspace</span>
+          </div>
+        </div>
+
+        <!-- Row 2: Tab 与 QWERTY 行 -->
+        <div class="kbd-row">
+          <div class="apple-key k-func k-tab" data-key="Tab">
+            <span class="func-icon">⇥</span>
+            <span class="func-label">Tab</span>
+          </div>
+          <div class="apple-key" data-key="q" data-finger="leftPinky"><span class="key-char">Q</span></div>
+          <div class="apple-key" data-key="w" data-finger="leftRing"><span class="key-char">W</span></div>
+          <div class="apple-key" data-key="e" data-finger="leftMiddle"><span class="key-char">E</span></div>
+          <div class="apple-key" data-key="r" data-finger="leftIndex"><span class="key-char">R</span></div>
+          <div class="apple-key" data-key="t" data-finger="leftIndex"><span class="key-char">T</span></div>
+          <div class="apple-key" data-key="y" data-finger="rightIndex"><span class="key-char">Y</span></div>
+          <div class="apple-key" data-key="u" data-finger="rightIndex"><span class="key-char">U</span></div>
+          <div class="apple-key" data-key="i" data-finger="rightMiddle"><span class="key-char">I</span></div>
+          <div class="apple-key" data-key="o" data-finger="rightRing"><span class="key-char">O</span></div>
+          <div class="apple-key" data-key="p" data-finger="rightPinky"><span class="key-char">P</span></div>
+          <div class="apple-key" data-key="[" data-finger="rightPinky"><span class="key-char">[</span></div>
+          <div class="apple-key" data-key="]" data-finger="rightPinky"><span class="key-char">]</span></div>
+        </div>
+
+        <!-- Row 3: Caps 与基准行 ASDF JKL; (重点：F和J带盲打小凸起) -->
+        <div class="kbd-row">
+          <div class="apple-key k-func k-caps" data-key="CapsLock">
+            <span class="func-icon">⇪</span>
+            <span class="func-label">Caps</span>
+          </div>
+          <div class="apple-key" data-key="a" data-finger="leftPinky"><span class="key-char">A</span></div>
+          <div class="apple-key" data-key="s" data-finger="leftRing"><span class="key-char">S</span></div>
+          <div class="apple-key" data-key="d" data-finger="leftMiddle"><span class="key-char">D</span></div>
+          <!-- F 盲打定位小凸起 -->
+          <div class="apple-key nub-f" data-key="f" data-finger="leftIndex"><span class="key-char">F</span></div>
+          <div class="apple-key" data-key="g" data-finger="leftIndex"><span class="key-char">G</span></div>
+          <div class="apple-key" data-key="h" data-finger="rightIndex"><span class="key-char">H</span></div>
+          <!-- J 盲打定位小凸起 -->
+          <div class="apple-key nub-j" data-key="j" data-finger="rightIndex"><span class="key-char">J</span></div>
+          <div class="apple-key" data-key="k" data-finger="rightMiddle"><span class="key-char">K</span></div>
+          <div class="apple-key" data-key="l" data-finger="rightRing"><span class="key-char">L</span></div>
+          <div class="apple-key" data-key=";" data-finger="rightPinky"><span class="key-char">;</span><span class="key-sub">:</span></div>
+          <div class="apple-key" data-key="'" data-finger="rightPinky"><span class="key-char">'</span><span class="key-sub">"</span></div>
+          <div class="apple-key k-func k-return" id="keyEnter" data-key="Enter" data-finger="rightPinky">
+            <span class="func-icon" id="iconEnter">↵</span>
+            <span class="func-label" id="lblEnter">Enter</span>
+          </div>
+        </div>
+
+        <!-- Row 4: Shift 与 ZXCVBNM 行 -->
+        <div class="kbd-row">
+          <div class="apple-key k-func k-shift-l" data-key="Shift">
+            <span class="func-icon">⇧</span>
+            <span class="func-label">Shift</span>
+          </div>
+          <div class="apple-key" data-key="z" data-finger="leftPinky"><span class="key-char">Z</span></div>
+          <div class="apple-key" data-key="x" data-finger="leftRing"><span class="key-char">X</span></div>
+          <div class="apple-key" data-key="c" data-finger="leftMiddle"><span class="key-char">C</span></div>
+          <div class="apple-key" data-key="v" data-finger="leftIndex"><span class="key-char">V</span></div>
+          <div class="apple-key" data-key="b" data-finger="leftIndex"><span class="key-char">B</span></div>
+          <div class="apple-key" data-key="n" data-finger="rightIndex"><span class="key-char">N</span></div>
+          <div class="apple-key" data-key="m" data-finger="rightIndex"><span class="key-char">M</span></div>
+          <div class="apple-key" data-key="," data-finger="rightMiddle"><span class="key-char">,</span><span class="key-sub"><</span></div>
+          <div class="apple-key" data-key="." data-finger="rightRing"><span class="key-char">.</span><span class="key-sub">></span></div>
+          <div class="apple-key" data-key="/" data-finger="rightPinky"><span class="key-char">/</span><span class="key-sub">?</span></div>
+          <div class="apple-key k-func k-shift-r" data-key="Shift">
+            <span class="func-icon">⇧</span>
+            <span class="func-label">Shift</span>
+          </div>
+        </div>
+
+        <!-- Row 5: 底部功能行（默认 PC 模式，可切 Mac） -->
+        <div class="kbd-row" id="kbdBottomRow">
+          <div class="apple-key k-func k-ctrl" data-key="Control"><span class="func-icon">Ctrl</span></div>
+          <div class="apple-key k-func k-win" data-key="Meta"><span class="func-icon">⊞</span><span class="func-label">Win</span></div>
+          <div class="apple-key k-func k-alt" data-key="Alt"><span class="func-icon">Alt</span></div>
+          <div class="apple-key k-func k-space" data-key=" " data-finger="thumb">
+            <span class="space-title">Space</span>
+            <span class="space-sub">空格跳跳床</span>
+          </div>
+          <div class="apple-key k-func k-alt" data-key="Alt"><span class="func-icon">Alt</span></div>
+          <div class="apple-key k-func k-win" data-key="Meta"><span class="func-icon">⊞</span><span class="func-label">Win</span></div>
+          <div class="apple-key k-func k-ctrl" data-key="Control"><span class="func-icon">Ctrl</span></div>
+        </div>
+      </div>
+
+
+      <!-- 彩虹手指图例说明 -->
+      <div class="hands-guide-container">
+        <div class="hand-legend-group">
+          <span class="legend-hand-title">左手 ✋</span>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-pinky);"></span>小指</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-ring);"></span>无名指</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-middle);"></span>中指</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-index);"></span>食指</div>
+        </div>
+        <div class="hand-legend-divider"></div>
+        <div class="hand-legend-group">
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-thumb);"></span>大拇指 (Space)</div>
+        </div>
+        <div class="hand-legend-divider"></div>
+        <div class="hand-legend-group">
+          <span class="legend-hand-title">右手 🤚</span>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-index);"></span>食指</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-middle);"></span>中指</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-ring);"></span>无名指</div>
+          <div class="legend-item"><span class="legend-dot" style="background: var(--finger-pinky);"></span>小指</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- 极速挑战结算弹窗 -->
+  <div class="modal-backdrop" id="reportModal">
+    <div class="modal-content report-modal-content">
+      <!-- 弹窗头部：奖杯 + 标题 + 排名成就勋章 -->
+      <div class="report-header">
+        <div class="modal-trophy">🏆</div>
+        <h2 class="modal-title">挑战大捷！</h2>
+        <div class="report-rank-badge" id="reportRankBadge">
+          <span class="rank-badge-icon" id="reportRankIcon">🎖️</span>
+          <span class="rank-badge-text" id="reportRankText">荣获历史第 1 名！</span>
+        </div>
+      </div>
+
+      <!-- 核心数据看板 (规整结构：2列核心英雄卡 + 3列均分细节卡) -->
+      <div class="report-stats-box">
+        <!-- 第 1 排：两大核心英雄数据（总得分 + 手速段位） -->
+        <div class="stats-hero-row">
+          <div class="stat-card hero-card stat-score-card">
+            <div class="stat-val" id="resScore">0</div>
+            <div class="stat-lbl">总得分 ⭐</div>
+          </div>
+          <div class="stat-card hero-card stat-speed-card">
+            <div class="stat-val" id="resSpeed">🐢 0 WPM</div>
+            <div class="stat-lbl">手速段位 🚀</div>
+          </div>
+        </div>
+
+        <!-- 第 2 排：三大细节指标（3列均分，完美对称） -->
+        <div class="stats-sub-row">
+          <div class="stat-card sub-card">
+            <div class="stat-val" id="resWords">0</div>
+            <div class="stat-lbl">击破单词 🎯</div>
+          </div>
+          <div class="stat-card sub-card">
+            <div class="stat-val" id="resCombo">0</div>
+            <div class="stat-lbl">最高连击 🔥</div>
+          </div>
+          <div class="stat-card sub-card">
+            <div class="stat-val" id="resFastest">0s</div>
+            <div class="stat-lbl">最速击破 ⚡</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 错词复盘箱 -->
+      <div class="wrong-words-box" id="wrongWordsBox" style="display: none;">
+        <span class="wrong-box-title">💡 需要加油的单词小怪兽：</span>
+        <div class="wrong-tags" id="wrongTags"></div>
+      </div>
+
+      <!-- 底部双操作按钮栏 -->
+      <div class="modal-actions-row">
+        <button class="secondary-action-btn" id="btnOpenLeaderboardFromReport">🏆 查看排行榜</button>
+        <button class="big-action-btn" id="btnRestartChallenge">再来一次超车挑战 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 荣耀排行榜弹窗 (Local Storage 稳定持久化) -->
+  <div class="modal-backdrop" id="leaderboardModal">
+    <div class="modal-content leaderboard-modal-card">
+      <button class="modal-close-icon" id="btnCloseLeaderboard" title="关闭">✕</button>
+      <div class="modal-trophy">🏆</div>
+      <h2 class="modal-title">荣耀排行榜</h2>
+      <p class="modal-subtitle">每一次专注敲击，都是成长的荣耀印记 ✨</p>
+
+      <!-- 玩家小勇士称号设置 -->
+      <div class="player-profile-row">
+        <span class="profile-label">🎮 小勇士称号：</span>
+        <div class="profile-input-wrap">
+          <input type="text" id="playerNicknameInput" class="player-name-input" maxlength="10" placeholder="例如：Kyrie" value="Kyrie">
+          <button class="save-name-btn" id="btnSaveNickname">保存</button>
+        </div>
+        <span class="save-tip" id="nameSaveTip">已保存 ✨</span>
+      </div>
+
+      <!-- 排行榜记录列表 -->
+      <div class="leaderboard-table-container">
+        <div class="leaderboard-list" id="leaderboardList">
+          <!-- 由 JS 动态渲染排行榜卡片 -->
+        </div>
+      </div>
+
+      <!-- 操作栏 -->
+      <div class="leaderboard-actions">
+        <button class="text-danger-btn" id="btnClearScores" title="清空所有记录">🗑️ 清空记录</button>
+        <button class="big-action-btn" id="btnCloseLeaderboardBottom">我知道啦 ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 极速挑战中途退出二次确认弹窗 -->
+  <div class="modal-backdrop" id="exitConfirmModal" style="display: none;">
+    <div class="modal-content exit-modal-content">
+      <div class="exit-modal-icon">⚠️</div>
+      <h3 class="exit-modal-title">挑战正在进行中哦！</h3>
+      <div class="exit-modal-meta">
+        <span class="exit-stat-chip">⭐ 当前得分: <strong id="exitCurrentScore">0</strong></span>
+        <span class="exit-stat-chip">💖 剩余生命: <strong id="exitCurrentLives">3</strong></span>
+      </div>
+      <p class="exit-modal-desc">离开将放弃本轮极速挑战成绩，确定要切换模式吗？</p>
+      <div class="exit-modal-actions">
+        <button class="btn-exit-resume" id="btnExitResume">
+          <span>⚡</span> 继续挑战
+        </button>
+        <button class="btn-exit-leave" id="btnExitLeave">
+          <span>🚪</span> 确定离开
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 逻辑脚本 -->
+  <script src="js/words.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/keyboard-guide.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
