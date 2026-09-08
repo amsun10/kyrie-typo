@@ -19,9 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const countdownTip = document.getElementById('countdownTip');
 
   const challengeStartModal = document.getElementById('challengeStartModal');
+  const startModalTitle = document.getElementById('startModalTitle');
+  const startModalBadge = document.getElementById('startModalBadge');
+  const startModalScopeChip = document.getElementById('startModalScopeChip');
+  const ruleTargetText = document.getElementById('ruleTargetText');
   const btnChallengeConfirm = document.getElementById('btnChallengeConfirm');
   const btnChallengeCancel = document.getElementById('btnChallengeCancel');
   const challengeProgressText = document.getElementById('challengeProgressText');
+  const challengeScopeBadge = document.getElementById('challengeScopeBadge');
+
+  const curriculumPicker = document.getElementById('curriculumPicker');
+  const btnCurriculumTrigger = document.getElementById('btnCurriculumTrigger');
+  const currSelectedLabel = document.getElementById('currSelectedLabel');
+  const curriculumDropdown = document.getElementById('curriculumDropdown');
+  const currBooksContainer = document.getElementById('currBooksContainer');
+  const currUnitCountBadge = document.getElementById('currUnitCountBadge');
 
   const exitConfirmModal = document.getElementById('exitConfirmModal');
   const exitCurrentScore = document.getElementById('exitCurrentScore');
@@ -479,6 +491,163 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ================= 剑桥少儿英语 PU 教材单元点播系统 (Curriculum Selector) =================
+  function setupCurriculumSelector() {
+    if (!curriculumPicker || !btnCurriculumTrigger || !curriculumDropdown) return;
+
+    const catalog = window.typoGame.getCurriculumCatalog();
+
+    // 动态渲染分册与单元卡片
+    if (currBooksContainer) {
+      currBooksContainer.innerHTML = '';
+
+      const bookCodes = ['PU1', 'PU2', 'PU3'];
+      bookCodes.forEach(code => {
+        const bookData = catalog.books[code];
+        if (!bookData) return;
+
+        const section = document.createElement('div');
+        section.className = 'curr-book-section';
+
+        // 头部：分册标题 + 全册按钮
+        const header = document.createElement('div');
+        header.className = 'curr-book-header';
+
+        const titleRow = document.createElement('div');
+        titleRow.className = 'curr-book-title-row';
+        titleRow.innerHTML = `
+          <span class="curr-book-pill">${code}</span>
+          <span class="curr-book-name">${bookData.title}</span>
+        `;
+
+        const btnAll = document.createElement('button');
+        btnAll.className = 'btn-book-all';
+        btnAll.textContent = `全册 (${bookData.count}词)`;
+        btnAll.dataset.book = code;
+        btnAll.dataset.unit = 'all';
+
+        header.appendChild(titleRow);
+        header.appendChild(btnAll);
+        section.appendChild(header);
+
+        // 单元网格
+        const grid = document.createElement('div');
+        grid.className = 'curr-units-grid';
+
+        const unitKeys = Object.keys(bookData.units).sort((a, b) => Number(a) - Number(b));
+        unitKeys.forEach(uKey => {
+          const uData = bookData.units[uKey];
+          const card = document.createElement('button');
+          card.className = 'curr-unit-card';
+          card.dataset.book = code;
+          card.dataset.unit = uData.unit;
+          card.innerHTML = `
+            <span class="unit-card-tag">${code} · U${uData.unit}</span>
+            <span class="unit-card-name">${uData.name || `Unit ${uData.unit}`}</span>
+            <span class="unit-card-count">${uData.count} 词</span>
+          `;
+          grid.appendChild(card);
+        });
+
+        section.appendChild(grid);
+        currBooksContainer.appendChild(section);
+      });
+    }
+
+    // 统一切换处理
+    function applyCurriculumFilter(book, unit) {
+      const info = window.typoGame.setWordFilter(book, unit);
+
+      // 更新触发按钮与状态
+      if (currSelectedLabel) {
+        currSelectedLabel.textContent = `${info.shortTitle} · ${info.count}词`;
+      }
+      if (currUnitCountBadge) {
+        currUnitCountBadge.textContent = `共 ${info.count} 词`;
+      }
+      if (challengeScopeBadge) {
+        challengeScopeBadge.textContent = `📘 ${info.shortTitle}`;
+      }
+
+      // 更新下拉项的高亮 active 类
+      const allOptButtons = curriculumDropdown.querySelectorAll('[data-book][data-unit]');
+      allOptButtons.forEach(btn => {
+        const b = btn.dataset.book;
+        const u = btn.dataset.unit;
+        const isMatch = (b === String(book)) && (String(u) === String(unit));
+        if (isMatch) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // 播放提示音与提示气泡
+      window.soundFX.playKeyPop(3);
+      showModeToast('📘', `已切换至：${info.title} (${info.count}词)`);
+
+      // 关闭下拉框
+      closeCurriculumDropdown();
+    }
+
+    function toggleCurriculumDropdown() {
+      const isOpen = curriculumDropdown.style.display !== 'none';
+      if (isOpen) {
+        closeCurriculumDropdown();
+      } else {
+        openCurriculumDropdown();
+      }
+    }
+
+    function openCurriculumDropdown() {
+      curriculumDropdown.style.display = 'flex';
+      curriculumPicker.classList.add('open');
+    }
+
+    function closeCurriculumDropdown() {
+      curriculumDropdown.style.display = 'none';
+      curriculumPicker.classList.remove('open');
+    }
+
+    btnCurriculumTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleCurriculumDropdown();
+    });
+
+    // 委托点击事件处理下拉面板内所有选项
+    curriculumDropdown.addEventListener('click', (e) => {
+      const targetBtn = e.target.closest('[data-book][data-unit]');
+      if (!targetBtn) return;
+      e.stopPropagation();
+      const b = targetBtn.dataset.book;
+      const u = targetBtn.dataset.unit;
+      applyCurriculumFilter(b, u);
+    });
+
+    // 点击页面其他任意区域关闭下拉菜单
+    document.addEventListener('click', (e) => {
+      if (!curriculumPicker.contains(e.target)) {
+        closeCurriculumDropdown();
+      }
+    });
+
+    // 点击单词卡片左上角教材徽章时也可快速展开选择器
+    if (puBadge) {
+      puBadge.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (currentActiveTab === 'practice') {
+          openCurriculumDropdown();
+        }
+      });
+    }
+
+    // 初始化时显示默认状态
+    const initInfo = window.typoGame.getFilterInfo();
+    if (currSelectedLabel) currSelectedLabel.textContent = `${initInfo.shortTitle} · ${initInfo.count}词`;
+    if (currUnitCountBadge) currUnitCountBadge.textContent = `共 ${initInfo.count} 词`;
+    if (challengeScopeBadge) challengeScopeBadge.textContent = `📘 ${initInfo.shortTitle}`;
+  }
+
   // ================= 1. 界面标签页切换（中途保护、重置与倒计时起跑） =================
   function switchTab(mode, isInitial = false, force = false) {
     // 0. 中途退出极速挑战防护：如果正在激战中且非强制，给出拦截确认
@@ -510,6 +679,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (reportModal) reportModal.style.display = 'none';
     if (exitConfirmModal) exitConfirmModal.style.display = 'none';
     if (challengeStartModal) challengeStartModal.style.display = 'none';
+    if (curriculumDropdown) curriculumDropdown.style.display = 'none';
+    if (curriculumPicker) curriculumPicker.classList.remove('open');
 
     // 2. 清除键盘所有高亮与按压状态
     document.querySelectorAll('.apple-key.highlight-target').forEach(el => el.classList.remove('highlight-target'));
@@ -547,6 +718,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
       // 启动挑战：装载单词与界面，但先不走秒
       window.typoGame.startChallengeMode(false);
+      if (challengeProgressText) {
+        challengeProgressText.textContent = `0 / ${window.typoGame.maxChallengeWords} 词`;
+      }
+      if (challengeScopeBadge) {
+        const fInfo = window.typoGame.getFilterInfo();
+        challengeScopeBadge.textContent = `📘 ${fInfo.shortTitle}`;
+      }
       // 启动 3, 2, 1 动感倒计时，结束后再正式开始计时
       startChallengeCountdown(() => {
         window.typoGame.startChallengeTimer();
@@ -569,6 +747,20 @@ document.addEventListener('DOMContentLoaded', () => {
   tabChallenge.addEventListener('click', () => {
     if (currentActiveTab === 'challenge') return;
     if (challengeStartModal) {
+      const info = window.typoGame.getFilterInfo();
+      const maxWords = Math.min(30, info.count);
+      if (startModalTitle) {
+        startModalTitle.textContent = `极速挑战 · ${maxWords}词通关冲刺赛`;
+      }
+      if (startModalBadge) {
+        startModalBadge.textContent = `🏆 ${maxWords} 词大满贯决胜机制`;
+      }
+      if (startModalScopeChip) {
+        startModalScopeChip.textContent = `📘 挑战范围：${info.title} (${info.count}词)`;
+      }
+      if (ruleTargetText) {
+        ruleTargetText.innerHTML = `<strong>通关目标</strong>：连续冲过 ${maxWords} 个${info.unit !== 'all' ? '单元' : '核心'}单词，夺取黄金大满贯奖杯！`;
+      }
       challengeStartModal.style.display = 'flex';
     } else {
       switchTab('challenge');
@@ -1427,7 +1619,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. 默认应用 PC (Windows) 键盘模式
   setKeyboardLayout('pc');
 
-  // 2. 默认从“单词探索”模式启动（跳过初始 Toast）
+  // 2. 初始化剑桥少儿英语 PU 核心教材单元点播器
+  setupCurriculumSelector();
+
+  // 3. 默认从“单词探索”模式启动（跳过初始 Toast）
   switchTab('practice', true);
 
   // 3. 页面初次加载：单次播放 Mimimi 招牌弹射动画（1.3秒后自动淡出进入主界面）

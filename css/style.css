@@ -222,6 +222,297 @@ body::before {
   animation: fadeIn 0.2s ease-out;
 }
 
+/* ================= 核心教材单元点播器 (PU Unit Selector) ================= */
+.curriculum-picker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-curriculum-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1.5px solid rgba(99, 102, 241, 0.45);
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: #F8FAFC;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.btn-curriculum-trigger:hover {
+  border-color: #818CF8;
+  background: linear-gradient(135deg, rgba(49, 46, 129, 0.9) 0%, rgba(30, 27, 75, 0.9) 100%);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-curriculum-trigger:active {
+  transform: translateY(1px);
+}
+
+.curr-badge-icon {
+  font-size: 1.05rem;
+}
+
+.curr-label {
+  color: #E0E7FF;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.curr-arrow {
+  font-size: 0.8rem;
+  color: #818CF8;
+  transition: transform 0.2s ease;
+}
+
+.curriculum-picker.open .curr-arrow {
+  transform: rotate(180deg);
+}
+
+/* 浮层下拉面板 */
+.curriculum-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 500px;
+  max-width: 90vw;
+  max-height: 480px;
+  overflow-y: auto;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(24px);
+  border: 2px solid rgba(99, 102, 241, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.25);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 1000;
+  box-sizing: border-box;
+  animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.curriculum-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.curriculum-dropdown::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 4px;
+}
+.curriculum-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.5);
+  border-radius: 4px;
+}
+
+.curr-dropdown-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.8);
+  padding-bottom: 10px;
+}
+
+.curr-dropdown-title {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #F8FAFC;
+}
+
+.curr-dropdown-desc {
+  font-size: 0.8rem;
+  color: #94A3B8;
+  font-weight: 600;
+}
+
+.curr-quick-deck {
+  width: 100%;
+}
+
+.curr-quick-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.3) 0%, rgba(67, 56, 202, 0.2) 100%);
+  border: 1.5px solid rgba(99, 102, 241, 0.4);
+  border-radius: 14px;
+  color: #E0E7FF;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.curr-quick-btn:hover,
+.curr-quick-btn.active {
+  background: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
+  border-color: #818CF8;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+}
+
+.curr-books-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.curr-book-section {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.curr-book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.curr-book-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.curr-book-pill {
+  background: #312E81;
+  color: #A5B4FC;
+  font-size: 0.76rem;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.curr-book-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #F1F5F9;
+}
+
+.btn-book-all {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 3px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-book-all:hover,
+.btn-book-all.active {
+  background: #0284C7;
+  color: #FFFFFF;
+}
+
+.curr-units-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
+  gap: 7px;
+}
+
+.curr-unit-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(51, 65, 85, 0.7);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.curr-unit-card:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #818CF8;
+  transform: translateY(-2px);
+}
+
+.curr-unit-card.active {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.45) 0%, rgba(67, 56, 202, 0.35) 100%);
+  border-color: #FDE047;
+  box-shadow: 0 0 12px rgba(253, 224, 71, 0.25);
+}
+
+.unit-card-tag {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #94A3B8;
+}
+
+.curr-unit-card.active .unit-card-tag {
+  color: #FDE047;
+}
+
+.unit-card-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #F8FAFC;
+}
+
+.unit-card-count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #38BDF8;
+}
+
+/* 挑战模式教材范围徽章 */
+.challenge-scope-badge {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 3px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.start-modal-scope-chip {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  padding: 4px 16px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+/* 单词卡片教材标签可点击交互 */
+.pu-badge {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pu-badge:hover {
+  transform: scale(1.06);
+  filter: brightness(1.2);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+}
+
 .practice-zen-tag {
   font-size: 0.95rem;
   font-weight: 800;

@@ -31,6 +31,9 @@ class TypoGame {
     this.maxChallengeWords = 30; // 30 词通关冲刺赛目标
     this.isVictory = false;
 
+    // 剑桥少儿英语教材定向点播与筛选状态
+    this.currentFilter = { book: 'all', unit: 'all' };
+
     // 事件监听回调
     this.onWordChange = null;
     this.onLetterHit = null;
@@ -48,9 +51,96 @@ class TypoGame {
     this.initWords();
   }
 
+  // 动态提取教材目录（按 PU1 / PU2 / PU3 分册与单元结构化组织）
+  getCurriculumCatalog() {
+    const catalog = {
+      all: { count: window.WORD_DATABASE ? window.WORD_DATABASE.length : 0 },
+      books: {}
+    };
+    if (!window.WORD_DATABASE) return catalog;
+
+    window.WORD_DATABASE.forEach(w => {
+      const b = w.book || 'PU1';
+      const u = w.unit || 1;
+      const cn = w.categoryCn || '';
+      if (!catalog.books[b]) {
+        catalog.books[b] = {
+          code: b,
+          title: b === 'PU1' ? 'Power Up 1 全册' : (b === 'PU2' ? 'Power Up 2 全册' : 'Power Up 3 (U1-U5)'),
+          count: 0,
+          units: {}
+        };
+      }
+      catalog.books[b].count++;
+      if (!catalog.books[b].units[u]) {
+        catalog.books[b].units[u] = {
+          unit: u,
+          book: b,
+          name: cn,
+          count: 0
+        };
+      }
+      catalog.books[b].units[u].count++;
+    });
+    return catalog;
+  }
+
+  // 设定当前练习的教材范围（book: 'all' | 'PU1' | 'PU2' | 'PU3', unit: 'all' | 1..9）
+  setWordFilter(book = 'all', unit = 'all') {
+    this.currentFilter = {
+      book: book,
+      unit: unit === 'all' ? 'all' : Number(unit)
+    };
+    this.initWords();
+    if (this.mode === 'practice') {
+      this.emitWordChange();
+    }
+    return this.getFilterInfo();
+  }
+
+  // 获取当前筛选状态详情（含描述性标题与词数）
+  getFilterInfo() {
+    let list = window.WORD_DATABASE || [];
+    if (this.currentFilter.book !== 'all') {
+      list = list.filter(w => w.book === this.currentFilter.book);
+    }
+    if (this.currentFilter.unit !== 'all') {
+      list = list.filter(w => w.unit === Number(this.currentFilter.unit));
+    }
+    let title = '全部教材大乱斗';
+    let shortTitle = '全部教材';
+    if (this.currentFilter.book !== 'all') {
+      if (this.currentFilter.unit !== 'all') {
+        const sample = list[0];
+        const unitName = sample ? sample.categoryCn : `第${this.currentFilter.unit}单元`;
+        title = `${this.currentFilter.book} · U${this.currentFilter.unit} ${unitName}`;
+        shortTitle = `${this.currentFilter.book} · U${this.currentFilter.unit}`;
+      } else {
+        title = `${this.currentFilter.book} 全册精练`;
+        shortTitle = `${this.currentFilter.book} 全册`;
+      }
+    }
+    return {
+      book: this.currentFilter.book,
+      unit: this.currentFilter.unit,
+      count: list.length,
+      title: title,
+      shortTitle: shortTitle
+    };
+  }
+
   initWords() {
-    this.wordsList = [...window.WORD_DATABASE];
+    let list = [...(window.WORD_DATABASE || [])];
+    if (this.currentFilter.book !== 'all') {
+      list = list.filter(w => w.book === this.currentFilter.book);
+    }
+    if (this.currentFilter.unit !== 'all') {
+      list = list.filter(w => w.unit === Number(this.currentFilter.unit));
+    }
+    this.wordsList = list.length > 0 ? list : [...(window.WORD_DATABASE || [])];
     this.shuffle(this.wordsList);
+    this.currentWordIdx = 0;
+    this.currentCharIdx = 0;
   }
 
   shuffle(array) {
@@ -102,23 +192,10 @@ class TypoGame {
   }
 
   // 开始闯关练习模式
-  startPracticeMode(category = 'all', level = 1) {
+  startPracticeMode() {
     this.resetAll();
     this.mode = 'practice';
-
-
-    let filtered = window.WORD_DATABASE;
-    if (category !== 'all') {
-      filtered = filtered.filter(w => w.category === category);
-    }
-    if (level > 0) {
-      filtered = filtered.filter(w => w.level <= level);
-    }
-    this.wordsList = filtered.length > 0 ? [...filtered] : [...window.WORD_DATABASE];
-    this.shuffle(this.wordsList);
-
-    this.currentWordIdx = 0;
-    this.currentCharIdx = 0;
+    this.initWords();
     this.emitWordChange();
   }
 
@@ -129,17 +206,15 @@ class TypoGame {
     this.fastestTime = 999;
     this.fastestWord = "";
 
-    // 挑战模式混合由浅入深的全部词汇
-    this.wordsList = [...window.WORD_DATABASE].sort((a, b) => a.level - b.level);
-    this.shuffle(this.wordsList);
-
-    this.currentWordIdx = 0;
-    this.currentCharIdx = 0;
+    this.initWords();
+    // 动态确定本局通关大满贯目标（不超过 30 词；若当前单元仅 8 词则以 8 词为大满贯目标）
+    this.maxChallengeWords = Math.min(30, this.wordsList.length);
+    this.challengeWordsCompleted = 0;
 
     this.loadChallengeWord(autoStartTimer);
   }
 
-  // 加载挑战模式当前单词并启动动态倒计时（30词极速马拉松，给时平滑递减压迫至 1.5s 极限值）
+  // 加载挑战模式当前单词并启动动态倒计时（极速马拉松，给时平滑递减压迫至 1.5s 极限值）
   loadChallengeWord(autoStartTimer = true) {
     if (this.challengeWordsCompleted >= this.maxChallengeWords) {
       this.handleChallengeVictory();
@@ -154,7 +229,8 @@ class TypoGame {
 
     // 动态时间紧迫递减计算：从初始 5.2 秒平滑收紧至 1.5 秒极限最小值
     const wordLen = wordObj.word.length;
-    const progress = Math.min(1.0, this.challengeWordsCompleted / (this.maxChallengeWords - 1));
+    const denominator = Math.max(1, this.maxChallengeWords - 1);
+    const progress = Math.min(1.0, this.challengeWordsCompleted / denominator);
     const baseSeconds = 5.2 - progress * (5.2 - 1.5);
     const lenBonus = Math.max(0, (wordLen - 3) * 0.22 * (1 - progress * 0.65));
     const allowedSeconds = Math.max(1.5, Math.round((baseSeconds + lenBonus) * 10) / 10);

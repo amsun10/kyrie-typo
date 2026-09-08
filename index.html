@@ -106,14 +106,42 @@
 
       <!-- 右侧：情境自适应状态舱 -->
       <div class="console-status-deck" id="consoleStatusDeck">
-        <!-- 1. 单词探索模式专属提示 -->
+        <!-- 1. 单词探索模式专属提示与教材单元点播器 -->
         <div class="console-status-practice" id="practiceHudContent">
-          <span class="practice-zen-tag">💖 无限练习 · 随心探索</span>
+          <!-- 核心教材单元点播器 -->
+          <div class="curriculum-picker" id="curriculumPicker">
+            <button class="btn-curriculum-trigger" id="btnCurriculumTrigger" title="点击选择教材册次或特定单元">
+              <span class="curr-badge-icon">📘</span>
+              <span class="curr-label" id="currSelectedLabel">全部教材 · 212词</span>
+              <span class="curr-arrow">▾</span>
+            </button>
+
+            <!-- 浮层下拉面板 (支持选择全部、分册、或具体单元) -->
+            <div class="curriculum-dropdown" id="curriculumDropdown" style="display: none;">
+              <div class="curr-dropdown-header">
+                <span class="curr-dropdown-title">📚 选择练习的教材与单元</span>
+                <span class="curr-dropdown-desc">可自由选全册或指定单元课后加练</span>
+              </div>
+              
+              <!-- 快捷全部选项 -->
+              <div class="curr-quick-deck">
+                <button class="curr-quick-btn active" data-book="all" data-unit="all">
+                  🌟 全部教材综合大乱斗 (212词)
+                </button>
+              </div>
+
+              <!-- PU1 / PU2 / PU3 分册与单元容器 -->
+              <div class="curr-books-container" id="currBooksContainer">
+                <!-- 由 JS 自动组装渲染 -->
+              </div>
+            </div>
+          </div>
+
           <span class="practice-status-sep">·</span>
-          <span class="practice-tip-text">✨ 敲对字母即获连击 ✨</span>
+          <span class="practice-zen-tag" id="currUnitCountBadge">共 212 词</span>
         </div>
 
-        <!-- 2. 极速挑战专属生命值、得分与30词进度 -->
+        <!-- 2. 极速挑战专属生命值、得分与进度 -->
         <div class="console-status-challenge" id="challengeHudContent" style="display: none;">
           <div class="lives-container" id="livesBox">
             <span class="heart-icon" id="heart1">💖</span>
@@ -121,6 +149,7 @@
             <span class="heart-icon" id="heart3">💖</span>
           </div>
           <div class="score-display">⭐ 得分: <span id="scoreVal">0</span></div>
+          <div class="challenge-scope-badge" id="challengeScopeBadge" title="当前挑战教材范围">📘 全部教材</div>
           <div class="challenge-progress-tag" id="challengeProgressTag">🎯 目标: <span id="challengeProgressText">0 / 30 词</span></div>
         </div>
 
@@ -715,14 +744,15 @@
     <div class="modal-content challenge-start-content">
       <div class="start-modal-header">
         <div class="start-modal-icon">⚡</div>
-        <h2 class="start-modal-title">极速挑战 · 30词通关冲刺赛</h2>
-        <div class="start-modal-badge">🏆 30 词大满贯决胜机制</div>
+        <h2 class="start-modal-title" id="startModalTitle">极速挑战 · 通关冲刺赛</h2>
+        <div class="start-modal-badge" id="startModalBadge">🏆 大满贯决胜机制</div>
+        <div class="start-modal-scope-chip" id="startModalScopeChip">📘 挑战范围：全部教材 · 212词</div>
       </div>
 
       <div class="start-rules-card">
         <div class="rule-row">
           <span class="rule-icon">🎯</span>
-          <div class="rule-text"><strong>通关目标</strong>：连续冲过 30 个核心单词，夺取黄金大满贯奖杯！</div>
+          <div class="rule-text" id="ruleTargetText"><strong>通关目标</strong>：连续冲过 30 个核心单词，夺取黄金大满贯奖杯！</div>
         </div>
         <div class="rule-row">
           <span class="rule-icon">💖</span>
