@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnExitResume = document.getElementById('btnExitResume');
   const btnExitLeave = document.getElementById('btnExitLeave');
 
+  const puBadge = document.getElementById('puBadge');
   const wordEmoji = document.getElementById('wordEmoji');
   const bubblesContainer = document.getElementById('bubblesContainer');
   const chinesePill = document.getElementById('chinesePill');
@@ -562,6 +563,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ================= 2. 单词与字母气泡渲染 =================
   function renderWord(wordObj, currentHitIdx) {
+    if (puBadge) {
+      if (wordObj && wordObj.book) {
+        puBadge.style.display = 'inline-flex';
+        puBadge.textContent = `📘 ${wordObj.book} · U${wordObj.unit || 1} ${wordObj.categoryCn || ''}`;
+      } else {
+        puBadge.style.display = 'none';
+      }
+    }
+
     wordEmoji.textContent = wordObj.emoji;
     chineseText.textContent = wordObj.chinese;
 
