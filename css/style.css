@@ -2709,6 +2709,161 @@ body::before {
   background: rgba(239, 68, 68, 0.15);
 }
 
+/* 顶层控制台中 30 词冲刺进度标签 */
+.challenge-progress-tag {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid #6366F1;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #C7D2FE;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+/* ================= 极速挑战战备就绪确认弹窗 ================= */
+.challenge-start-content {
+  max-width: 500px;
+  width: 90%;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+  border: 2.5px solid #6366F1;
+  border-radius: 32px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(99, 102, 241, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.start-modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.start-modal-icon {
+  font-size: 3rem;
+  filter: drop-shadow(0 4px 14px rgba(245, 158, 11, 0.6));
+}
+
+.start-modal-title {
+  font-size: 1.48rem;
+  font-weight: 900;
+  color: #F8FAFC;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.start-modal-badge {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #FDE047;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 3px 14px;
+  border-radius: 999px;
+}
+
+.start-rules-card {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid #334155;
+  border-radius: 20px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.rule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+}
+
+.rule-icon {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.rule-text {
+  font-size: 0.92rem;
+  color: #CBD5E1;
+  line-height: 1.45;
+}
+
+.rule-text strong {
+  color: #F8FAFC;
+}
+
+.start-modal-tip {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #94A3B8;
+  background: rgba(30, 41, 59, 0.6);
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid #334155;
+}
+
+.start-modal-actions {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.btn-start-confirm {
+  flex: 1.6;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #4F46E5, #6366F1);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 18px rgba(79, 70, 229, 0.55);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-start-confirm:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.7);
+}
+
+.btn-start-cancel {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1.5px solid #475569;
+  background: rgba(30, 41, 59, 0.8);
+  color: #94A3B8;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-start-cancel:hover {
+  background: #334155;
+  color: #F8FAFC;
+  border-color: #64748B;
+}
+
 /* ================= 动画特效 ================= */
 @keyframes floatEmoji {
   0%, 100% { transform: translateY(0) rotate(0deg); }

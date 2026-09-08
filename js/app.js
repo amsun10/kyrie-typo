@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const countdownNum = document.getElementById('countdownNum');
   const countdownTip = document.getElementById('countdownTip');
 
+  const challengeStartModal = document.getElementById('challengeStartModal');
+  const btnChallengeConfirm = document.getElementById('btnChallengeConfirm');
+  const btnChallengeCancel = document.getElementById('btnChallengeCancel');
+  const challengeProgressText = document.getElementById('challengeProgressText');
+
   const exitConfirmModal = document.getElementById('exitConfirmModal');
   const exitCurrentScore = document.getElementById('exitCurrentScore');
   const exitCurrentLives = document.getElementById('exitCurrentLives');
@@ -49,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 结算弹窗元素
   const reportModal = document.getElementById('reportModal');
+  const reportModalTitle = document.getElementById('reportModalTitle');
+  const reportModalTrophy = document.getElementById('reportModalTrophy');
   const resScore = document.getElementById('resScore');
   const resWords = document.getElementById('resWords');
   const resCombo = document.getElementById('resCombo');
@@ -502,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. 先关闭任何已弹出的结算与确认弹窗
     if (reportModal) reportModal.style.display = 'none';
     if (exitConfirmModal) exitConfirmModal.style.display = 'none';
+    if (challengeStartModal) challengeStartModal.style.display = 'none';
 
     // 2. 清除键盘所有高亮与按压状态
     document.querySelectorAll('.apple-key.highlight-target').forEach(el => el.classList.remove('highlight-target'));
@@ -558,8 +566,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   tabPractice.addEventListener('click', () => switchTab('practice'));
-  tabChallenge.addEventListener('click', () => switchTab('challenge'));
+  tabChallenge.addEventListener('click', () => {
+    if (currentActiveTab === 'challenge') return;
+    if (challengeStartModal) {
+      challengeStartModal.style.display = 'flex';
+    } else {
+      switchTab('challenge');
+    }
+  });
   tabTutorial.addEventListener('click', () => switchTab('tutorial'));
+
+  if (btnChallengeConfirm) {
+    btnChallengeConfirm.addEventListener('click', () => {
+      if (challengeStartModal) challengeStartModal.style.display = 'none';
+      switchTab('challenge');
+    });
+  }
+
+  if (btnChallengeCancel) {
+    btnChallengeCancel.addEventListener('click', () => {
+      if (challengeStartModal) challengeStartModal.style.display = 'none';
+    });
+  }
 
   // ================= 2. 单词与字母气泡渲染 =================
   function renderWord(wordObj, currentHitIdx) {
@@ -753,14 +781,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // 极速挑战 30 词冲刺赛实时进度更新
+  window.typoGame.onProgressUpdate = (current, total) => {
+    if (challengeProgressText) {
+      challengeProgressText.textContent = `${current} / ${total} 词`;
+    }
+  };
+
   window.typoGame.onGameOver = (report) => {
+    if (reportModalTitle) {
+      reportModalTitle.textContent = report.isVictory ? '🎉 30 词通关大满贯！' : '挑战大捷！';
+    }
+    if (reportModalTrophy) {
+      reportModalTrophy.textContent = report.isVictory ? '🎉' : '🏆';
+    }
     resScore.textContent = report.score;
-    resWords.textContent = report.wordsCount;
+    resWords.textContent = report.isVictory ? `${report.wordsCount} / ${report.maxWords || 30} 词` : report.wordsCount;
     resCombo.textContent = report.maxCombo;
     resFastest.textContent = report.fastestTime > 0 ? `${report.fastestTime}s (${report.fastestWord})` : '-';
     if (resSpeed) {
       const tierIcon = report.tier ? report.tier.icon : '🐢';
       resSpeed.textContent = `${tierIcon} ${report.wpm} WPM`;
+    }
+
+    if (report.isVictory) {
+      window.soundFX.playFanfare();
     }
 
     if (report.wrongWords && report.wrongWords.length > 0) {
@@ -811,7 +856,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnRestartChallenge.addEventListener('click', () => {
     reportModal.style.display = 'none';
-    window.typoGame.startChallengeMode();
+    window.typoGame.startChallengeMode(false);
+    startChallengeCountdown(() => {
+      window.typoGame.startChallengeTimer();
+    });
   });
 
   // ================= 荣耀排行榜交互与渲染逻辑 =================
@@ -1186,6 +1234,19 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // 若挑战战备就绪确认弹窗处于打开状态
+    if (challengeStartModal && challengeStartModal.style.display === 'flex') {
+      if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        challengeStartModal.style.display = 'none';
+        switchTab('challenge');
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        challengeStartModal.style.display = 'none';
+      }
+      return;
+    }
+
     // 若退出二次确认弹窗处于打开状态
     if (exitConfirmModal && exitConfirmModal.style.display === 'flex') {
       if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
@@ -1193,6 +1254,31 @@ document.addEventListener('DOMContentLoaded', () => {
         exitConfirmModal.style.display = 'none';
         if (window.typoGame) window.typoGame.resumeChallengeTimer();
         pendingSwitchMode = null;
+      }
+      return;
+    }
+
+    // 若极速挑战结算弹窗处于打开状态
+    if (reportModal && reportModal.style.display === 'flex') {
+      if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        reportModal.style.display = 'none';
+        window.typoGame.startChallengeMode(false);
+        startChallengeCountdown(() => {
+          window.typoGame.startChallengeTimer();
+        });
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        reportModal.style.display = 'none';
+      }
+      return;
+    }
+
+    // 若排行榜弹窗处于打开状态
+    if (leaderboardModal && leaderboardModal.style.display === 'flex') {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        leaderboardModal.style.display = 'none';
       }
       return;
     }

@@ -28,6 +28,9 @@ class TypoGame {
     this.currentWPM = 0;
     this.currentCPM = 0;
 
+    this.maxChallengeWords = 30; // 30 词通关冲刺赛目标
+    this.isVictory = false;
+
     // 事件监听回调
     this.onWordChange = null;
     this.onLetterHit = null;
@@ -35,6 +38,8 @@ class TypoGame {
     this.onWordComplete = null;
     this.onTimerTick = null;
     this.onGameOver = null;
+    this.onVictory = null;
+    this.onProgressUpdate = null;
     this.onComboChange = null;
     this.onScoreChange = null;
     this.onLivesChange = null;
@@ -134,18 +139,25 @@ class TypoGame {
     this.loadChallengeWord(autoStartTimer);
   }
 
-  // 加载挑战模式当前单词并启动动态倒计时
+  // 加载挑战模式当前单词并启动动态倒计时（30词极速马拉松，给时平滑递减压迫至 1.5s 极限值）
   loadChallengeWord(autoStartTimer = true) {
+    if (this.challengeWordsCompleted >= this.maxChallengeWords) {
+      this.handleChallengeVictory();
+      return;
+    }
+
     const wordObj = this.getCurrentWordObj();
     if (!wordObj) return;
 
     this.currentCharIdx = 0;
     this.wordStartTime = performance.now();
 
-    // 动态时间计算公式：(字母数 * 0.85s + 2.5s) * 难度递减因数
+    // 动态时间紧迫递减计算：从初始 5.2 秒平滑收紧至 1.5 秒极限最小值
     const wordLen = wordObj.word.length;
-    const shrinkFactor = Math.max(0.55, Math.pow(0.95, this.challengeWordsCompleted));
-    const allowedSeconds = Math.max(2.2, (wordLen * 0.9 + 2.2) * shrinkFactor);
+    const progress = Math.min(1.0, this.challengeWordsCompleted / (this.maxChallengeWords - 1));
+    const baseSeconds = 5.2 - progress * (5.2 - 1.5);
+    const lenBonus = Math.max(0, (wordLen - 3) * 0.22 * (1 - progress * 0.65));
+    const allowedSeconds = Math.max(1.5, Math.round((baseSeconds + lenBonus) * 10) / 10);
 
     this.maxTime = allowedSeconds;
     this.timeLeft = allowedSeconds;
@@ -153,6 +165,9 @@ class TypoGame {
     this.emitWordChange();
     if (this.onTimerTick) {
       this.onTimerTick(this.timeLeft, this.maxTime);
+    }
+    if (this.onProgressUpdate) {
+      this.onProgressUpdate(this.challengeWordsCompleted, this.maxChallengeWords);
     }
     if (autoStartTimer) {
       this.startChallengeTimer();
@@ -247,8 +262,39 @@ class TypoGame {
         fastestTime: this.fastestTime === 999 ? 0 : this.fastestTime.toFixed(1),
         wrongWords: this.wrongWordsList,
         wpm: this.currentWPM,
-        tier: this.getSpeedTier(this.currentWPM)
+        tier: this.getSpeedTier(this.currentWPM),
+        isVictory: false,
+        maxWords: this.maxChallengeWords
       });
+    }
+  }
+
+  // 30 词通关冲刺赛大满贯胜利！
+  handleChallengeVictory() {
+    this.stopTimer();
+    this.isVictory = true;
+    const victoryBonus = 3000;
+    this.score += victoryBonus;
+
+    if (this.onScoreChange) this.onScoreChange(this.score, victoryBonus);
+
+    const resultData = {
+      score: this.score,
+      wordsCount: this.challengeWordsCompleted,
+      maxCombo: this.maxCombo,
+      fastestWord: this.fastestWord,
+      fastestTime: this.fastestTime === 999 ? 0 : this.fastestTime.toFixed(1),
+      wrongWords: this.wrongWordsList,
+      wpm: this.currentWPM,
+      tier: this.getSpeedTier(this.currentWPM),
+      isVictory: true,
+      maxWords: this.maxChallengeWords
+    };
+
+    if (this.onVictory) {
+      this.onVictory(resultData);
+    } else if (this.onGameOver) {
+      this.onGameOver(resultData);
     }
   }
 
@@ -332,13 +378,17 @@ class TypoGame {
       this.stopTimer();
       this.challengeWordsCompleted++;
 
+      if (this.onProgressUpdate) {
+        this.onProgressUpdate(this.challengeWordsCompleted, this.maxChallengeWords);
+      }
+
       // 连击 5 次回血奖励半颗心
       if (this.combo === 5 && this.lives < 3) {
         this.lives = Math.min(3, this.lives + 1);
         if (this.onLivesChange) this.onLivesChange(this.lives);
       }
 
-      // 计分公式：基础字数 * 10 + 速度剩余奖励 * 50 + 连击加权
+      // 计分公式：基础字数 * 15 + 速度剩余奖励 * 50 + 连击加权
       const speedBonusRatio = Math.max(0, this.timeLeft / this.maxTime);
       const speedPoints = Math.round(speedBonusRatio * 50);
       const basePoints = wordObj.word.length * 15;
@@ -349,6 +399,17 @@ class TypoGame {
 
       if (this.onScoreChange) this.onScoreChange(this.score, earned);
       if (this.onComboChange) this.onComboChange(this.combo);
+
+      // 检查是否已达成 30 词通关大满贯！
+      if (this.challengeWordsCompleted >= this.maxChallengeWords) {
+        if (this.onWordComplete) {
+          this.onWordComplete(wordObj);
+        }
+        setTimeout(() => {
+          this.handleChallengeVictory();
+        }, 900);
+        return;
+      }
     } else {
       // 单词探索模式连击计数与音效激励
       if (this.onComboChange) this.onComboChange(this.combo);

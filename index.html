@@ -113,7 +113,7 @@
           <span class="practice-tip-text">✨ 敲对字母即获连击 ✨</span>
         </div>
 
-        <!-- 2. 极速挑战专属生命值与得分 -->
+        <!-- 2. 极速挑战专属生命值、得分与30词进度 -->
         <div class="console-status-challenge" id="challengeHudContent" style="display: none;">
           <div class="lives-container" id="livesBox">
             <span class="heart-icon" id="heart1">💖</span>
@@ -121,6 +121,7 @@
             <span class="heart-icon" id="heart3">💖</span>
           </div>
           <div class="score-display">⭐ 得分: <span id="scoreVal">0</span></div>
+          <div class="challenge-progress-tag" id="challengeProgressTag">🎯 目标: <span id="challengeProgressText">0 / 30 词</span></div>
         </div>
 
         <!-- 3. 键盘启蒙模式专属提示 -->
@@ -623,8 +624,8 @@
     <div class="modal-content report-modal-content">
       <!-- 弹窗头部：奖杯 + 标题 + 排名成就勋章 -->
       <div class="report-header">
-        <div class="modal-trophy">🏆</div>
-        <h2 class="modal-title">挑战大捷！</h2>
+        <div class="modal-trophy" id="reportModalTrophy">🏆</div>
+        <h2 class="modal-title" id="reportModalTitle">挑战大捷！</h2>
         <div class="report-rank-badge" id="reportRankBadge">
           <span class="rank-badge-icon" id="reportRankIcon">🎖️</span>
           <span class="rank-badge-text" id="reportRankText">荣获历史第 1 名！</span>
@@ -705,6 +706,47 @@
       <div class="leaderboard-actions">
         <button class="text-danger-btn" id="btnClearScores" title="清空所有记录">🗑️ 清空记录</button>
         <button class="big-action-btn" id="btnCloseLeaderboardBottom">我知道啦 ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 极速挑战战备就绪确认弹窗 (30词极速马拉松冲刺) -->
+  <div class="modal-backdrop" id="challengeStartModal" style="display: none;">
+    <div class="modal-content challenge-start-content">
+      <div class="start-modal-header">
+        <div class="start-modal-icon">⚡</div>
+        <h2 class="start-modal-title">极速挑战 · 30词通关冲刺赛</h2>
+        <div class="start-modal-badge">🏆 30 词大满贯决胜机制</div>
+      </div>
+
+      <div class="start-rules-card">
+        <div class="rule-row">
+          <span class="rule-icon">🎯</span>
+          <div class="rule-text"><strong>通关目标</strong>：连续冲过 30 个核心单词，夺取黄金大满贯奖杯！</div>
+        </div>
+        <div class="rule-row">
+          <span class="rule-icon">💖</span>
+          <div class="rule-text"><strong>生命小心心</strong>：共有 3 条生命，超时或多次按错将扣除小心心。</div>
+        </div>
+        <div class="rule-row">
+          <span class="rule-icon">⏱️</span>
+          <div class="rule-text"><strong>极限递减压迫</strong>：时间从 5.2 秒逐词收紧至 1.5 秒极限反应！</div>
+        </div>
+        <div class="rule-row">
+          <span class="rule-icon">🔥</span>
+          <div class="rule-text"><strong>连击得分加倍</strong>：节奏越稳、手速越快，Combo 得分翻倍暴击。</div>
+        </div>
+      </div>
+
+      <div class="start-modal-tip">💡 双手就位：双手食指轻放在 F 和 J 键位盲打小凸起上</div>
+
+      <div class="start-modal-actions">
+        <button class="btn-start-confirm" id="btnChallengeConfirm">
+          <span>🚀</span> 我准备好了，开始！ (Enter)
+        </button>
+        <button class="btn-start-cancel" id="btnChallengeCancel">
+          稍后再练 (Esc)
+        </button>
       </div>
     </div>
   </div>
