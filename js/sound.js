@@ -421,7 +421,7 @@ class SoundFX {
 
     const t = this.ctx.currentTime;
 
-    // ① 开篇：键盘噼里啪啦狂敲声（打出 Kyrie's Topo 11个字符）
+    // ① 开篇：键盘噼里啪啦狂敲声（打出 Kyrie's Typo 11个字符）
     this.playKeyboardClatter(t, 11);
 
 

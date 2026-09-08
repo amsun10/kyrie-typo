@@ -1,8 +1,10 @@
-// Kyrie's Topo - 本地存储与得分排行榜管理引擎 (localStorage Safe Storage)
+// Kyrie's Typo - 本地存储与得分排行榜管理引擎 (localStorage Safe Storage)
 
 (function () {
-  const SCORES_KEY = 'kyrie_topo_leaderboard_v1';
-  const PLAYER_NAME_KEY = 'kyrie_topo_player_name';
+  const SCORES_KEY = 'kyrie_typo_leaderboard_v1';
+  const OLD_SCORES_KEY = 'kyrie_topo_leaderboard_v1';
+  const PLAYER_NAME_KEY = 'kyrie_typo_player_name';
+  const OLD_PLAYER_NAME_KEY = 'kyrie_topo_player_name';
   const MAX_STORED_RECORDS = 50;
 
   class ScoreStorage {
@@ -27,7 +29,7 @@
     hasCustomName() {
       if (this.isAvailable) {
         try {
-          const stored = localStorage.getItem(PLAYER_NAME_KEY);
+          const stored = localStorage.getItem(PLAYER_NAME_KEY) || localStorage.getItem(OLD_PLAYER_NAME_KEY);
           return !!(stored && stored.trim());
         } catch (e) {
           return false;
@@ -39,7 +41,7 @@
     getPlayerName() {
       if (this.isAvailable) {
         try {
-          const stored = localStorage.getItem(PLAYER_NAME_KEY);
+          const stored = localStorage.getItem(PLAYER_NAME_KEY) || localStorage.getItem(OLD_PLAYER_NAME_KEY);
           if (stored && stored.trim()) {
             return stored.trim();
           }
@@ -66,7 +68,7 @@
     getScores() {
       if (this.isAvailable) {
         try {
-          const raw = localStorage.getItem(SCORES_KEY);
+          const raw = localStorage.getItem(SCORES_KEY) || localStorage.getItem(OLD_SCORES_KEY);
           if (raw) {
             const list = JSON.parse(raw);
             if (Array.isArray(list)) {

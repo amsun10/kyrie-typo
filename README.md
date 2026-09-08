@@ -1,4 +1,4 @@
-# Kyrie's Topo ⌨️🐱
+# Kyrie's Typo ⌨️🐱
 > 儿童双语趣味打字与键盘指法启蒙程序
 
 

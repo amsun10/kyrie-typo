@@ -1,4 +1,4 @@
-// Kyrie's Topo - 少儿键盘与指法启蒙教学中枢逻辑 (Keyboard Guide Engine)
+// Kyrie's Typo - 少儿键盘与指法启蒙教学中枢逻辑 (Keyboard Guide Engine)
 
 class KeyboardGuide {
   constructor() {

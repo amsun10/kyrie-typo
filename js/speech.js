@@ -88,10 +88,10 @@ class SpeechEngine {
     this.synth.speak(utterEn);
   }
 
-  // Mimimi 开场彩蛋：活泼萌萌少儿欢呼 "Yay! Kyrie's Topo!"
+  // Mimimi 开场彩蛋：活泼萌萌少儿欢呼 "Yay! Kyrie's Typo!"
   playKidCheer() {
     if (!this.enabled || !this.synth) return;
-    const utter = new SpeechSynthesisUtterance("Yay! Kyrie's Topo!");
+    const utter = new SpeechSynthesisUtterance("Yay! Kyrie's Typo!");
     utter.rate = 1.2;
     utter.pitch = 1.45;
     const friendlyVoice = this.voices.find(v => (v.name.includes('Child') || v.name.includes('Junior') || v.name.includes('Samantha') || v.name.includes('Jenny') || v.name.includes('Xiaoxiao')));
