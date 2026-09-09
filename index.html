@@ -158,6 +158,7 @@
             <span class="heart-icon" id="heart3">💖</span>
           </div>
           <div class="score-display">⭐ 得分: <span id="scoreVal">0</span></div>
+          <div class="challenge-diff-badge" id="challengeDiffBadge" title="当前难度">🌱 新手 (20s)</div>
           <div class="challenge-scope-badge" id="challengeScopeBadge" title="当前挑战教材范围">📘 全部教材</div>
           <div class="challenge-progress-tag" id="challengeProgressTag">🎯 目标: <span id="challengeProgressText">0 / 30 词</span></div>
         </div>
@@ -755,7 +756,32 @@
         <div class="start-modal-icon">⚡</div>
         <h2 class="start-modal-title" id="startModalTitle">极速挑战 · 通关冲刺赛</h2>
         <div class="start-modal-badge" id="startModalBadge">🏆 大满贯决胜机制</div>
-        <div class="start-modal-scope-chip" id="startModalScopeChip">📘 挑战范围：全部教材 · 212词</div>
+        <div class="start-modal-scope-chip" id="startModalScopeChip">📘 挑战范围：全部教材 · 327词</div>
+      </div>
+
+      <!-- 三阶难度直选卡片组 (新手 20s/5命 · 进阶 10s/3命 · 大师 5s/1命极限) -->
+      <div class="diff-selector-deck" id="diffSelectorDeck">
+        <button class="diff-card-btn active" data-diff="easy" type="button">
+          <span class="diff-card-icon">🌱</span>
+          <div class="diff-card-info">
+            <div class="diff-card-title">新手萌芽</div>
+            <div class="diff-card-meta">20秒 · 💖×5</div>
+          </div>
+        </button>
+        <button class="diff-card-btn" data-diff="normal" type="button">
+          <span class="diff-card-icon">⚡</span>
+          <div class="diff-card-info">
+            <div class="diff-card-title">进阶小侠</div>
+            <div class="diff-card-meta">10秒 · 💖×3</div>
+          </div>
+        </button>
+        <button class="diff-card-btn" data-diff="hard" type="button">
+          <span class="diff-card-icon">🔥</span>
+          <div class="diff-card-info">
+            <div class="diff-card-title">键盘大师</div>
+            <div class="diff-card-meta">5秒 · 💖×1 (一命到底)</div>
+          </div>
+        </button>
       </div>
 
       <div class="start-rules-card">
@@ -764,12 +790,12 @@
           <div class="rule-text" id="ruleTargetText"><strong>通关目标</strong>：连续冲过 30 个核心单词，夺取黄金大满贯奖杯！</div>
         </div>
         <div class="rule-row">
-          <span class="rule-icon">💖</span>
-          <div class="rule-text"><strong>生命小心心</strong>：共有 3 条生命，超时或多次按错将扣除小心心。</div>
+          <span class="rule-icon" id="ruleLivesIcon">💖</span>
+          <div class="rule-text" id="ruleLivesText"><strong>生命小心心</strong>：共有 5 条生命，充裕容错安心练习。</div>
         </div>
         <div class="rule-row">
-          <span class="rule-icon">⏱️</span>
-          <div class="rule-text"><strong>极限递减压迫</strong>：时间从 5.2 秒逐词收紧至 1.5 秒极限反应！</div>
+          <span class="rule-icon" id="ruleTimerIcon">⏱️</span>
+          <div class="rule-text" id="ruleTimerText"><strong>作答倒计时</strong>：从 20 秒起步，平缓收紧至 10 秒保底！</div>
         </div>
         <div class="rule-row">
           <span class="rule-icon">🔥</span>

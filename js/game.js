@@ -1,4 +1,45 @@
-// Kyrie Typo - 游戏核心状态与逻辑控制（支持闯关模式、极速挑战模式）
+// 极速挑战三阶难度预设（新手 20s/5命，进阶 10s/3命，大师 5s/1命极限）
+const DIFFICULTY_PRESETS = {
+  easy: {
+    id: 'easy',
+    name: '🌱 新手萌芽',
+    shortTitle: '新手萌芽',
+    badge: '🌱 20秒 · 5命',
+    hudTag: '🌱 新手 (20s)',
+    baseSeconds: 20.0,
+    minSeconds: 10.0,
+    lenBonusRatio: 0.8,
+    lives: 5,
+    medal: '🥉 萌芽小勇士',
+    desc: '初始 20 秒宽裕答题，平缓收紧至 10 秒，5 条小心心从容练习！'
+  },
+  normal: {
+    id: 'normal',
+    name: '⚡ 进阶小侠',
+    shortTitle: '进阶小侠',
+    badge: '⚡ 10秒 · 3命',
+    hudTag: '⚡ 进阶 (10s)',
+    baseSeconds: 10.0,
+    minSeconds: 4.5,
+    lenBonusRatio: 0.4,
+    lives: 3,
+    medal: '🥈 闪电小飞侠',
+    desc: '初始 10 秒标准节奏，适度收紧至 4.5 秒，3 条小心心张弛有度！'
+  },
+  hard: {
+    id: 'hard',
+    name: '🔥 键盘大师',
+    shortTitle: '键盘大师',
+    badge: '🔥 5秒 · 1命',
+    hudTag: '🔥 大师 (1命)',
+    baseSeconds: 5.0,
+    minSeconds: 1.5,
+    lenBonusRatio: 0.15,
+    lives: 1,
+    medal: '🥇 黄金大满贯',
+    desc: '初始 5 秒极速压迫至 1.5 秒极限反应，仅 1 颗心（一命到底）！'
+  }
+};
 
 class TypoGame {
   constructor() {
@@ -7,11 +48,20 @@ class TypoGame {
     this.currentWordIdx = 0;
     this.currentCharIdx = 0;
 
-    // 挑战模式专属状态
+    // 挑战模式专属状态与三阶难度设置
+    let savedDiff = 'easy';
+    try {
+      if (typeof localStorage !== 'undefined') {
+        savedDiff = localStorage.getItem('typo_challenge_diff') || 'easy';
+      }
+    } catch (e) {}
+    this.difficulty = DIFFICULTY_PRESETS[savedDiff] ? savedDiff : 'easy';
+    this.maxLives = DIFFICULTY_PRESETS[this.difficulty].lives;
+    this.lives = this.maxLives;
+
     this.score = 0;
     this.combo = 0;
     this.maxCombo = 0;
-    this.lives = 3;
     this.timerInterval = null;
     this.timeLeft = 0;
     this.maxTime = 5;
@@ -49,6 +99,32 @@ class TypoGame {
     this.onSpeedUpdate = null;
 
     this.initWords();
+  }
+
+  // 获取难度预设配置字典
+  getDifficultyPresets() {
+    return DIFFICULTY_PRESETS;
+  }
+
+  getDifficultyPreset(diffKey = this.difficulty) {
+    return DIFFICULTY_PRESETS[diffKey] || DIFFICULTY_PRESETS.easy;
+  }
+
+  setDifficulty(diffKey) {
+    if (!DIFFICULTY_PRESETS[diffKey]) return this.getDifficultyPreset();
+    this.difficulty = diffKey;
+    const preset = DIFFICULTY_PRESETS[diffKey];
+    this.maxLives = preset.lives;
+    this.lives = preset.lives;
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('typo_challenge_diff', diffKey);
+      }
+    } catch (e) {}
+    if (this.onLivesChange) {
+      this.onLivesChange(this.lives, this.maxLives);
+    }
+    return preset;
   }
 
   // 动态提取教材目录（按 苏教版 / 剑桥少儿 PU 双教材体系组织）
@@ -209,7 +285,9 @@ class TypoGame {
     this.score = 0;
     this.combo = 0;
     this.maxCombo = 0;
-    this.lives = 3;
+    const preset = this.getDifficultyPreset();
+    this.maxLives = preset.lives;
+    this.lives = preset.lives;
     this.currentCharIdx = 0;
     this.challengeWordsCompleted = 0;
     this.wrongWordsList = [];
@@ -230,7 +308,7 @@ class TypoGame {
 
     if (this.onScoreChange) this.onScoreChange(0);
     if (this.onComboChange) this.onComboChange(0);
-    if (this.onLivesChange) this.onLivesChange(3);
+    if (this.onLivesChange) this.onLivesChange(this.lives, this.maxLives);
     if (this.onTimerTick) this.onTimerTick(0, 1);
   }
 
@@ -249,15 +327,22 @@ class TypoGame {
     this.fastestTime = 999;
     this.fastestWord = "";
 
+    const preset = this.getDifficultyPreset();
+    this.maxLives = preset.lives;
+    this.lives = preset.lives;
+
     this.initWords();
     // 动态确定本局通关大满贯目标（不超过 30 词；若当前单元仅 8 词则以 8 词为大满贯目标）
     this.maxChallengeWords = Math.min(30, this.wordsList.length);
     this.challengeWordsCompleted = 0;
 
+    if (this.onLivesChange) {
+      this.onLivesChange(this.lives, this.maxLives);
+    }
     this.loadChallengeWord(autoStartTimer);
   }
 
-  // 加载挑战模式当前单词并启动动态倒计时（极速马拉松，给时平滑递减压迫至 1.5s 极限值）
+  // 加载挑战模式当前单词并启动动态倒计时（按三阶难度：新手 20s->10s, 进阶 10s->4.5s, 大师 5s->1.5s 极限值）
   loadChallengeWord(autoStartTimer = true) {
     if (this.challengeWordsCompleted >= this.maxChallengeWords) {
       this.handleChallengeVictory();
@@ -270,13 +355,14 @@ class TypoGame {
     this.currentCharIdx = 0;
     this.wordStartTime = performance.now();
 
-    // 动态时间紧迫递减计算：从初始 5.2 秒平滑收紧至 1.5 秒极限最小值
+    // 动态时间紧迫递减计算（根据所选难度预设：新手/进阶/大师）
+    const preset = this.getDifficultyPreset();
     const wordLen = wordObj.word.length;
     const denominator = Math.max(1, this.maxChallengeWords - 1);
     const progress = Math.min(1.0, this.challengeWordsCompleted / denominator);
-    const baseSeconds = 5.2 - progress * (5.2 - 1.5);
-    const lenBonus = Math.max(0, (wordLen - 3) * 0.22 * (1 - progress * 0.65));
-    const allowedSeconds = Math.max(1.5, Math.round((baseSeconds + lenBonus) * 10) / 10);
+    const baseSeconds = preset.baseSeconds - progress * (preset.baseSeconds - preset.minSeconds);
+    const lenBonus = Math.max(0, (wordLen - 3) * preset.lenBonusRatio * (1 - progress * 0.5));
+    const allowedSeconds = Math.max(preset.minSeconds, Math.round((baseSeconds + lenBonus) * 10) / 10);
 
     this.maxTime = allowedSeconds;
     this.timeLeft = allowedSeconds;
@@ -351,7 +437,7 @@ class TypoGame {
     this.combo = 0;
     this.lives -= 1;
     if (this.onComboChange) this.onComboChange(this.combo);
-    if (this.onLivesChange) this.onLivesChange(this.lives);
+    if (this.onLivesChange) this.onLivesChange(this.lives, this.maxLives);
 
     // 扣心音效（温和可爱的微水滴滑音，绝不挫败）
     if (window.soundFX && window.soundFX.playHeartLost) {
@@ -382,6 +468,8 @@ class TypoGame {
         wrongWords: this.wrongWordsList,
         wpm: this.currentWPM,
         tier: this.getSpeedTier(this.currentWPM),
+        difficulty: this.difficulty,
+        difficultyPreset: this.getDifficultyPreset(),
         isVictory: false,
         maxWords: this.maxChallengeWords
       });
@@ -406,6 +494,8 @@ class TypoGame {
       wrongWords: this.wrongWordsList,
       wpm: this.currentWPM,
       tier: this.getSpeedTier(this.currentWPM),
+      difficulty: this.difficulty,
+      difficultyPreset: this.getDifficultyPreset(),
       isVictory: true,
       maxWords: this.maxChallengeWords
     };
@@ -501,10 +591,10 @@ class TypoGame {
         this.onProgressUpdate(this.challengeWordsCompleted, this.maxChallengeWords);
       }
 
-      // 连击 5 次回血奖励半颗心
-      if (this.combo === 5 && this.lives < 3) {
-        this.lives = Math.min(3, this.lives + 1);
-        if (this.onLivesChange) this.onLivesChange(this.lives);
+      // 连击 5 次且未满血时回血奖励 1 颗心（大师模式 1 命到底不加血）
+      if (this.combo === 5 && this.lives < this.maxLives && this.maxLives > 1) {
+        this.lives = Math.min(this.maxLives, this.lives + 1);
+        if (this.onLivesChange) this.onLivesChange(this.lives, this.maxLives);
       }
 
       // 计分公式：基础字数 * 15 + 速度剩余奖励 * 50 + 连击加权

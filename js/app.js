@@ -51,9 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const scoreVal = document.getElementById('scoreVal');
   const comboBadge = document.getElementById('comboBadge');
   const timerFill = document.getElementById('timerFill');
-  const heart1 = document.getElementById('heart1');
-  const heart2 = document.getElementById('heart2');
-  const heart3 = document.getElementById('heart3');
+  const livesBox = document.getElementById('livesBox');
+  const challengeDiffBadge = document.getElementById('challengeDiffBadge');
+  const diffSelectorDeck = document.getElementById('diffSelectorDeck');
+  const ruleLivesText = document.getElementById('ruleLivesText');
+  const ruleTimerText = document.getElementById('ruleTimerText');
 
   // 教程元素
   const stepChips = document.querySelectorAll('.step-chip');
@@ -684,7 +686,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 弹窗提示
         if (exitConfirmModal) {
           if (exitCurrentScore) exitCurrentScore.textContent = window.typoGame.score || 0;
-          if (exitCurrentLives) exitCurrentLives.textContent = window.typoGame.lives || 3;
+          if (exitCurrentLives) exitCurrentLives.textContent = `${window.typoGame.lives} / ${window.typoGame.maxLives}`;
           pendingSwitchMode = mode;
           exitConfirmModal.style.display = 'flex';
         }
@@ -751,6 +753,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const fIcon = (fInfo.book && (fInfo.book.startsWith('苏教') || fInfo.book === 'SJ_ALL')) ? '🏫' : (fInfo.book === 'all' ? '🌟' : '📘');
         challengeScopeBadge.textContent = `${fIcon} ${fInfo.shortTitle}`;
       }
+      if (challengeDiffBadge) {
+        const diffPreset = window.typoGame.getDifficultyPreset();
+        challengeDiffBadge.textContent = diffPreset.hudTag;
+      }
       // 启动 3, 2, 1 动感倒计时，结束后再正式开始计时
       startChallengeCountdown(() => {
         window.typoGame.startChallengeTimer();
@@ -767,6 +773,47 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'inline-flex';
       switchGuideSubTab(window.keyboardGuide.activeGuideTab || 'posture');
     }
+  }
+
+  // 极速挑战三阶难度控制体系
+  function updateDifficultyUI(diffKey) {
+    const preset = window.typoGame.setDifficulty(diffKey);
+    if (diffSelectorDeck) {
+      diffSelectorDeck.querySelectorAll('.diff-card-btn').forEach(btn => {
+        if (btn.dataset.diff === diffKey) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+    if (ruleLivesText) {
+      if (preset.lives === 1) {
+        ruleLivesText.innerHTML = `<strong>生命小心心</strong>：<strong style="color: #FB7185;">仅 1 颗小心心 (一命到底)</strong>，容错为零，极限硬核！`;
+      } else {
+        ruleLivesText.innerHTML = `<strong>生命小心心</strong>：共有 <strong>${preset.lives} 条小心心</strong>，充裕容错安心练习。`;
+      }
+    }
+    if (ruleTimerText) {
+      ruleTimerText.innerHTML = `<strong>作答倒计时</strong>：从 <strong>${preset.baseSeconds} 秒</strong> 起步，平缓收紧至 <strong>${preset.minSeconds} 秒</strong> 极限！`;
+    }
+    if (challengeDiffBadge) {
+      challengeDiffBadge.textContent = preset.hudTag;
+    }
+  }
+
+  if (diffSelectorDeck) {
+    diffSelectorDeck.addEventListener('click', (e) => {
+      const btn = e.target.closest('.diff-card-btn');
+      if (!btn) return;
+      const d = btn.dataset.diff;
+      if (d) {
+        updateDifficultyUI(d);
+        if (window.soundFX && window.soundFX.playKeyPop) {
+          window.soundFX.playKeyPop(2);
+        }
+      }
+    });
   }
 
   tabPractice.addEventListener('click', () => switchTab('practice'));
@@ -788,6 +835,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (ruleTargetText) {
         ruleTargetText.innerHTML = `<strong>通关目标</strong>：连续冲过 ${maxWords} 个${info.unit !== 'all' ? '单元' : '核心'}单词，夺取黄金大满贯奖杯！`;
       }
+
+      // 同步当前选中的难度及规则卡片
+      updateDifficultyUI(window.typoGame.difficulty);
+
       challengeStartModal.style.display = 'flex';
     } else {
       switchTab('challenge');
@@ -988,17 +1039,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.typoGame.onLivesChange = (lives) => {
-    const hearts = [heart1, heart2, heart3];
-    hearts.forEach((h, idx) => {
-      if (idx < lives) {
-        h.classList.remove('lost');
-        h.textContent = '💖';
-      } else {
-        h.classList.add('lost');
-        h.textContent = '💔';
-      }
-    });
+  window.typoGame.onLivesChange = (lives, maxLives) => {
+    if (!livesBox) return;
+    const total = maxLives || window.typoGame.maxLives || 3;
+    livesBox.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const h = document.createElement('span');
+      h.className = 'heart-icon' + (i >= lives ? ' lost' : '');
+      h.textContent = i < lives ? '💖' : '💔';
+      livesBox.appendChild(h);
+    }
   };
 
   // 极速挑战 30 词冲刺赛实时进度更新
@@ -1010,7 +1060,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.typoGame.onGameOver = (report) => {
     if (reportModalTitle) {
-      reportModalTitle.textContent = report.isVictory ? '🎉 30 词通关大满贯！' : '挑战大捷！';
+      if (report.isVictory) {
+        const medal = report.difficultyPreset ? report.difficultyPreset.medal : '🏆 黄金大满贯';
+        reportModalTitle.textContent = `🎉 通关！荣获 ${medal}`;
+      } else {
+        reportModalTitle.textContent = '挑战大捷！';
+      }
     }
     if (reportModalTrophy) {
       reportModalTrophy.textContent = report.isVictory ? '🎉' : '🏆';

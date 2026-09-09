@@ -563,7 +563,18 @@ body::before {
   color: #38BDF8;
 }
 
-/* 挑战模式教材范围徽章 */
+/* 挑战模式教材范围徽章与难度徽章 */
+.challenge-diff-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #34D399;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
 .challenge-scope-badge {
   font-size: 0.82rem;
   font-weight: 800;
@@ -3152,6 +3163,99 @@ body::before {
   border: 1px solid rgba(245, 158, 11, 0.4);
   padding: 3px 14px;
   border-radius: 999px;
+}
+
+/* 挑战模式三阶难度选择卡片组 */
+.diff-selector-deck {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.diff-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1.5px solid rgba(51, 65, 85, 0.8);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: left;
+}
+
+.diff-card-btn:hover {
+  background: rgba(51, 65, 85, 0.85);
+  border-color: #818CF8;
+  transform: translateY(-2px);
+}
+
+.diff-card-btn.active {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.4) 0%, rgba(67, 56, 202, 0.3) 100%);
+  border-color: #FDE047;
+  box-shadow: 0 4px 16px rgba(253, 224, 71, 0.2);
+  transform: translateY(-2px);
+}
+
+.diff-card-btn[data-diff="easy"].active {
+  border-color: #34D399;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+}
+
+.diff-card-btn[data-diff="easy"].active .diff-card-title {
+  color: #34D399;
+}
+
+.diff-card-btn[data-diff="normal"].active {
+  border-color: #FDE047;
+  box-shadow: 0 4px 16px rgba(253, 224, 71, 0.25);
+}
+
+.diff-card-btn[data-diff="normal"].active .diff-card-title {
+  color: #FDE047;
+}
+
+.diff-card-btn[data-diff="hard"].active {
+  border-color: #FB7185;
+  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.25);
+}
+
+.diff-card-btn[data-diff="hard"].active .diff-card-title {
+  color: #FB7185;
+}
+
+.diff-card-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.diff-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.diff-card-title {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #F8FAFC;
+  white-space: nowrap;
+}
+
+.diff-card-meta {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94A3B8;
+  white-space: nowrap;
+}
+
+.diff-card-btn.active .diff-card-meta {
+  color: #CBD5E1;
 }
 
 .start-rules-card {
