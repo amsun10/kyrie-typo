@@ -498,66 +498,88 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const catalog = window.typoGame.getCurriculumCatalog();
 
+    function getScopeIcon(book) {
+      if (!book || book === 'all') return '🌟';
+      if (book.startsWith('苏教') || book === 'SJ_ALL') return '🏫';
+      return '📘';
+    }
+
     // 动态渲染分册与单元卡片
     if (currBooksContainer) {
       currBooksContainer.innerHTML = '';
 
-      const bookCodes = ['PU1', 'PU2', 'PU3'];
-      bookCodes.forEach(code => {
-        const bookData = catalog.books[code];
-        if (!bookData) return;
+      const groups = catalog.groups || [
+        { id: 'SJ', title: '🏫 苏教版小学英语 (译林版·三年级)', badge: '苏教版三年级', bookCodes: ['苏教3A', '苏教3B'] },
+        { id: 'PU', title: '📘 剑桥少儿英语 Power Up', badge: '剑桥少儿核心', bookCodes: ['PU1', 'PU2', 'PU3'] }
+      ];
 
-        const section = document.createElement('div');
-        section.className = 'curr-book-section';
-
-        // 头部：分册标题 + 全册按钮
-        const header = document.createElement('div');
-        header.className = 'curr-book-header';
-
-        const titleRow = document.createElement('div');
-        titleRow.className = 'curr-book-title-row';
-        titleRow.innerHTML = `
-          <span class="curr-book-pill">${code}</span>
-          <span class="curr-book-name">${bookData.title}</span>
+      groups.forEach(grp => {
+        // 群组横幅
+        const banner = document.createElement('div');
+        banner.className = `curr-group-banner group-${grp.id.toLowerCase()}`;
+        banner.innerHTML = `
+          <span class="group-banner-title">${grp.title}</span>
+          <span class="group-banner-tag">${grp.badge}</span>
         `;
+        currBooksContainer.appendChild(banner);
 
-        const btnAll = document.createElement('button');
-        btnAll.className = 'btn-book-all';
-        btnAll.textContent = `全册 (${bookData.count}词)`;
-        btnAll.dataset.book = code;
-        btnAll.dataset.unit = 'all';
+        grp.bookCodes.forEach(code => {
+          const bookData = catalog.books[code];
+          if (!bookData) return;
 
-        header.appendChild(titleRow);
-        header.appendChild(btnAll);
-        section.appendChild(header);
+          const section = document.createElement('div');
+          section.className = 'curr-book-section';
 
-        // 单元网格
-        const grid = document.createElement('div');
-        grid.className = 'curr-units-grid';
+          // 头部：分册标题 + 全册按钮
+          const header = document.createElement('div');
+          header.className = 'curr-book-header';
 
-        const unitKeys = Object.keys(bookData.units).sort((a, b) => Number(a) - Number(b));
-        unitKeys.forEach(uKey => {
-          const uData = bookData.units[uKey];
-          const card = document.createElement('button');
-          card.className = 'curr-unit-card';
-          card.dataset.book = code;
-          card.dataset.unit = uData.unit;
-          card.innerHTML = `
-            <span class="unit-card-tag">${code} · U${uData.unit}</span>
-            <span class="unit-card-name">${uData.name || `Unit ${uData.unit}`}</span>
-            <span class="unit-card-count">${uData.count} 词</span>
+          const titleRow = document.createElement('div');
+          titleRow.className = 'curr-book-title-row';
+          titleRow.innerHTML = `
+            <span class="curr-book-pill">${code}</span>
+            <span class="curr-book-name">${bookData.title}</span>
           `;
-          grid.appendChild(card);
-        });
 
-        section.appendChild(grid);
-        currBooksContainer.appendChild(section);
+          const btnAll = document.createElement('button');
+          btnAll.className = 'btn-book-all';
+          btnAll.textContent = `全册 (${bookData.count}词)`;
+          btnAll.dataset.book = code;
+          btnAll.dataset.unit = 'all';
+
+          header.appendChild(titleRow);
+          header.appendChild(btnAll);
+          section.appendChild(header);
+
+          // 单元网格
+          const grid = document.createElement('div');
+          grid.className = 'curr-units-grid';
+
+          const unitKeys = Object.keys(bookData.units).sort((a, b) => Number(a) - Number(b));
+          unitKeys.forEach(uKey => {
+            const uData = bookData.units[uKey];
+            const card = document.createElement('button');
+            card.className = 'curr-unit-card';
+            card.dataset.book = code;
+            card.dataset.unit = uData.unit;
+            card.innerHTML = `
+              <span class="unit-card-tag">${code} · U${uData.unit}</span>
+              <span class="unit-card-name">${uData.name || `Unit ${uData.unit}`}</span>
+              <span class="unit-card-count">${uData.count} 词</span>
+            `;
+            grid.appendChild(card);
+          });
+
+          section.appendChild(grid);
+          currBooksContainer.appendChild(section);
+        });
       });
     }
 
     // 统一切换处理
     function applyCurriculumFilter(book, unit) {
       const info = window.typoGame.setWordFilter(book, unit);
+      const sIcon = getScopeIcon(info.book);
 
       // 更新触发按钮与状态
       if (currSelectedLabel) {
@@ -567,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currUnitCountBadge.textContent = `共 ${info.count} 词`;
       }
       if (challengeScopeBadge) {
-        challengeScopeBadge.textContent = `📘 ${info.shortTitle}`;
+        challengeScopeBadge.textContent = `${sIcon} ${info.shortTitle}`;
       }
 
       // 更新下拉项的高亮 active 类
@@ -585,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 播放提示音与提示气泡
       window.soundFX.playKeyPop(3);
-      showModeToast('📘', `已切换至：${info.title} (${info.count}词)`);
+      showModeToast(sIcon, `已切换至：${info.title} (${info.count}词)`);
 
       // 关闭下拉框
       closeCurriculumDropdown();
@@ -644,9 +666,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初始化时显示默认状态
     const initInfo = window.typoGame.getFilterInfo();
+    const initIcon = getScopeIcon(initInfo.book);
     if (currSelectedLabel) currSelectedLabel.textContent = `${initInfo.shortTitle} · ${initInfo.count}词`;
     if (currUnitCountBadge) currUnitCountBadge.textContent = `共 ${initInfo.count} 词`;
-    if (challengeScopeBadge) challengeScopeBadge.textContent = `📘 ${initInfo.shortTitle}`;
+    if (challengeScopeBadge) challengeScopeBadge.textContent = `${initIcon} ${initInfo.shortTitle}`;
   }
 
   // ================= 1. 界面标签页切换（中途保护、重置与倒计时起跑） =================
@@ -724,7 +747,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (challengeScopeBadge) {
         const fInfo = window.typoGame.getFilterInfo();
-        challengeScopeBadge.textContent = `📘 ${fInfo.shortTitle}`;
+        const fIcon = (fInfo.book && (fInfo.book.startsWith('苏教') || fInfo.book === 'SJ_ALL')) ? '🏫' : (fInfo.book === 'all' ? '🌟' : '📘');
+        challengeScopeBadge.textContent = `${fIcon} ${fInfo.shortTitle}`;
       }
       // 启动 3, 2, 1 动感倒计时，结束后再正式开始计时
       startChallengeCountdown(() => {
@@ -749,6 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentActiveTab === 'challenge') return;
     if (challengeStartModal) {
       const info = window.typoGame.getFilterInfo();
+      const sIcon = (info.book && (info.book.startsWith('苏教') || info.book === 'SJ_ALL')) ? '🏫' : (info.book === 'all' ? '🌟' : '📘');
       const maxWords = Math.min(30, info.count);
       if (startModalTitle) {
         startModalTitle.textContent = `极速挑战 · ${maxWords}词通关冲刺赛`;
@@ -757,7 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startModalBadge.textContent = `🏆 ${maxWords} 词大满贯决胜机制`;
       }
       if (startModalScopeChip) {
-        startModalScopeChip.textContent = `📘 挑战范围：${info.title} (${info.count}词)`;
+        startModalScopeChip.textContent = `${sIcon} 挑战范围：${info.title} (${info.count}词)`;
       }
       if (ruleTargetText) {
         ruleTargetText.innerHTML = `<strong>通关目标</strong>：连续冲过 ${maxWords} 个${info.unit !== 'all' ? '单元' : '核心'}单词，夺取黄金大满贯奖杯！`;
@@ -786,8 +811,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderWord(wordObj, currentHitIdx) {
     if (puBadge) {
       if (wordObj && wordObj.book) {
+        const isSJ = wordObj.book.startsWith('苏教');
         puBadge.style.display = 'inline-flex';
-        puBadge.textContent = `📘 ${wordObj.book} · U${wordObj.unit || 1} ${wordObj.categoryCn || ''}`;
+        puBadge.textContent = `${isSJ ? '🏫' : '📘'} ${wordObj.book} · U${wordObj.unit || 1} ${wordObj.categoryCn || ''}`;
       } else {
         puBadge.style.display = 'none';
       }

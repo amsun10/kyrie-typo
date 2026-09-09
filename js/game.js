@@ -51,10 +51,24 @@ class TypoGame {
     this.initWords();
   }
 
-  // 动态提取教材目录（按 PU1 / PU2 / PU3 分册与单元结构化组织）
+  // 动态提取教材目录（按 苏教版 / 剑桥少儿 PU 双教材体系组织）
   getCurriculumCatalog() {
     const catalog = {
       all: { count: window.WORD_DATABASE ? window.WORD_DATABASE.length : 0 },
+      groups: [
+        {
+          id: 'SJ',
+          title: '🏫 苏教版小学英语 (译林版·三年级)',
+          tag: '校内同步',
+          bookCodes: ['苏教3A', '苏教3B']
+        },
+        {
+          id: 'PU',
+          title: '📘 剑桥少儿英语 Power Up (PU1~PU3)',
+          tag: '国际名校',
+          bookCodes: ['PU1', 'PU2', 'PU3']
+        }
+      ],
       books: {}
     };
     if (!window.WORD_DATABASE) return catalog;
@@ -64,9 +78,17 @@ class TypoGame {
       const u = w.unit || 1;
       const cn = w.categoryCn || '';
       if (!catalog.books[b]) {
+        let bTitle = b;
+        if (b === '苏教3A') bTitle = '苏教版 3A (三年级上册)';
+        else if (b === '苏教3B') bTitle = '苏教版 3B (三年级下册)';
+        else if (b === 'PU1') bTitle = 'Power Up 1 全册';
+        else if (b === 'PU2') bTitle = 'Power Up 2 全册';
+        else if (b === 'PU3') bTitle = 'Power Up 3 (U1-U5)';
+
         catalog.books[b] = {
           code: b,
-          title: b === 'PU1' ? 'Power Up 1 全册' : (b === 'PU2' ? 'Power Up 2 全册' : 'Power Up 3 (U1-U5)'),
+          title: bTitle,
+          curriculum: w.curriculum || (b.startsWith('苏教') ? 'SJ' : 'PU'),
           count: 0,
           units: {}
         };
@@ -85,7 +107,7 @@ class TypoGame {
     return catalog;
   }
 
-  // 设定当前练习的教材范围（book: 'all' | 'PU1' | 'PU2' | 'PU3', unit: 'all' | 1..9）
+  // 设定当前练习的教材范围（book: 'all' | 'SJ_ALL' | 'PU_ALL' | '苏教3A' | '苏教3B' | 'PU1'..., unit: 'all' | 1..9）
   setWordFilter(book = 'all', unit = 'all') {
     this.currentFilter = {
       book: book,
@@ -101,25 +123,40 @@ class TypoGame {
   // 获取当前筛选状态详情（含描述性标题与词数）
   getFilterInfo() {
     let list = window.WORD_DATABASE || [];
-    if (this.currentFilter.book !== 'all') {
+    if (this.currentFilter.book === 'SJ_ALL') {
+      list = list.filter(w => w.curriculum === 'SJ' || (w.book && w.book.startsWith('苏教')));
+    } else if (this.currentFilter.book === 'PU_ALL') {
+      list = list.filter(w => w.curriculum === 'PU' || (w.book && w.book.startsWith('PU')));
+    } else if (this.currentFilter.book !== 'all') {
       list = list.filter(w => w.book === this.currentFilter.book);
+      if (this.currentFilter.unit !== 'all') {
+        list = list.filter(w => w.unit === Number(this.currentFilter.unit));
+      }
     }
-    if (this.currentFilter.unit !== 'all') {
-      list = list.filter(w => w.unit === Number(this.currentFilter.unit));
-    }
+
     let title = '全部教材大乱斗';
     let shortTitle = '全部教材';
-    if (this.currentFilter.book !== 'all') {
+
+    if (this.currentFilter.book === 'SJ_ALL') {
+      title = '🏫 苏教版三年级全套 (3A+3B)';
+      shortTitle = '苏教版全套';
+    } else if (this.currentFilter.book === 'PU_ALL') {
+      title = '📘 剑桥 Power Up 全套 (PU1~PU3)';
+      shortTitle = 'Power Up 全套';
+    } else if (this.currentFilter.book !== 'all') {
+      const isSJ = this.currentFilter.book.startsWith('苏教');
+      const icon = isSJ ? '🏫' : '📘';
       if (this.currentFilter.unit !== 'all') {
         const sample = list[0];
         const unitName = sample ? sample.categoryCn : `第${this.currentFilter.unit}单元`;
-        title = `${this.currentFilter.book} · U${this.currentFilter.unit} ${unitName}`;
+        title = `${icon} ${this.currentFilter.book} · U${this.currentFilter.unit} ${unitName}`;
         shortTitle = `${this.currentFilter.book} · U${this.currentFilter.unit}`;
       } else {
-        title = `${this.currentFilter.book} 全册精练`;
+        title = `${icon} ${this.currentFilter.book} 全册精练`;
         shortTitle = `${this.currentFilter.book} 全册`;
       }
     }
+
     return {
       book: this.currentFilter.book,
       unit: this.currentFilter.unit,
@@ -131,11 +168,15 @@ class TypoGame {
 
   initWords() {
     let list = [...(window.WORD_DATABASE || [])];
-    if (this.currentFilter.book !== 'all') {
+    if (this.currentFilter.book === 'SJ_ALL') {
+      list = list.filter(w => w.curriculum === 'SJ' || (w.book && w.book.startsWith('苏教')));
+    } else if (this.currentFilter.book === 'PU_ALL') {
+      list = list.filter(w => w.curriculum === 'PU' || (w.book && w.book.startsWith('PU')));
+    } else if (this.currentFilter.book !== 'all') {
       list = list.filter(w => w.book === this.currentFilter.book);
-    }
-    if (this.currentFilter.unit !== 'all') {
-      list = list.filter(w => w.unit === Number(this.currentFilter.unit));
+      if (this.currentFilter.unit !== 'all') {
+        list = list.filter(w => w.unit === Number(this.currentFilter.unit));
+      }
     }
     this.wordsList = list.length > 0 ? list : [...(window.WORD_DATABASE || [])];
     this.shuffle(this.wordsList);

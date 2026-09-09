@@ -113,7 +113,7 @@
           <div class="curriculum-picker" id="curriculumPicker">
             <button class="btn-curriculum-trigger" id="btnCurriculumTrigger" title="点击选择教材册次或特定单元">
               <span class="curr-badge-icon">📘</span>
-              <span class="curr-label" id="currSelectedLabel">全部教材 · 212词</span>
+              <span class="curr-label" id="currSelectedLabel">全部教材 · 327词</span>
               <span class="curr-arrow">▾</span>
             </button>
 
@@ -124,14 +124,22 @@
                 <span class="curr-dropdown-desc">可自由选全册或指定单元课后加练</span>
               </div>
               
-              <!-- 快捷全部选项 -->
+              <!-- 快捷全部选项与分套精选 -->
               <div class="curr-quick-deck">
                 <button class="curr-quick-btn active" data-book="all" data-unit="all">
-                  🌟 全部教材综合大乱斗 (212词)
+                  🌟 双教材综合大乱斗 (共 327 词)
                 </button>
+                <div class="curr-quick-row">
+                  <button class="curr-quick-sub-btn" data-book="SJ_ALL" data-unit="all">
+                    🏫 苏教版全套 (115词)
+                  </button>
+                  <button class="curr-quick-sub-btn" data-book="PU_ALL" data-unit="all">
+                    📘 剑桥 PU 全套 (212词)
+                  </button>
+                </div>
               </div>
 
-              <!-- PU1 / PU2 / PU3 分册与单元容器 -->
+              <!-- 苏教版 / Power Up 分册与单元容器 -->
               <div class="curr-books-container" id="currBooksContainer">
                 <!-- 由 JS 自动组装渲染 -->
               </div>
@@ -139,7 +147,7 @@
           </div>
 
           <span class="practice-status-sep">·</span>
-          <span class="practice-zen-tag" id="currUnitCountBadge">共 212 词</span>
+          <span class="practice-zen-tag" id="currUnitCountBadge">共 327 词</span>
         </div>
 
         <!-- 2. 极速挑战专属生命值、得分与进度 -->

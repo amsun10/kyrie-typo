@@ -1,6 +1,7 @@
-// Kyrie Typo - 剑桥少儿英语教材《Power Up》(PU) 核心词库
-// 覆盖：Power Up 1 全册 (U1-U9) + Power Up 2 全册 (U1-U9) + Power Up 3 (U1-U5)
-// 包含官方对应单元、少儿常用释义、卡通 Emoji、自然拼读拆分与难度分级
+// Kyrie Typo - 双教材核心词库
+// 1. 剑桥少儿英语教材《Power Up》(PU): PU1(U1-U9) + PU2(U1-U9) + PU3(U1-U5)
+// 2. 译林版/苏教版三年级起点小学英语: 3A(U1-U8) + 3B(U1-U8)
+// 全量配备官方单元、少儿生动释义、卡通 Emoji、自然拼读拆分与难度分级
 
 window.WORD_DATABASE = [
   {
@@ -16,7 +17,8 @@ window.WORD_DATABASE = [
       "p",
       "e",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "pencil",
@@ -34,7 +36,8 @@ window.WORD_DATABASE = [
       "c",
       "i",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "ruler",
@@ -51,7 +54,8 @@ window.WORD_DATABASE = [
       "l",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "rubber",
@@ -69,7 +73,8 @@ window.WORD_DATABASE = [
       "b",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bag",
@@ -84,7 +89,8 @@ window.WORD_DATABASE = [
       "b",
       "a",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "book",
@@ -100,7 +106,8 @@ window.WORD_DATABASE = [
       "o",
       "o",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "desk",
@@ -116,7 +123,8 @@ window.WORD_DATABASE = [
       "e",
       "s",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "chair",
@@ -133,7 +141,8 @@ window.WORD_DATABASE = [
       "a",
       "i",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "crayon",
@@ -151,7 +160,8 @@ window.WORD_DATABASE = [
       "y",
       "o",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "teacher",
@@ -170,7 +180,8 @@ window.WORD_DATABASE = [
       "h",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "mum",
@@ -185,7 +196,8 @@ window.WORD_DATABASE = [
       "m",
       "u",
       "m"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "dad",
@@ -200,7 +212,8 @@ window.WORD_DATABASE = [
       "d",
       "a",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "baby",
@@ -216,7 +229,8 @@ window.WORD_DATABASE = [
       "a",
       "b",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "boy",
@@ -231,7 +245,8 @@ window.WORD_DATABASE = [
       "b",
       "o",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "girl",
@@ -247,7 +262,8 @@ window.WORD_DATABASE = [
       "i",
       "r",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "brother",
@@ -266,7 +282,8 @@ window.WORD_DATABASE = [
       "h",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "sister",
@@ -284,7 +301,8 @@ window.WORD_DATABASE = [
       "t",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "family",
@@ -302,7 +320,8 @@ window.WORD_DATABASE = [
       "i",
       "l",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "ball",
@@ -318,7 +337,8 @@ window.WORD_DATABASE = [
       "a",
       "l",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "doll",
@@ -334,7 +354,8 @@ window.WORD_DATABASE = [
       "o",
       "l",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "kite",
@@ -350,7 +371,8 @@ window.WORD_DATABASE = [
       "i",
       "t",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bike",
@@ -366,7 +388,8 @@ window.WORD_DATABASE = [
       "i",
       "k",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "train",
@@ -383,7 +406,8 @@ window.WORD_DATABASE = [
       "a",
       "i",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "car",
@@ -398,7 +422,8 @@ window.WORD_DATABASE = [
       "c",
       "a",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "boat",
@@ -414,7 +439,8 @@ window.WORD_DATABASE = [
       "o",
       "a",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "plane",
@@ -431,7 +457,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "robot",
@@ -448,7 +475,8 @@ window.WORD_DATABASE = [
       "b",
       "o",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "head",
@@ -464,7 +492,8 @@ window.WORD_DATABASE = [
       "e",
       "a",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "eye",
@@ -479,7 +508,8 @@ window.WORD_DATABASE = [
       "e",
       "y",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "nose",
@@ -495,7 +525,8 @@ window.WORD_DATABASE = [
       "o",
       "s",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "mouth",
@@ -512,7 +543,8 @@ window.WORD_DATABASE = [
       "u",
       "t",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "ear",
@@ -527,7 +559,8 @@ window.WORD_DATABASE = [
       "e",
       "a",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "arm",
@@ -542,7 +575,8 @@ window.WORD_DATABASE = [
       "a",
       "r",
       "m"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "hand",
@@ -558,7 +592,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "leg",
@@ -573,7 +608,8 @@ window.WORD_DATABASE = [
       "l",
       "e",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "foot",
@@ -589,7 +625,8 @@ window.WORD_DATABASE = [
       "o",
       "o",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "face",
@@ -605,7 +642,8 @@ window.WORD_DATABASE = [
       "a",
       "c",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cat",
@@ -620,7 +658,8 @@ window.WORD_DATABASE = [
       "c",
       "a",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "dog",
@@ -635,7 +674,8 @@ window.WORD_DATABASE = [
       "d",
       "o",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "duck",
@@ -651,7 +691,8 @@ window.WORD_DATABASE = [
       "u",
       "c",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "frog",
@@ -667,7 +708,8 @@ window.WORD_DATABASE = [
       "r",
       "o",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bird",
@@ -683,7 +725,8 @@ window.WORD_DATABASE = [
       "i",
       "r",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "fish",
@@ -699,7 +742,8 @@ window.WORD_DATABASE = [
       "i",
       "s",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "horse",
@@ -716,7 +760,8 @@ window.WORD_DATABASE = [
       "r",
       "s",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "sheep",
@@ -733,7 +778,8 @@ window.WORD_DATABASE = [
       "e",
       "e",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "mouse",
@@ -750,7 +796,8 @@ window.WORD_DATABASE = [
       "u",
       "s",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "spider",
@@ -768,7 +815,8 @@ window.WORD_DATABASE = [
       "d",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "tiger",
@@ -785,7 +833,8 @@ window.WORD_DATABASE = [
       "g",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "apple",
@@ -802,7 +851,8 @@ window.WORD_DATABASE = [
       "p",
       "l",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "banana",
@@ -820,7 +870,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "orange",
@@ -838,7 +889,8 @@ window.WORD_DATABASE = [
       "n",
       "g",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cake",
@@ -854,7 +906,8 @@ window.WORD_DATABASE = [
       "a",
       "k",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "milk",
@@ -870,7 +923,8 @@ window.WORD_DATABASE = [
       "i",
       "l",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "egg",
@@ -885,7 +939,8 @@ window.WORD_DATABASE = [
       "e",
       "g",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bread",
@@ -902,7 +957,8 @@ window.WORD_DATABASE = [
       "e",
       "a",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "water",
@@ -919,7 +975,8 @@ window.WORD_DATABASE = [
       "t",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "juice",
@@ -936,7 +993,8 @@ window.WORD_DATABASE = [
       "i",
       "c",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cheese",
@@ -954,7 +1012,8 @@ window.WORD_DATABASE = [
       "e",
       "s",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "chicken",
@@ -973,7 +1032,8 @@ window.WORD_DATABASE = [
       "k",
       "e",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "house",
@@ -990,7 +1050,8 @@ window.WORD_DATABASE = [
       "u",
       "s",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bed",
@@ -1005,7 +1066,8 @@ window.WORD_DATABASE = [
       "b",
       "e",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "door",
@@ -1021,7 +1083,8 @@ window.WORD_DATABASE = [
       "o",
       "o",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "window",
@@ -1039,7 +1102,8 @@ window.WORD_DATABASE = [
       "d",
       "o",
       "w"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "clock",
@@ -1056,7 +1120,8 @@ window.WORD_DATABASE = [
       "o",
       "c",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "garden",
@@ -1074,7 +1139,8 @@ window.WORD_DATABASE = [
       "d",
       "e",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "kitchen",
@@ -1093,7 +1159,8 @@ window.WORD_DATABASE = [
       "h",
       "e",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "lamp",
@@ -1109,7 +1176,8 @@ window.WORD_DATABASE = [
       "a",
       "m",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "hat",
@@ -1124,7 +1192,8 @@ window.WORD_DATABASE = [
       "h",
       "a",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "jacket",
@@ -1142,7 +1211,8 @@ window.WORD_DATABASE = [
       "k",
       "e",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "shoes",
@@ -1159,7 +1229,8 @@ window.WORD_DATABASE = [
       "o",
       "e",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "socks",
@@ -1176,7 +1247,8 @@ window.WORD_DATABASE = [
       "c",
       "k",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "skirt",
@@ -1193,7 +1265,8 @@ window.WORD_DATABASE = [
       "i",
       "r",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "dress",
@@ -1210,7 +1283,8 @@ window.WORD_DATABASE = [
       "e",
       "s",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "shirt",
@@ -1227,7 +1301,8 @@ window.WORD_DATABASE = [
       "i",
       "r",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "shorts",
@@ -1245,7 +1320,8 @@ window.WORD_DATABASE = [
       "r",
       "t",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "boots",
@@ -1262,7 +1338,8 @@ window.WORD_DATABASE = [
       "o",
       "t",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "run",
@@ -1277,7 +1354,8 @@ window.WORD_DATABASE = [
       "r",
       "u",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "jump",
@@ -1293,7 +1371,8 @@ window.WORD_DATABASE = [
       "u",
       "m",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "swim",
@@ -1309,7 +1388,8 @@ window.WORD_DATABASE = [
       "w",
       "i",
       "m"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "sing",
@@ -1325,7 +1405,8 @@ window.WORD_DATABASE = [
       "i",
       "n",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "draw",
@@ -1341,7 +1422,8 @@ window.WORD_DATABASE = [
       "r",
       "a",
       "w"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "read",
@@ -1357,7 +1439,8 @@ window.WORD_DATABASE = [
       "e",
       "a",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "play",
@@ -1373,7 +1456,8 @@ window.WORD_DATABASE = [
       "l",
       "a",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "walk",
@@ -1389,7 +1473,8 @@ window.WORD_DATABASE = [
       "a",
       "l",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "board",
@@ -1406,7 +1491,8 @@ window.WORD_DATABASE = [
       "a",
       "r",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "floor",
@@ -1423,7 +1509,8 @@ window.WORD_DATABASE = [
       "o",
       "o",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "poster",
@@ -1441,7 +1528,8 @@ window.WORD_DATABASE = [
       "t",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "glue",
@@ -1457,7 +1545,8 @@ window.WORD_DATABASE = [
       "l",
       "u",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "scissors",
@@ -1477,7 +1566,8 @@ window.WORD_DATABASE = [
       "o",
       "r",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "keyboard",
@@ -1497,7 +1587,8 @@ window.WORD_DATABASE = [
       "a",
       "r",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "screen",
@@ -1515,7 +1606,8 @@ window.WORD_DATABASE = [
       "e",
       "e",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "paper",
@@ -1532,7 +1624,8 @@ window.WORD_DATABASE = [
       "p",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bench",
@@ -1549,7 +1642,8 @@ window.WORD_DATABASE = [
       "n",
       "c",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "grass",
@@ -1566,7 +1660,8 @@ window.WORD_DATABASE = [
       "a",
       "s",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "tree",
@@ -1582,7 +1677,8 @@ window.WORD_DATABASE = [
       "r",
       "e",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "flower",
@@ -1600,7 +1696,8 @@ window.WORD_DATABASE = [
       "w",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "swing",
@@ -1617,7 +1714,8 @@ window.WORD_DATABASE = [
       "i",
       "n",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "slide",
@@ -1634,7 +1732,8 @@ window.WORD_DATABASE = [
       "i",
       "d",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "path",
@@ -1650,7 +1749,8 @@ window.WORD_DATABASE = [
       "a",
       "t",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "plant",
@@ -1667,7 +1767,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "morning",
@@ -1686,7 +1787,8 @@ window.WORD_DATABASE = [
       "i",
       "n",
       "g"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "night",
@@ -1703,7 +1805,8 @@ window.WORD_DATABASE = [
       "g",
       "h",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "lunch",
@@ -1720,7 +1823,8 @@ window.WORD_DATABASE = [
       "n",
       "c",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "dinner",
@@ -1738,7 +1842,8 @@ window.WORD_DATABASE = [
       "n",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "clean",
@@ -1755,7 +1860,8 @@ window.WORD_DATABASE = [
       "e",
       "a",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "sleep",
@@ -1772,7 +1878,8 @@ window.WORD_DATABASE = [
       "e",
       "e",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "wash",
@@ -1788,7 +1895,8 @@ window.WORD_DATABASE = [
       "a",
       "s",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bank",
@@ -1804,7 +1912,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cafe",
@@ -1820,7 +1929,8 @@ window.WORD_DATABASE = [
       "a",
       "f",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cinema",
@@ -1838,7 +1948,8 @@ window.WORD_DATABASE = [
       "e",
       "m",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "hospital",
@@ -1858,7 +1969,8 @@ window.WORD_DATABASE = [
       "t",
       "a",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "library",
@@ -1877,7 +1989,8 @@ window.WORD_DATABASE = [
       "a",
       "r",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "park",
@@ -1893,7 +2006,8 @@ window.WORD_DATABASE = [
       "a",
       "r",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "shop",
@@ -1909,7 +2023,8 @@ window.WORD_DATABASE = [
       "h",
       "o",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "market",
@@ -1927,7 +2042,8 @@ window.WORD_DATABASE = [
       "k",
       "e",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "station",
@@ -1946,7 +2062,8 @@ window.WORD_DATABASE = [
       "i",
       "o",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "hotel",
@@ -1963,7 +2080,8 @@ window.WORD_DATABASE = [
       "t",
       "e",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "doctor",
@@ -1981,7 +2099,8 @@ window.WORD_DATABASE = [
       "t",
       "o",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "nurse",
@@ -1998,7 +2117,8 @@ window.WORD_DATABASE = [
       "r",
       "s",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "dentist",
@@ -2017,7 +2137,8 @@ window.WORD_DATABASE = [
       "i",
       "s",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "pilot",
@@ -2034,7 +2155,8 @@ window.WORD_DATABASE = [
       "l",
       "o",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cook",
@@ -2050,7 +2172,8 @@ window.WORD_DATABASE = [
       "o",
       "o",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "farmer",
@@ -2068,7 +2191,8 @@ window.WORD_DATABASE = [
       "m",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "driver",
@@ -2086,7 +2210,8 @@ window.WORD_DATABASE = [
       "v",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "singer",
@@ -2104,7 +2229,8 @@ window.WORD_DATABASE = [
       "g",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "lion",
@@ -2120,7 +2246,8 @@ window.WORD_DATABASE = [
       "i",
       "o",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bear",
@@ -2136,7 +2263,8 @@ window.WORD_DATABASE = [
       "e",
       "a",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "panda",
@@ -2153,7 +2281,8 @@ window.WORD_DATABASE = [
       "n",
       "d",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "koala",
@@ -2170,7 +2299,8 @@ window.WORD_DATABASE = [
       "a",
       "l",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "elephant",
@@ -2190,7 +2320,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "giraffe",
@@ -2209,7 +2340,8 @@ window.WORD_DATABASE = [
       "f",
       "f",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "monkey",
@@ -2227,7 +2359,8 @@ window.WORD_DATABASE = [
       "k",
       "e",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "zebra",
@@ -2244,7 +2377,8 @@ window.WORD_DATABASE = [
       "b",
       "r",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "dolphin",
@@ -2263,7 +2397,8 @@ window.WORD_DATABASE = [
       "h",
       "i",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "whale",
@@ -2280,7 +2415,8 @@ window.WORD_DATABASE = [
       "a",
       "l",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "shark",
@@ -2297,7 +2433,8 @@ window.WORD_DATABASE = [
       "a",
       "r",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bat",
@@ -2312,7 +2449,8 @@ window.WORD_DATABASE = [
       "b",
       "a",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "kangaroo",
@@ -2332,7 +2470,8 @@ window.WORD_DATABASE = [
       "r",
       "o",
       "o"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "penguin",
@@ -2351,7 +2490,8 @@ window.WORD_DATABASE = [
       "u",
       "i",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "pizza",
@@ -2368,7 +2508,8 @@ window.WORD_DATABASE = [
       "z",
       "z",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "burger",
@@ -2386,7 +2527,8 @@ window.WORD_DATABASE = [
       "g",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "pasta",
@@ -2403,7 +2545,8 @@ window.WORD_DATABASE = [
       "s",
       "t",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "salad",
@@ -2420,7 +2563,8 @@ window.WORD_DATABASE = [
       "l",
       "a",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "soup",
@@ -2436,7 +2580,8 @@ window.WORD_DATABASE = [
       "o",
       "u",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "potato",
@@ -2454,7 +2599,8 @@ window.WORD_DATABASE = [
       "a",
       "t",
       "o"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "tomato",
@@ -2472,7 +2618,8 @@ window.WORD_DATABASE = [
       "a",
       "t",
       "o"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "carrot",
@@ -2490,7 +2637,8 @@ window.WORD_DATABASE = [
       "r",
       "o",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "lemon",
@@ -2507,7 +2655,8 @@ window.WORD_DATABASE = [
       "m",
       "o",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "candy",
@@ -2524,7 +2673,8 @@ window.WORD_DATABASE = [
       "n",
       "d",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "happy",
@@ -2541,7 +2691,8 @@ window.WORD_DATABASE = [
       "p",
       "p",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "sad",
@@ -2556,7 +2707,8 @@ window.WORD_DATABASE = [
       "s",
       "a",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "angry",
@@ -2573,7 +2725,8 @@ window.WORD_DATABASE = [
       "g",
       "r",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "tired",
@@ -2590,7 +2743,8 @@ window.WORD_DATABASE = [
       "r",
       "e",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "hungry",
@@ -2608,7 +2762,8 @@ window.WORD_DATABASE = [
       "g",
       "r",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "thirsty",
@@ -2627,7 +2782,8 @@ window.WORD_DATABASE = [
       "s",
       "t",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "scared",
@@ -2645,7 +2801,8 @@ window.WORD_DATABASE = [
       "r",
       "e",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cold",
@@ -2661,7 +2818,8 @@ window.WORD_DATABASE = [
       "o",
       "l",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "hot",
@@ -2676,7 +2834,8 @@ window.WORD_DATABASE = [
       "h",
       "o",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "beach",
@@ -2693,7 +2852,8 @@ window.WORD_DATABASE = [
       "a",
       "c",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "island",
@@ -2711,7 +2871,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "sea",
@@ -2726,7 +2887,8 @@ window.WORD_DATABASE = [
       "s",
       "e",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "shell",
@@ -2743,7 +2905,8 @@ window.WORD_DATABASE = [
       "e",
       "l",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "camp",
@@ -2759,7 +2922,8 @@ window.WORD_DATABASE = [
       "a",
       "m",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "rain",
@@ -2775,7 +2939,8 @@ window.WORD_DATABASE = [
       "a",
       "i",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "snow",
@@ -2791,7 +2956,8 @@ window.WORD_DATABASE = [
       "n",
       "o",
       "w"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "wind",
@@ -2807,7 +2973,8 @@ window.WORD_DATABASE = [
       "i",
       "n",
       "d"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "sunny",
@@ -2824,7 +2991,8 @@ window.WORD_DATABASE = [
       "n",
       "n",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "maths",
@@ -2841,7 +3009,8 @@ window.WORD_DATABASE = [
       "t",
       "h",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "science",
@@ -2860,7 +3029,8 @@ window.WORD_DATABASE = [
       "n",
       "c",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "music",
@@ -2877,7 +3047,8 @@ window.WORD_DATABASE = [
       "s",
       "i",
       "c"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "art",
@@ -2892,7 +3063,8 @@ window.WORD_DATABASE = [
       "a",
       "r",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "history",
@@ -2911,7 +3083,8 @@ window.WORD_DATABASE = [
       "o",
       "r",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "english",
@@ -2930,7 +3103,8 @@ window.WORD_DATABASE = [
       "i",
       "s",
       "h"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "project",
@@ -2949,7 +3123,8 @@ window.WORD_DATABASE = [
       "e",
       "c",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "uniform",
@@ -2968,7 +3143,8 @@ window.WORD_DATABASE = [
       "o",
       "r",
       "m"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "lesson",
@@ -2986,7 +3162,8 @@ window.WORD_DATABASE = [
       "s",
       "o",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "laptop",
@@ -3004,7 +3181,8 @@ window.WORD_DATABASE = [
       "t",
       "o",
       "p"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "tablet",
@@ -3022,7 +3200,8 @@ window.WORD_DATABASE = [
       "l",
       "e",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "camera",
@@ -3040,7 +3219,8 @@ window.WORD_DATABASE = [
       "e",
       "r",
       "a"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "internet",
@@ -3060,7 +3240,8 @@ window.WORD_DATABASE = [
       "n",
       "e",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "message",
@@ -3079,7 +3260,8 @@ window.WORD_DATABASE = [
       "a",
       "g",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "online",
@@ -3097,7 +3279,8 @@ window.WORD_DATABASE = [
       "i",
       "n",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "email",
@@ -3114,7 +3297,8 @@ window.WORD_DATABASE = [
       "a",
       "i",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "video",
@@ -3131,7 +3315,8 @@ window.WORD_DATABASE = [
       "d",
       "e",
       "o"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "airport",
@@ -3150,7 +3335,8 @@ window.WORD_DATABASE = [
       "o",
       "r",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "bridge",
@@ -3168,7 +3354,8 @@ window.WORD_DATABASE = [
       "d",
       "g",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "castle",
@@ -3186,7 +3373,8 @@ window.WORD_DATABASE = [
       "t",
       "l",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "museum",
@@ -3204,7 +3392,8 @@ window.WORD_DATABASE = [
       "e",
       "u",
       "m"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "stadium",
@@ -3223,7 +3412,8 @@ window.WORD_DATABASE = [
       "i",
       "u",
       "m"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "theatre",
@@ -3242,7 +3432,8 @@ window.WORD_DATABASE = [
       "t",
       "r",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "traffic",
@@ -3261,7 +3452,8 @@ window.WORD_DATABASE = [
       "f",
       "i",
       "c"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "metro",
@@ -3278,7 +3470,8 @@ window.WORD_DATABASE = [
       "t",
       "r",
       "o"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "rocket",
@@ -3296,7 +3489,8 @@ window.WORD_DATABASE = [
       "k",
       "e",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "cave",
@@ -3312,7 +3506,8 @@ window.WORD_DATABASE = [
       "a",
       "v",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "desert",
@@ -3330,7 +3525,8 @@ window.WORD_DATABASE = [
       "e",
       "r",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "forest",
@@ -3348,7 +3544,8 @@ window.WORD_DATABASE = [
       "e",
       "s",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "jungle",
@@ -3366,7 +3563,8 @@ window.WORD_DATABASE = [
       "g",
       "l",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "lake",
@@ -3382,7 +3580,8 @@ window.WORD_DATABASE = [
       "a",
       "k",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "ocean",
@@ -3399,7 +3598,8 @@ window.WORD_DATABASE = [
       "e",
       "a",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "river",
@@ -3416,7 +3616,8 @@ window.WORD_DATABASE = [
       "v",
       "e",
       "r"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "volcano",
@@ -3435,7 +3636,8 @@ window.WORD_DATABASE = [
       "a",
       "n",
       "o"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "waterfall",
@@ -3456,7 +3658,8 @@ window.WORD_DATABASE = [
       "a",
       "l",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "mountain",
@@ -3476,7 +3679,8 @@ window.WORD_DATABASE = [
       "a",
       "i",
       "n"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "party",
@@ -3493,7 +3697,8 @@ window.WORD_DATABASE = [
       "r",
       "t",
       "y"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "gift",
@@ -3509,7 +3714,8 @@ window.WORD_DATABASE = [
       "i",
       "f",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "present",
@@ -3528,7 +3734,8 @@ window.WORD_DATABASE = [
       "e",
       "n",
       "t"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "costume",
@@ -3547,7 +3754,8 @@ window.WORD_DATABASE = [
       "u",
       "m",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "mask",
@@ -3563,7 +3771,8 @@ window.WORD_DATABASE = [
       "a",
       "s",
       "k"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "festival",
@@ -3583,7 +3792,8 @@ window.WORD_DATABASE = [
       "v",
       "a",
       "l"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "fireworks",
@@ -3604,7 +3814,8 @@ window.WORD_DATABASE = [
       "r",
       "k",
       "s"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "candle",
@@ -3622,7 +3833,8 @@ window.WORD_DATABASE = [
       "d",
       "l",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
   },
   {
     "word": "dance",
@@ -3639,6 +3851,1927 @@ window.WORD_DATABASE = [
       "n",
       "c",
       "e"
-    ]
+    ],
+    "curriculum": "PU"
+  },
+  {
+    "word": "hello",
+    "chinese": "你好",
+    "emoji": "👋",
+    "category": "greeting",
+    "categoryCn": "问候与相识",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "h",
+      "e",
+      "ll",
+      "o"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "hi",
+    "chinese": "嗨",
+    "emoji": "👋",
+    "category": "greeting",
+    "categoryCn": "问候与相识",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "h",
+      "i"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "miss",
+    "chinese": "小姐/老师",
+    "emoji": "👩‍🏫",
+    "category": "greeting",
+    "categoryCn": "问候与相识",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "m",
+      "i",
+      "ss"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "class",
+    "chinese": "同学们/班级",
+    "emoji": "🏫",
+    "category": "greeting",
+    "categoryCn": "问候与相识",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "c",
+      "l",
+      "a",
+      "ss"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "am",
+    "chinese": "是(我)",
+    "emoji": "✨",
+    "category": "greeting",
+    "categoryCn": "问候与相识",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "a",
+      "m"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "are",
+    "chinese": "是(你/你们)",
+    "emoji": "✨",
+    "category": "identity",
+    "categoryCn": "确认与道别",
+    "unit": 2,
+    "level": 1,
+    "phonics": [
+      "a",
+      "r",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "you",
+    "chinese": "你/你们",
+    "emoji": "👉",
+    "category": "identity",
+    "categoryCn": "确认与道别",
+    "unit": 2,
+    "level": 1,
+    "phonics": [
+      "y",
+      "ou"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "yes",
+    "chinese": "是的",
+    "emoji": "✅",
+    "category": "identity",
+    "categoryCn": "确认与道别",
+    "unit": 2,
+    "level": 1,
+    "phonics": [
+      "y",
+      "e",
+      "s"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "no",
+    "chinese": "不/不是",
+    "emoji": "❌",
+    "category": "identity",
+    "categoryCn": "确认与道别",
+    "unit": 2,
+    "level": 1,
+    "phonics": [
+      "n",
+      "o"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "not",
+    "chinese": "不/没有",
+    "emoji": "🚫",
+    "category": "identity",
+    "categoryCn": "确认与道别",
+    "unit": 2,
+    "level": 1,
+    "phonics": [
+      "n",
+      "o",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "goodbye",
+    "chinese": "再见",
+    "emoji": "🙋‍♂️",
+    "category": "identity",
+    "categoryCn": "确认与道别",
+    "unit": 2,
+    "level": 2,
+    "phonics": [
+      "g",
+      "oo",
+      "d",
+      "b",
+      "y",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "my",
+    "chinese": "我的",
+    "emoji": "💖",
+    "category": "friends",
+    "categoryCn": "朋友介绍",
+    "unit": 3,
+    "level": 1,
+    "phonics": [
+      "m",
+      "y"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "friend",
+    "chinese": "朋友",
+    "emoji": "🤝",
+    "category": "friends",
+    "categoryCn": "朋友介绍",
+    "unit": 3,
+    "level": 2,
+    "phonics": [
+      "f",
+      "r",
+      "ie",
+      "n",
+      "d"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "she",
+    "chinese": "她",
+    "emoji": "👧",
+    "category": "friends",
+    "categoryCn": "朋友介绍",
+    "unit": 3,
+    "level": 1,
+    "phonics": [
+      "sh",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "he",
+    "chinese": "他",
+    "emoji": "👦",
+    "category": "friends",
+    "categoryCn": "朋友介绍",
+    "unit": 3,
+    "level": 1,
+    "phonics": [
+      "h",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "this",
+    "chinese": "这个",
+    "emoji": "👈",
+    "category": "friends",
+    "categoryCn": "朋友介绍",
+    "unit": 3,
+    "level": 1,
+    "phonics": [
+      "th",
+      "i",
+      "s"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "sister",
+    "chinese": "姐妹",
+    "emoji": "👭",
+    "category": "friends",
+    "categoryCn": "朋友介绍",
+    "unit": 3,
+    "level": 2,
+    "phonics": [
+      "s",
+      "i",
+      "s",
+      "t",
+      "er"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "family",
+    "chinese": "家庭",
+    "emoji": "🏡",
+    "category": "family",
+    "categoryCn": "温馨家庭",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "f",
+      "a",
+      "m",
+      "i",
+      "l",
+      "y"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "father",
+    "chinese": "爸爸",
+    "emoji": "👨",
+    "category": "family",
+    "categoryCn": "温馨家庭",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "f",
+      "a",
+      "th",
+      "er"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "mother",
+    "chinese": "妈妈",
+    "emoji": "👩",
+    "category": "family",
+    "categoryCn": "温馨家庭",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "m",
+      "o",
+      "th",
+      "er"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "brother",
+    "chinese": "兄弟",
+    "emoji": "👦",
+    "category": "family",
+    "categoryCn": "温馨家庭",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "b",
+      "r",
+      "o",
+      "th",
+      "er"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "me",
+    "chinese": "我(宾格)",
+    "emoji": "🙋",
+    "category": "family",
+    "categoryCn": "温馨家庭",
+    "unit": 4,
+    "level": 1,
+    "phonics": [
+      "m",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "grandpa",
+    "chinese": "爷爷/外公",
+    "emoji": "👴",
+    "category": "family",
+    "categoryCn": "温馨家庭",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "g",
+      "r",
+      "a",
+      "n",
+      "d",
+      "p",
+      "a"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "grandma",
+    "chinese": "奶奶/外婆",
+    "emoji": "👵",
+    "category": "family",
+    "categoryCn": "温馨家庭",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "g",
+      "r",
+      "a",
+      "n",
+      "d",
+      "m",
+      "a"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "skirt",
+    "chinese": "短裙",
+    "emoji": "👗",
+    "category": "clothes",
+    "categoryCn": "服装秀",
+    "unit": 5,
+    "level": 2,
+    "phonics": [
+      "s",
+      "k",
+      "ir",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "cap",
+    "chinese": "便帽/鸭舌帽",
+    "emoji": "🧢",
+    "category": "clothes",
+    "categoryCn": "服装秀",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "c",
+      "a",
+      "p"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "jacket",
+    "chinese": "夹克衫",
+    "emoji": "🧥",
+    "category": "clothes",
+    "categoryCn": "服装秀",
+    "unit": 5,
+    "level": 2,
+    "phonics": [
+      "j",
+      "a",
+      "ck",
+      "e",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "nice",
+    "chinese": "好看的/好的",
+    "emoji": "✨",
+    "category": "clothes",
+    "categoryCn": "服装秀",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "n",
+      "i",
+      "c",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "great",
+    "chinese": "太棒了/极好的",
+    "emoji": "👍",
+    "category": "clothes",
+    "categoryCn": "服装秀",
+    "unit": 5,
+    "level": 2,
+    "phonics": [
+      "g",
+      "r",
+      "ea",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "new",
+    "chinese": "新的",
+    "emoji": "🆕",
+    "category": "clothes",
+    "categoryCn": "服装秀",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "n",
+      "ew"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "look",
+    "chinese": "看",
+    "emoji": "👀",
+    "category": "clothes",
+    "categoryCn": "服装秀",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "l",
+      "oo",
+      "k"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "colour",
+    "chinese": "颜色",
+    "emoji": "🎨",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "c",
+      "o",
+      "l",
+      "ou",
+      "r"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "red",
+    "chinese": "红色",
+    "emoji": "🔴",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 1,
+    "phonics": [
+      "r",
+      "e",
+      "d"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "yellow",
+    "chinese": "黄色",
+    "emoji": "🟡",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "y",
+      "e",
+      "ll",
+      "ow"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "green",
+    "chinese": "绿色",
+    "emoji": "🟢",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "g",
+      "r",
+      "ee",
+      "n"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "blue",
+    "chinese": "蓝色",
+    "emoji": "🔵",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 1,
+    "phonics": [
+      "b",
+      "l",
+      "u",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "brown",
+    "chinese": "棕色",
+    "emoji": "🟤",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "b",
+      "r",
+      "ow",
+      "n"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "white",
+    "chinese": "白色",
+    "emoji": "⚪",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "wh",
+      "i",
+      "t",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "black",
+    "chinese": "黑色",
+    "emoji": "⚫",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "b",
+      "l",
+      "a",
+      "ck"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "orange",
+    "chinese": "橙色/橙子",
+    "emoji": "🟠",
+    "category": "colours",
+    "categoryCn": "缤纷色彩",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "o",
+      "r",
+      "a",
+      "n",
+      "g",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "pie",
+    "chinese": "馅饼",
+    "emoji": "🥧",
+    "category": "food",
+    "categoryCn": "美食分享",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "p",
+      "ie"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "cake",
+    "chinese": "蛋糕",
+    "emoji": "🎂",
+    "category": "food",
+    "categoryCn": "美食分享",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "c",
+      "a",
+      "k",
+      "e"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "sweet",
+    "chinese": "糖果/甜的",
+    "emoji": "🍬",
+    "category": "food",
+    "categoryCn": "美食分享",
+    "unit": 7,
+    "level": 2,
+    "phonics": [
+      "s",
+      "w",
+      "ee",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "what",
+    "chinese": "什么",
+    "emoji": "❓",
+    "category": "food",
+    "categoryCn": "美食分享",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "wh",
+      "a",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "happy",
+    "chinese": "快乐的",
+    "emoji": "😊",
+    "category": "newyear",
+    "categoryCn": "新年礼物",
+    "unit": 8,
+    "level": 2,
+    "phonics": [
+      "h",
+      "a",
+      "pp",
+      "y"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "year",
+    "chinese": "年",
+    "emoji": "📅",
+    "category": "newyear",
+    "categoryCn": "新年礼物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "y",
+      "ear"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "doll",
+    "chinese": "洋娃娃",
+    "emoji": "🪆",
+    "category": "newyear",
+    "categoryCn": "新年礼物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "d",
+      "o",
+      "ll"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "ball",
+    "chinese": "球",
+    "emoji": "⚽",
+    "category": "newyear",
+    "categoryCn": "新年礼物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "b",
+      "a",
+      "ll"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "robot",
+    "chinese": "机器人",
+    "emoji": "🤖",
+    "category": "newyear",
+    "categoryCn": "新年礼物",
+    "unit": 8,
+    "level": 2,
+    "phonics": [
+      "r",
+      "o",
+      "b",
+      "o",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "car",
+    "chinese": "小汽车",
+    "emoji": "🚗",
+    "category": "newyear",
+    "categoryCn": "新年礼物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "c",
+      "ar"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "that",
+    "chinese": "那个",
+    "emoji": "👉",
+    "category": "newyear",
+    "categoryCn": "新年礼物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "th",
+      "a",
+      "t"
+    ],
+    "book": "苏教3A",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "open",
+    "chinese": "打开",
+    "emoji": "📖",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "o",
+      "p",
+      "e",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "door",
+    "chinese": "门",
+    "emoji": "🚪",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "d",
+      "oor"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "close",
+    "chinese": "关上",
+    "emoji": "📕",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 2,
+    "phonics": [
+      "c",
+      "l",
+      "o",
+      "s",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "window",
+    "chinese": "窗户",
+    "emoji": "🪟",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 2,
+    "phonics": [
+      "w",
+      "i",
+      "n",
+      "d",
+      "ow"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "book",
+    "chinese": "书本",
+    "emoji": "📚",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "b",
+      "oo",
+      "k"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "please",
+    "chinese": "请",
+    "emoji": "🙏",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 2,
+    "phonics": [
+      "p",
+      "l",
+      "ea",
+      "s",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "sorry",
+    "chinese": "对不起",
+    "emoji": "🥺",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 2,
+    "phonics": [
+      "s",
+      "o",
+      "rr",
+      "y"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "come",
+    "chinese": "来",
+    "emoji": "🏃",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "c",
+      "o",
+      "m",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "in",
+    "chinese": "在...里",
+    "emoji": "📥",
+    "category": "classroom",
+    "categoryCn": "课堂指令",
+    "unit": 1,
+    "level": 1,
+    "phonics": [
+      "i",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "library",
+    "chinese": "图书馆",
+    "emoji": "🏛️",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 3,
+    "phonics": [
+      "l",
+      "i",
+      "b",
+      "r",
+      "a",
+      "r",
+      "y"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "shout",
+    "chinese": "大喊",
+    "emoji": "🗣️",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 2,
+    "phonics": [
+      "sh",
+      "ou",
+      "t"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "run",
+    "chinese": "跑步",
+    "emoji": "🏃",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 1,
+    "phonics": [
+      "r",
+      "u",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "eat",
+    "chinese": "吃",
+    "emoji": "🍽️",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 1,
+    "phonics": [
+      "ea",
+      "t"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "talk",
+    "chinese": "说话/谈话",
+    "emoji": "💬",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 2,
+    "phonics": [
+      "t",
+      "al",
+      "k"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "sleep",
+    "chinese": "睡觉",
+    "emoji": "😴",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 2,
+    "phonics": [
+      "s",
+      "l",
+      "ee",
+      "p"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "drink",
+    "chinese": "喝水/饮料",
+    "emoji": "🥤",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 2,
+    "phonics": [
+      "d",
+      "r",
+      "i",
+      "n",
+      "k"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "English",
+    "chinese": "英语",
+    "emoji": "🇬🇧",
+    "category": "library",
+    "categoryCn": "图书场馆",
+    "unit": 2,
+    "level": 2,
+    "phonics": [
+      "E",
+      "n",
+      "g",
+      "l",
+      "i",
+      "sh"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "pen",
+    "chinese": "钢笔",
+    "emoji": "🖊️",
+    "category": "stationery",
+    "categoryCn": "学习文具",
+    "unit": 3,
+    "level": 1,
+    "phonics": [
+      "p",
+      "e",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "pencil",
+    "chinese": "铅笔",
+    "emoji": "✏️",
+    "category": "stationery",
+    "categoryCn": "学习文具",
+    "unit": 3,
+    "level": 2,
+    "phonics": [
+      "p",
+      "e",
+      "n",
+      "c",
+      "i",
+      "l"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "ruler",
+    "chinese": "尺子",
+    "emoji": "📏",
+    "category": "stationery",
+    "categoryCn": "学习文具",
+    "unit": 3,
+    "level": 2,
+    "phonics": [
+      "r",
+      "u",
+      "l",
+      "er"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "rubber",
+    "chinese": "橡皮擦",
+    "emoji": "🧼",
+    "category": "stationery",
+    "categoryCn": "学习文具",
+    "unit": 3,
+    "level": 2,
+    "phonics": [
+      "r",
+      "u",
+      "bb",
+      "er"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "crayon",
+    "chinese": "蜡笔",
+    "emoji": "🖍️",
+    "category": "stationery",
+    "categoryCn": "学习文具",
+    "unit": 3,
+    "level": 2,
+    "phonics": [
+      "c",
+      "r",
+      "ay",
+      "o",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "bird",
+    "chinese": "小鸟",
+    "emoji": "🐦",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 1,
+    "phonics": [
+      "b",
+      "ir",
+      "d"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "beautiful",
+    "chinese": "漂亮的",
+    "emoji": "🌸",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 3,
+    "phonics": [
+      "b",
+      "eau",
+      "t",
+      "i",
+      "f",
+      "u",
+      "l"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "under",
+    "chinese": "在...下面",
+    "emoji": "⬇️",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "u",
+      "n",
+      "d",
+      "er"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "desk",
+    "chinese": "书桌",
+    "emoji": "🖥️",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 1,
+    "phonics": [
+      "d",
+      "e",
+      "s",
+      "k"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "behind",
+    "chinese": "在...后面",
+    "emoji": "🔙",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "b",
+      "e",
+      "h",
+      "i",
+      "n",
+      "d"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "on",
+    "chinese": "在...上面",
+    "emoji": "⬆️",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 1,
+    "phonics": [
+      "o",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "tree",
+    "chinese": "大树",
+    "emoji": "🌳",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 1,
+    "phonics": [
+      "t",
+      "r",
+      "ee"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "chair",
+    "chinese": "椅子",
+    "emoji": "🪑",
+    "category": "nature",
+    "categoryCn": "方位观察",
+    "unit": 4,
+    "level": 2,
+    "phonics": [
+      "ch",
+      "air"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "how",
+    "chinese": "怎样/如何",
+    "emoji": "❓",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "h",
+      "ow"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "old",
+    "chinese": "年纪的/旧的",
+    "emoji": "🕰️",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "o",
+      "l",
+      "d"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "one",
+    "chinese": "一",
+    "emoji": "1️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "o",
+      "n",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "two",
+    "chinese": "二",
+    "emoji": "2️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "t",
+      "w",
+      "o"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "three",
+    "chinese": "三",
+    "emoji": "3️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "th",
+      "r",
+      "ee"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "four",
+    "chinese": "四",
+    "emoji": "4️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "f",
+      "our"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "five",
+    "chinese": "五",
+    "emoji": "5️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "f",
+      "i",
+      "v",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "six",
+    "chinese": "六",
+    "emoji": "6️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "s",
+      "i",
+      "x"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "seven",
+    "chinese": "七",
+    "emoji": "7️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 2,
+    "phonics": [
+      "s",
+      "e",
+      "v",
+      "e",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "eight",
+    "chinese": "八",
+    "emoji": "8️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 2,
+    "phonics": [
+      "eigh",
+      "t"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "nine",
+    "chinese": "九",
+    "emoji": "9️⃣",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "n",
+      "i",
+      "n",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "ten",
+    "chinese": "十",
+    "emoji": "🔟",
+    "category": "numbers",
+    "categoryCn": "数字年龄",
+    "unit": 5,
+    "level": 1,
+    "phonics": [
+      "t",
+      "e",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "time",
+    "chinese": "时间",
+    "emoji": "⏰",
+    "category": "daily",
+    "categoryCn": "时间作息",
+    "unit": 6,
+    "level": 1,
+    "phonics": [
+      "t",
+      "i",
+      "m",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "breakfast",
+    "chinese": "早餐",
+    "emoji": "🍳",
+    "category": "daily",
+    "categoryCn": "时间作息",
+    "unit": 6,
+    "level": 3,
+    "phonics": [
+      "b",
+      "r",
+      "ea",
+      "k",
+      "f",
+      "a",
+      "s",
+      "t"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "lunch",
+    "chinese": "午餐",
+    "emoji": "🥪",
+    "category": "daily",
+    "categoryCn": "时间作息",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "l",
+      "u",
+      "n",
+      "ch"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "dinner",
+    "chinese": "晚餐",
+    "emoji": "🍲",
+    "category": "daily",
+    "categoryCn": "时间作息",
+    "unit": 6,
+    "level": 2,
+    "phonics": [
+      "d",
+      "i",
+      "nn",
+      "er"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "bed",
+    "chinese": "床",
+    "emoji": "🛏️",
+    "category": "daily",
+    "categoryCn": "时间作息",
+    "unit": 6,
+    "level": 1,
+    "phonics": [
+      "b",
+      "e",
+      "d"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "bag",
+    "chinese": "书包/提包",
+    "emoji": "👜",
+    "category": "daily",
+    "categoryCn": "时间作息",
+    "unit": 6,
+    "level": 1,
+    "phonics": [
+      "b",
+      "a",
+      "g"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "farm",
+    "chinese": "农场",
+    "emoji": "🚜",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "f",
+      "ar",
+      "m"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "pig",
+    "chinese": "小猪",
+    "emoji": "🐷",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "p",
+      "i",
+      "g"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "cow",
+    "chinese": "奶牛",
+    "emoji": "🐮",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "c",
+      "ow"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "chicken",
+    "chinese": "小鸡/鸡肉",
+    "emoji": "🐥",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 2,
+    "phonics": [
+      "ch",
+      "i",
+      "ck",
+      "e",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "duck",
+    "chinese": "鸭子",
+    "emoji": "🦆",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "d",
+      "u",
+      "ck"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "apple",
+    "chinese": "苹果",
+    "emoji": "🍎",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 2,
+    "phonics": [
+      "a",
+      "pp",
+      "l",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "pear",
+    "chinese": "梨子",
+    "emoji": "🍐",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 1,
+    "phonics": [
+      "p",
+      "ear"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "fruit",
+    "chinese": "水果",
+    "emoji": "🍇",
+    "category": "farm",
+    "categoryCn": "农场果蔬",
+    "unit": 7,
+    "level": 2,
+    "phonics": [
+      "f",
+      "r",
+      "ui",
+      "t"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "twin",
+    "chinese": "双胞胎",
+    "emoji": "👯",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 2,
+    "phonics": [
+      "t",
+      "w",
+      "i",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "aunt",
+    "chinese": "阿姨/姑母",
+    "emoji": "👩",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 2,
+    "phonics": [
+      "au",
+      "n",
+      "t"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "uncle",
+    "chinese": "叔叔/舅舅",
+    "emoji": "👨",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 2,
+    "phonics": [
+      "u",
+      "n",
+      "c",
+      "l",
+      "e"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "cousin",
+    "chinese": "堂/表兄弟姐妹",
+    "emoji": "🧒",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 2,
+    "phonics": [
+      "c",
+      "ou",
+      "s",
+      "i",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "man",
+    "chinese": "男人",
+    "emoji": "👨",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "m",
+      "a",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "woman",
+    "chinese": "女人",
+    "emoji": "👩",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 2,
+    "phonics": [
+      "w",
+      "o",
+      "m",
+      "a",
+      "n"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "boy",
+    "chinese": "男孩",
+    "emoji": "👦",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "b",
+      "oy"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
+  },
+  {
+    "word": "girl",
+    "chinese": "女孩",
+    "emoji": "👧",
+    "category": "people",
+    "categoryCn": "亲友与人物",
+    "unit": 8,
+    "level": 1,
+    "phonics": [
+      "g",
+      "ir",
+      "l"
+    ],
+    "book": "苏教3B",
+    "curriculum": "SJ"
   }
 ];
