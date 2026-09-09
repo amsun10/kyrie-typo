@@ -59,13 +59,15 @@ class TypoGame {
         {
           id: 'SJ',
           title: '🏫 苏教版小学英语 (译林版·三年级)',
-          tag: '校内同步',
+          tag: '校内同步 · 115词',
+          badge: '校内同步 · 115词',
           bookCodes: ['苏教3A', '苏教3B']
         },
         {
           id: 'PU',
-          title: '📘 剑桥少儿英语 Power Up (PU1~PU3)',
-          tag: '国际名校',
+          title: '📘 剑桥少儿英语 Power Up',
+          tag: '经典核心 · 212词',
+          badge: '经典核心 · 212词',
           bookCodes: ['PU1', 'PU2', 'PU3']
         }
       ],

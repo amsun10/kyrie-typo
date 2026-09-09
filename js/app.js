@@ -515,11 +515,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       groups.forEach(grp => {
         // 群组横幅
+        const tagText = grp.tag || grp.badge || (grp.id === 'SJ' ? '校内同步 · 115词' : '经典核心 · 212词');
         const banner = document.createElement('div');
         banner.className = `curr-group-banner group-${grp.id.toLowerCase()}`;
         banner.innerHTML = `
           <span class="group-banner-title">${grp.title}</span>
-          <span class="group-banner-tag">${grp.badge}</span>
+          <span class="group-banner-tag">${tagText}</span>
         `;
         currBooksContainer.appendChild(banner);
 
