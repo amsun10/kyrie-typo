@@ -286,8 +286,9 @@ body::before {
   right: 0;
   width: 580px;
   max-width: min(580px, calc(100vw - 32px));
-  max-height: min(530px, calc(100vh - 110px));
-  overflow-y: auto;
+  height: 520px;
+  max-height: calc(100vh - 110px);
+  overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-gutter: stable;
   background: rgba(15, 23, 42, 0.98);
@@ -301,19 +302,23 @@ body::before {
   gap: 12px;
   z-index: 2000;
   box-sizing: border-box;
-  animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: top right;
+  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .curriculum-dropdown::-webkit-scrollbar {
   width: 6px;
 }
 .curriculum-dropdown::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 23, 42, 0.6);
   border-radius: 4px;
 }
 .curriculum-dropdown::-webkit-scrollbar-thumb {
   background: rgba(99, 102, 241, 0.5);
   border-radius: 4px;
+}
+.curriculum-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(129, 140, 248, 0.8);
 }
 
 .curr-dropdown-header {
@@ -345,6 +350,7 @@ body::before {
   padding: 5px;
   border-radius: 16px;
   border: 1px solid rgba(51, 65, 85, 0.7);
+  user-select: none;
 }
 
 .curr-tab-btn {
@@ -358,7 +364,7 @@ body::before {
   cursor: pointer;
   text-align: center;
   white-space: nowrap;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -368,39 +374,37 @@ body::before {
 .curr-tab-btn:hover {
   color: #F8FAFC;
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .curr-tab-btn.active {
   color: #FFFFFF;
-  font-weight: 900;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
-  transform: translateY(-1px);
+  font-weight: 800;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .curr-tab-btn[data-curriculum-tab="all"].active {
   background: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
   border-color: #818CF8;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45);
+  box-shadow: 0 2px 12px rgba(79, 70, 229, 0.45);
 }
 
 .curr-tab-btn[data-curriculum-tab="SJ"].active {
   background: linear-gradient(135deg, #059669 0%, #047857 100%);
   border-color: #34D399;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.45);
 }
 
 .curr-tab-btn[data-curriculum-tab="PU"].active {
   background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
   border-color: #38BDF8;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+  box-shadow: 0 2px 12px rgba(2, 132, 199, 0.45);
 }
 
 .curr-tab-btn[data-curriculum-tab="KET"].active {
   background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
   border-color: #FBBF24;
-  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.45);
+  box-shadow: 0 2px 12px rgba(217, 119, 6, 0.45);
 }
 
 .curr-quick-deck {
@@ -409,6 +413,7 @@ body::before {
 
 .curr-quick-btn {
   width: 100%;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -421,7 +426,8 @@ body::before {
   font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
 }
 
 .curr-quick-btn:hover,
@@ -612,7 +618,7 @@ body::before {
   border-radius: 12px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
   overflow: hidden;
   box-sizing: border-box;
 }

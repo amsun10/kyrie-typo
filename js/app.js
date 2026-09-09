@@ -651,6 +651,9 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+
+      // 重置滚动条位置，彻底消除切换时的滚动突跳
+      curriculumDropdown.scrollTop = 0;
     }
 
     if (currTabNav) {
@@ -659,7 +662,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tabBtn) return;
         e.stopPropagation();
         const tabId = tabBtn.dataset.curriculumTab;
-        switchCurriculumTab(tabId);
+        
+        // 允许“取消选择”：若再次点击当前已激活的分类，则平滑撤销筛选回到全部
+        const activeBtn = currTabNav.querySelector('.curr-tab-btn.active');
+        const currentActive = activeBtn ? activeBtn.dataset.curriculumTab : 'all';
+        if (tabId === currentActive && tabId !== 'all') {
+          switchCurriculumTab('all');
+        } else {
+          switchCurriculumTab(tabId);
+        }
         window.soundFX?.playKeyPop?.(1);
       });
     }
@@ -711,10 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openCurriculumDropdown() {
-      curriculumDropdown.style.display = 'flex';
-      curriculumPicker.classList.add('open');
-
-      // 根据当前正在练习的教材，智能同步对应 Tab
+      // 先计算并执行 Tab 预同步，避免显示后再重排引起抖动
       const curFilter = window.typoGame.getFilterInfo();
       let targetTab = 'all';
       if (curFilter.book === 'SJ_ALL' || curFilter.book.startsWith('苏教')) {
@@ -732,6 +740,9 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         switchCurriculumTab(currentNavTab);
       }
+
+      curriculumDropdown.style.display = 'flex';
+      curriculumPicker.classList.add('open');
     }
 
     function closeCurriculumDropdown() {
