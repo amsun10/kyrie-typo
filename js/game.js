@@ -81,8 +81,17 @@ class TypoGame {
     this.maxChallengeWords = 30; // 30 词通关冲刺赛目标
     this.isVictory = false;
 
-    // 剑桥少儿英语教材定向点播与筛选状态
-    this.currentFilter = { book: 'all', unit: 'all' };
+    // 词库与教材定向点播筛选状态（从 localStorage 安全持久化恢复）
+    let savedFilter = { book: 'all', unit: 'all' };
+    try {
+      if (typeof window !== 'undefined' && window.scoreStorage && typeof window.scoreStorage.getWordFilter === 'function') {
+        savedFilter = window.scoreStorage.getWordFilter();
+      } else if (typeof localStorage !== 'undefined') {
+        const raw = localStorage.getItem('kyrie_typo_word_filter');
+        if (raw) savedFilter = JSON.parse(raw);
+      }
+    } catch (e) {}
+    this.currentFilter = savedFilter || { book: 'all', unit: 'all' };
 
     // 事件监听回调
     this.onWordChange = null;
@@ -199,6 +208,13 @@ class TypoGame {
       book: book,
       unit: unit === 'all' ? 'all' : Number(unit)
     };
+    try {
+      if (typeof window !== 'undefined' && window.scoreStorage && typeof window.scoreStorage.setWordFilter === 'function') {
+        window.scoreStorage.setWordFilter(this.currentFilter);
+      } else if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('kyrie_typo_word_filter', JSON.stringify(this.currentFilter));
+      }
+    } catch (e) {}
     this.initWords();
     if (this.mode === 'practice') {
       this.emitWordChange();

@@ -782,12 +782,36 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // 初始化时显示默认状态
+    // 初始化时根据 localStorage 恢复的词库状态渲染界面
     const initInfo = window.typoGame.getFilterInfo();
     const initIcon = getScopeIcon(initInfo.book);
     if (currSelectedLabel) currSelectedLabel.textContent = `${initInfo.shortTitle} · ${initInfo.count}词`;
     if (currUnitCountBadge) currUnitCountBadge.textContent = `共 ${initInfo.count} 词`;
     if (challengeScopeBadge) challengeScopeBadge.textContent = `${initIcon} ${initInfo.shortTitle}`;
+
+    // 同步高亮下拉面板内选中的卡片/全套按钮
+    const allOptButtons = curriculumDropdown.querySelectorAll('[data-book][data-unit]');
+    allOptButtons.forEach(btn => {
+      const b = btn.dataset.book;
+      const u = btn.dataset.unit;
+      const isMatch = (b === String(initInfo.book)) && (String(u) === String(initInfo.unit));
+      if (isMatch) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // 确定对应的分类 Tab 并激活对应 Tab 视图与 Hero 按钮
+    let initTab = 'all';
+    if (initInfo.book === 'SJ_ALL' || initInfo.book.startsWith('苏教')) {
+      initTab = 'SJ';
+    } else if (initInfo.book === 'PU_ALL' || initInfo.book.startsWith('PU')) {
+      initTab = 'PU';
+    } else if (initInfo.book === 'KET_ALL' || initInfo.book.startsWith('KET')) {
+      initTab = 'KET';
+    }
+    switchCurriculumTab(initTab);
   }
 
   // ================= 1. 界面标签页切换（中途保护、重置与倒计时起跑） =================

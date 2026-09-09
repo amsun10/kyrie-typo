@@ -5,6 +5,7 @@
   const OLD_SCORES_KEY = 'kyrie_topo_leaderboard_v1';
   const PLAYER_NAME_KEY = 'kyrie_typo_player_name';
   const OLD_PLAYER_NAME_KEY = 'kyrie_topo_player_name';
+  const WORD_FILTER_KEY = 'kyrie_typo_word_filter';
   const MAX_STORED_RECORDS = 50;
 
   class ScoreStorage {
@@ -12,6 +13,7 @@
       this.isAvailable = this.testStorage();
       this.memoryScores = [];
       this.memoryPlayerName = 'Kyrie';
+      this.memoryWordFilter = { book: 'all', unit: 'all' };
     }
 
     testStorage() {
@@ -63,6 +65,42 @@
         }
       }
       return cleanName;
+    }
+
+    getWordFilter() {
+      if (this.isAvailable) {
+        try {
+          const raw = localStorage.getItem(WORD_FILTER_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed.book === 'string') {
+              return {
+                book: parsed.book,
+                unit: parsed.unit !== undefined ? parsed.unit : 'all'
+              };
+            }
+          }
+        } catch (e) {
+          console.error('读取词库筛选设置失败：', e);
+        }
+      }
+      return this.memoryWordFilter || { book: 'all', unit: 'all' };
+    }
+
+    setWordFilter(filter) {
+      const cleanFilter = {
+        book: (filter && typeof filter.book === 'string') ? filter.book : 'all',
+        unit: (filter && filter.unit !== undefined) ? filter.unit : 'all'
+      };
+      this.memoryWordFilter = cleanFilter;
+      if (this.isAvailable) {
+        try {
+          localStorage.setItem(WORD_FILTER_KEY, JSON.stringify(cleanFilter));
+        } catch (e) {
+          console.error('保存词库筛选设置失败：', e);
+        }
+      }
+      return cleanFilter;
     }
 
     getScores() {
