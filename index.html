@@ -749,62 +749,73 @@
     </div>
   </div>
 
-  <!-- 极速挑战战备就绪确认弹窗 (30词极速马拉松冲刺) -->
+  <!-- 极速挑战战备就绪确认弹窗 (清爽通透 · 三阶难度自选) -->
   <div class="modal-backdrop" id="challengeStartModal" style="display: none;">
     <div class="modal-content challenge-start-content">
+      <!-- 头部：紧凑标题与横向标签行 -->
       <div class="start-modal-header">
-        <div class="start-modal-icon">⚡</div>
-        <h2 class="start-modal-title" id="startModalTitle">极速挑战 · 通关冲刺赛</h2>
-        <div class="start-modal-badge" id="startModalBadge">🏆 大满贯决胜机制</div>
-        <div class="start-modal-scope-chip" id="startModalScopeChip">📘 挑战范围：全部教材 · 327词</div>
+        <h2 class="start-modal-title" id="startModalTitle">
+          <span class="title-flash-icon">⚡</span> 极速挑战 · 30词大满贯
+        </h2>
+        <div class="start-modal-meta-row">
+          <span class="start-meta-chip chip-target" id="startModalBadge">🎯 连冲 30 词</span>
+          <span class="start-meta-chip chip-scope" id="startModalScopeChip">📘 全部教材 (327词)</span>
+        </div>
       </div>
 
-      <!-- 三阶难度直选卡片组 (新手 20s/5命 · 进阶 10s/3命 · 大师 5s/1命极限) -->
+      <!-- 主咖：三阶难度英雄卡片组 (大图标 + 核心数值 + 特性标签) -->
       <div class="diff-selector-deck" id="diffSelectorDeck">
-        <button class="diff-card-btn active" data-diff="easy" type="button">
-          <span class="diff-card-icon">🌱</span>
-          <div class="diff-card-info">
-            <div class="diff-card-title">新手萌芽</div>
-            <div class="diff-card-meta">20秒 · 💖×5</div>
+        <button class="diff-hero-card active" data-diff="easy" type="button">
+          <div class="hero-card-icon">🌱</div>
+          <div class="hero-card-title">新手萌芽</div>
+          <div class="hero-card-param">
+            <span class="param-time">⏱️ 20秒</span>
+            <span class="param-lives">💖 × 5</span>
           </div>
+          <div class="hero-card-tag">高容错从容练</div>
         </button>
-        <button class="diff-card-btn" data-diff="normal" type="button">
-          <span class="diff-card-icon">⚡</span>
-          <div class="diff-card-info">
-            <div class="diff-card-title">进阶小侠</div>
-            <div class="diff-card-meta">10秒 · 💖×3</div>
+        <button class="diff-hero-card" data-diff="normal" type="button">
+          <div class="hero-card-icon">⚡</div>
+          <div class="hero-card-title">进阶小侠</div>
+          <div class="hero-card-param">
+            <span class="param-time">⏱️ 10秒</span>
+            <span class="param-lives">💖 × 3</span>
           </div>
+          <div class="hero-card-tag">标准舒适节奏</div>
         </button>
-        <button class="diff-card-btn" data-diff="hard" type="button">
-          <span class="diff-card-icon">🔥</span>
-          <div class="diff-card-info">
-            <div class="diff-card-title">键盘大师</div>
-            <div class="diff-card-meta">5秒 · 💖×1 (一命到底)</div>
+        <button class="diff-hero-card" data-diff="hard" type="button">
+          <div class="hero-card-icon">🔥</div>
+          <div class="hero-card-title">键盘大师</div>
+          <div class="hero-card-param">
+            <span class="param-time">⏱️ 5秒</span>
+            <span class="param-lives">💖 × 1</span>
           </div>
+          <div class="hero-card-tag tag-sudden-death">一命通关极限</div>
         </button>
       </div>
 
-      <div class="start-rules-card">
-        <div class="rule-row">
-          <span class="rule-icon">🎯</span>
-          <div class="rule-text" id="ruleTargetText"><strong>通关目标</strong>：连续冲过 30 个核心单词，夺取黄金大满贯奖杯！</div>
+      <!-- 单行灵动数据条 (取代原 4 行厚重文字框) -->
+      <div class="start-stat-strip" id="startStatStrip">
+        <div class="stat-strip-item">
+          <span class="strip-label">⏱️ 倒计时:</span>
+          <strong class="strip-val" id="stripTimerVal">20s → 10s</strong>
         </div>
-        <div class="rule-row">
-          <span class="rule-icon" id="ruleLivesIcon">💖</span>
-          <div class="rule-text" id="ruleLivesText"><strong>生命小心心</strong>：共有 5 条生命，充裕容错安心练习。</div>
+        <span class="strip-sep">|</span>
+        <div class="stat-strip-item">
+          <span class="strip-label">💖 生命值:</span>
+          <strong class="strip-val" id="stripLivesVal">5 条小心心</strong>
         </div>
-        <div class="rule-row">
-          <span class="rule-icon" id="ruleTimerIcon">⏱️</span>
-          <div class="rule-text" id="ruleTimerText"><strong>作答倒计时</strong>：从 20 秒起步，平缓收紧至 10 秒保底！</div>
-        </div>
-        <div class="rule-row">
-          <span class="rule-icon">🔥</span>
-          <div class="rule-text"><strong>连击得分加倍</strong>：节奏越稳、手速越快，Combo 得分翻倍暴击。</div>
+        <span class="strip-sep">|</span>
+        <div class="stat-strip-item">
+          <span class="strip-label">🔥 连击得分:</span>
+          <strong class="strip-val" id="stripComboVal">最高 2.0x 暴击</strong>
         </div>
       </div>
 
-      <div class="start-modal-tip">💡 双手就位：双手食指轻放在 F 和 J 键位盲打小凸起上</div>
+      <!-- 盲打定位极简贴士 -->
+      <div class="start-modal-tip">💡 双手就位：双手食指轻放在 F 和 J 盲打凸起点上</div>
 
+      <!-- 底部行动按钮 -->
       <div class="start-modal-actions">
         <button class="btn-start-confirm" id="btnChallengeConfirm">
           <span>🚀</span> 我准备好了，开始！ (Enter)

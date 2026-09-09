@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const livesBox = document.getElementById('livesBox');
   const challengeDiffBadge = document.getElementById('challengeDiffBadge');
   const diffSelectorDeck = document.getElementById('diffSelectorDeck');
-  const ruleLivesText = document.getElementById('ruleLivesText');
-  const ruleTimerText = document.getElementById('ruleTimerText');
+  const stripTimerVal = document.getElementById('stripTimerVal');
+  const stripLivesVal = document.getElementById('stripLivesVal');
 
   // 教程元素
   const stepChips = document.querySelectorAll('.step-chip');
@@ -779,7 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateDifficultyUI(diffKey) {
     const preset = window.typoGame.setDifficulty(diffKey);
     if (diffSelectorDeck) {
-      diffSelectorDeck.querySelectorAll('.diff-card-btn').forEach(btn => {
+      diffSelectorDeck.querySelectorAll('.diff-hero-card').forEach(btn => {
         if (btn.dataset.diff === diffKey) {
           btn.classList.add('active');
         } else {
@@ -787,15 +787,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-    if (ruleLivesText) {
-      if (preset.lives === 1) {
-        ruleLivesText.innerHTML = `<strong>生命小心心</strong>：<strong style="color: #FB7185;">仅 1 颗小心心 (一命到底)</strong>，容错为零，极限硬核！`;
-      } else {
-        ruleLivesText.innerHTML = `<strong>生命小心心</strong>：共有 <strong>${preset.lives} 条小心心</strong>，充裕容错安心练习。`;
-      }
+    if (stripTimerVal) {
+      stripTimerVal.textContent = `${preset.baseSeconds}s → ${preset.minSeconds}s`;
     }
-    if (ruleTimerText) {
-      ruleTimerText.innerHTML = `<strong>作答倒计时</strong>：从 <strong>${preset.baseSeconds} 秒</strong> 起步，平缓收紧至 <strong>${preset.minSeconds} 秒</strong> 极限！`;
+    if (stripLivesVal) {
+      if (preset.lives === 1) {
+        stripLivesVal.innerHTML = `<span style="color: #FB7185;">1 条心 (一命到底)</span>`;
+      } else {
+        stripLivesVal.textContent = `${preset.lives} 条小心心`;
+      }
     }
     if (challengeDiffBadge) {
       challengeDiffBadge.textContent = preset.hudTag;
@@ -804,7 +804,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (diffSelectorDeck) {
     diffSelectorDeck.addEventListener('click', (e) => {
-      const btn = e.target.closest('.diff-card-btn');
+      const btn = e.target.closest('.diff-hero-card');
       if (!btn) return;
       const d = btn.dataset.diff;
       if (d) {
@@ -824,19 +824,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const sIcon = (info.book && (info.book.startsWith('苏教') || info.book === 'SJ_ALL')) ? '🏫' : (info.book === 'all' ? '🌟' : '📘');
       const maxWords = Math.min(30, info.count);
       if (startModalTitle) {
-        startModalTitle.textContent = `极速挑战 · ${maxWords}词通关冲刺赛`;
+        startModalTitle.innerHTML = `<span class="title-flash-icon">⚡</span> 极速挑战 · ${maxWords}词大满贯`;
       }
       if (startModalBadge) {
-        startModalBadge.textContent = `🏆 ${maxWords} 词大满贯决胜机制`;
+        startModalBadge.textContent = `🎯 连冲 ${maxWords} 词`;
       }
       if (startModalScopeChip) {
-        startModalScopeChip.textContent = `${sIcon} 挑战范围：${info.title} (${info.count}词)`;
-      }
-      if (ruleTargetText) {
-        ruleTargetText.innerHTML = `<strong>通关目标</strong>：连续冲过 ${maxWords} 个${info.unit !== 'all' ? '单元' : '核心'}单词，夺取黄金大满贯奖杯！`;
+        startModalScopeChip.textContent = `${sIcon} ${info.title} (${info.count}词)`;
       }
 
-      // 同步当前选中的难度及规则卡片
+      // 同步当前选中的难度及数据条
       updateDifficultyUI(window.typoGame.difficulty);
 
       challengeStartModal.style.display = 'flex';
