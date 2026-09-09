@@ -506,6 +506,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!curriculumPicker || !btnCurriculumTrigger || !curriculumDropdown) return;
 
     const catalog = window.typoGame.getCurriculumCatalog();
+    const currTabNav = document.getElementById('currTabNav');
+    const btnCurriculumHero = document.getElementById('btnCurriculumHero');
+
+    const tabHeroConfigs = {
+      all: {
+        text: '🌟 全教材综合大乱斗 (共 925 词)',
+        book: 'all',
+        unit: 'all'
+      },
+      SJ: {
+        text: '🏫 苏教版三年级全套通练 (共 115 词)',
+        book: 'SJ_ALL',
+        unit: 'all'
+      },
+      PU: {
+        text: '📘 剑桥 Power Up 全套通练 (共 212 词)',
+        book: 'PU_ALL',
+        unit: 'all'
+      },
+      KET: {
+        text: '🎓 剑桥 KET 考级核心全库通练 (共 598 词)',
+        book: 'KET_ALL',
+        unit: 'all'
+      }
+    };
 
     // 动态渲染分册与单元卡片
     if (currBooksContainer) {
@@ -522,6 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tagText = grp.tag || grp.badge || (grp.id === 'SJ' ? '校内同步 · 115词' : (grp.id === 'KET' ? '考级冲刺 · 598词' : '经典核心 · 212词'));
         const banner = document.createElement('div');
         banner.className = `curr-group-banner group-${grp.id.toLowerCase()}`;
+        banner.dataset.curriculumGroup = grp.id;
         banner.innerHTML = `
           <span class="group-banner-title">${grp.title}</span>
           <span class="group-banner-tag">${tagText}</span>
@@ -534,6 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const section = document.createElement('div');
           section.className = 'curr-book-section';
+          section.dataset.curriculumGroup = grp.id;
 
           // 头部：分册标题 + 全册/全库按钮
           const header = document.createElement('div');
@@ -582,6 +609,58 @@ document.addEventListener('DOMContentLoaded', () => {
           section.appendChild(grid);
           currBooksContainer.appendChild(section);
         });
+      });
+    }
+
+    // 教材标签导航切换函数
+    function switchCurriculumTab(tabId) {
+      if (currTabNav) {
+        currTabNav.querySelectorAll('.curr-tab-btn').forEach(btn => {
+          if (btn.dataset.curriculumTab === tabId) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+
+      // 更新 Hero 按钮文本与数据属性
+      if (btnCurriculumHero && tabHeroConfigs[tabId]) {
+        const cfg = tabHeroConfigs[tabId];
+        btnCurriculumHero.textContent = cfg.text;
+        btnCurriculumHero.dataset.book = cfg.book;
+        btnCurriculumHero.dataset.unit = cfg.unit;
+
+        // 同步 active 状态
+        const cur = window.typoGame.getFilterInfo();
+        if (String(cur.book) === String(cfg.book) && String(cur.unit) === String(cfg.unit)) {
+          btnCurriculumHero.classList.add('active');
+        } else {
+          btnCurriculumHero.classList.remove('active');
+        }
+      }
+
+      // 联动过滤下方教材分册和单元卡片展示
+      if (currBooksContainer) {
+        Array.from(currBooksContainer.children).forEach(el => {
+          const grp = el.dataset.curriculumGroup;
+          if (tabId === 'all' || grp === tabId) {
+            el.style.display = '';
+          } else {
+            el.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    if (currTabNav) {
+      currTabNav.addEventListener('click', (e) => {
+        const tabBtn = e.target.closest('.curr-tab-btn');
+        if (!tabBtn) return;
+        e.stopPropagation();
+        const tabId = tabBtn.dataset.curriculumTab;
+        switchCurriculumTab(tabId);
+        window.soundFX?.playKeyPop?.(1);
       });
     }
 
@@ -634,6 +713,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function openCurriculumDropdown() {
       curriculumDropdown.style.display = 'flex';
       curriculumPicker.classList.add('open');
+
+      // 根据当前正在练习的教材，智能同步对应 Tab
+      const curFilter = window.typoGame.getFilterInfo();
+      let targetTab = 'all';
+      if (curFilter.book === 'SJ_ALL' || curFilter.book.startsWith('苏教')) {
+        targetTab = 'SJ';
+      } else if (curFilter.book === 'PU_ALL' || curFilter.book.startsWith('PU')) {
+        targetTab = 'PU';
+      } else if (curFilter.book === 'KET_ALL' || curFilter.book.startsWith('KET')) {
+        targetTab = 'KET';
+      }
+
+      const activeTabBtn = currTabNav ? currTabNav.querySelector('.curr-tab-btn.active') : null;
+      const currentNavTab = activeTabBtn ? activeTabBtn.dataset.curriculumTab : 'all';
+      if (targetTab !== 'all' && currentNavTab === 'all') {
+        switchCurriculumTab(targetTab);
+      } else {
+        switchCurriculumTab(currentNavTab);
+      }
     }
 
     function closeCurriculumDropdown() {

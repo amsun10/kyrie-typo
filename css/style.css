@@ -284,19 +284,21 @@ body::before {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  width: 500px;
-  max-width: min(500px, calc(100vw - 32px));
-  max-height: min(480px, calc(100vh - 120px));
+  width: 580px;
+  max-width: min(580px, calc(100vw - 32px));
+  max-height: min(530px, calc(100vh - 110px));
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
   background: rgba(15, 23, 42, 0.98);
   backdrop-filter: blur(24px);
   border: 2px solid rgba(99, 102, 241, 0.5);
   border-radius: 24px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(99, 102, 241, 0.3);
-  padding: 18px;
+  padding: 18px 16px 18px 20px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   z-index: 2000;
   box-sizing: border-box;
   animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -334,6 +336,73 @@ body::before {
   font-weight: 600;
 }
 
+/* 核心四大教材切换胶囊标签导航 */
+.curr-tab-nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.7);
+  padding: 5px;
+  border-radius: 16px;
+  border: 1px solid rgba(51, 65, 85, 0.7);
+}
+
+.curr-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  padding: 8px 4px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #94A3B8;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.curr-tab-btn:hover {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.curr-tab-btn.active {
+  color: #FFFFFF;
+  font-weight: 900;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.curr-tab-btn[data-curriculum-tab="all"].active {
+  background: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
+  border-color: #818CF8;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45);
+}
+
+.curr-tab-btn[data-curriculum-tab="SJ"].active {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border-color: #34D399;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+}
+
+.curr-tab-btn[data-curriculum-tab="PU"].active {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  border-color: #38BDF8;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+}
+
+.curr-tab-btn[data-curriculum-tab="KET"].active {
+  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  border-color: #FBBF24;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.45);
+}
+
 .curr-quick-deck {
   width: 100%;
 }
@@ -345,7 +414,7 @@ body::before {
   justify-content: center;
   gap: 8px;
   padding: 10px 16px;
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.3) 0%, rgba(67, 56, 202, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.25) 0%, rgba(67, 56, 202, 0.15) 100%);
   border: 1.5px solid rgba(99, 102, 241, 0.4);
   border-radius: 14px;
   color: #E0E7FF;
@@ -528,22 +597,24 @@ body::before {
 
 .curr-units-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
-  gap: 7px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 
 .curr-unit-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
-  padding: 8px 10px;
+  gap: 3px;
+  padding: 9px 12px;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(51, 65, 85, 0.7);
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
   transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .curr-unit-card:hover {
@@ -562,6 +633,7 @@ body::before {
   font-size: 0.72rem;
   font-weight: 900;
   color: #94A3B8;
+  white-space: nowrap;
 }
 
 .curr-unit-card.active .unit-card-tag {
@@ -572,6 +644,10 @@ body::before {
   font-size: 0.88rem;
   font-weight: 800;
   color: #F8FAFC;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .unit-card-count {
