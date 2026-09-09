@@ -1160,7 +1160,8 @@ body::before {
   width: 100%;
   max-width: 1160px;
   margin-bottom: 10px;
-  padding: 6px 20px;
+  padding: 8px 20px;
+  min-height: 66px;
   background: rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(12px);
   border: 1.5px solid #334155;
@@ -1173,7 +1174,9 @@ body::before {
 .kbd-type-toggle {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  height: 50px;
+  box-sizing: border-box;
   background: rgba(30, 41, 59, 0.85);
   border: 1.5px solid #475569;
   padding: 4px 6px;
@@ -1188,14 +1191,17 @@ body::before {
   font-size: 0.92rem;
   font-weight: 800;
   color: #94A3B8;
-  padding: 6px 16px;
+  height: 39px;
+  padding: 0 18px;
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 5px;
+  box-sizing: border-box;
 }
 
 .kbd-type-btn:hover {
@@ -1220,9 +1226,11 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  height: 50px;
+  box-sizing: border-box;
   background: rgba(30, 41, 59, 0.9);
   border: 1.5px solid #6366F1;
-  padding: 6px 18px;
+  padding: 0 20px;
   border-radius: 999px;
   color: #CBD5E1;
   font-size: 0.92rem;
@@ -1244,9 +1252,11 @@ body::before {
   display: flex;
   align-items: center;
   gap: 12px;
+  height: 50px;
+  box-sizing: border-box;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
   border: 2px solid #4F46E5;
-  padding: 5px 20px;
+  padding: 4px 20px;
   border-radius: 999px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 16px rgba(79, 70, 229, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1272,7 +1282,7 @@ body::before {
 }
 
 .speed-animal-icon {
-  font-size: 2.1rem;
+  font-size: 1.95rem;
   display: inline-block;
   line-height: 1;
 }
@@ -1281,18 +1291,18 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1px;
+  gap: 0px;
 }
 
 .speed-num-row {
   display: flex;
   align-items: baseline;
   gap: 4px;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .speed-val {
-  font-size: 1.45rem;
+  font-size: 1.35rem;
   font-weight: 900;
   color: #FBBF24;
   text-shadow: 0 0 14px rgba(251, 191, 36, 0.55);
@@ -1301,16 +1311,17 @@ body::before {
 }
 
 .speed-unit {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 900;
   color: #A5B4FC;
 }
 
 .speed-tier-lbl {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 800;
   color: #38BDF8;
   letter-spacing: 0.2px;
+  line-height: 1.1;
   transition: color 0.3s;
 }
 
