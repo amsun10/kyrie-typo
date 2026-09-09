@@ -574,9 +574,15 @@ class TypoGame {
       this.maxCombo = this.combo;
     }
 
-    // 播放胜利和弦（传入递增后的连击数，实现音调阶梯式华丽攀升！）
+    // 播放胜利和弦与发音
     window.soundFX.playWordSuccess(this.combo);
-    window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+    if (this.mode === 'challenge') {
+      // 极速挑战模式下争分夺秒，仅轻快干脆朗读英文单词，绝不拖泥带水！
+      window.speechEngine.speakEnglish(wordObj.word, 1.15);
+    } else {
+      // 单词探索模式下进行紧凑无缝双语连读
+      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+    }
 
     // 里程碑连击额外加持晶莹冲天琶音
     if (this.combo >= 3 && (this.combo % 3 === 0 || this.combo === 5 || this.combo === 10)) {
@@ -628,13 +634,19 @@ class TypoGame {
       this.onWordComplete(wordObj);
     }
 
-    // 延迟过渡到下一个词，给孩子看动画和听发音
+    // 延迟过渡到下一个词：探索模式给足 1350ms 听完清脆双语，挑战模式 750ms 紧凑疾速
+    const transitionDelay = this.mode === 'challenge' ? 750 : 1350;
     setTimeout(() => {
       this.nextWord();
-    }, 1100);
+    }, transitionDelay);
   }
 
   nextWord() {
+    // 彻底清除上一词的发音队列，绝不允许串音到新单词！
+    if (window.speechEngine) {
+      window.speechEngine.cancel();
+    }
+
     this.currentWordIdx++;
     if (this.currentWordIdx >= this.wordsList.length) {
       this.shuffle(this.wordsList);

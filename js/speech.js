@@ -18,19 +18,29 @@ class SpeechEngine {
     }
   }
 
+  cancel() {
+    if (this.synth) {
+      this.synth.cancel();
+      this.currentUtterance = null;
+    }
+  }
+
   toggleSpeech() {
     this.enabled = !this.enabled;
+    if (!this.enabled) {
+      this.cancel();
+    }
     return this.enabled;
   }
 
   // 朗读英文单词
-  speakEnglish(text, rate = 0.88) {
+  speakEnglish(text, rate = 1.05) {
     if (!this.enabled || !this.synth) return;
-    this.synth.cancel(); // 停止前面的发音
+    this.cancel();
 
     const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = rate; // 稍微放慢一点，儿童听得更清楚
-    utter.pitch = 1.1; // 稍微活泼明亮的语调
+    utter.rate = rate; // 自然明快
+    utter.pitch = 1.1; // 活泼明亮的语调
 
     // 优先选择美音或英音儿童/女性友好声音
     const enVoice = this.voices.find(v => (v.lang.includes('en-US') || v.lang.includes('en-GB')) && (v.name.includes('Samantha') || v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Jenny')));
@@ -41,14 +51,18 @@ class SpeechEngine {
       if (genericEn) utter.voice = genericEn;
     }
 
+    this.currentUtterance = utter;
     this.synth.speak(utter);
   }
 
   // 朗读中文意思
   speakChinese(text) {
     if (!this.enabled || !this.synth) return;
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.95;
+    this.cancel();
+
+    const cleanZh = (text || '').replace(/[\(（].*?[\)）]/g, '').trim();
+    const utter = new SpeechSynthesisUtterance(cleanZh);
+    utter.rate = 1.15; // 轻快干脆
     utter.pitch = 1.05;
 
     const zhVoice = this.voices.find(v => v.lang.includes('zh') && (v.name.includes('Xiaoxiao') || v.name.includes('Google') || v.name.includes('Tingting') || v.name.includes('Mei-Jia')));
@@ -59,32 +73,37 @@ class SpeechEngine {
       if (genericZh) utter.voice = genericZh;
     }
 
+    this.currentUtterance = utter;
     this.synth.speak(utter);
   }
 
-  // 双语连读：先读英文单词，短暂间隔后读中文释义
+  // 双语紧凑连读：先读英文单词，0延迟立即轻读中文释义（绝不延后串音到下个词）
   speakBilingual(word, chinese) {
     if (!this.enabled || !this.synth) return;
-    this.synth.cancel();
+    this.cancel();
 
     const utterEn = new SpeechSynthesisUtterance(word);
-    utterEn.rate = 0.85;
+    utterEn.rate = 1.05; // 轻快、标准
     utterEn.pitch = 1.1;
     const enVoice = this.voices.find(v => v.lang.startsWith('en'));
     if (enVoice) utterEn.voice = enVoice;
 
+    // 清洗中文中的词性或说明括号（如 "你好 (日常问候)" -> "你好"），读音干净利落
+    const cleanZh = (chinese || '').replace(/[\(（].*?[\)）]/g, '').trim();
+
     utterEn.onend = () => {
-      // 英文读完，轻读中文释义
-      setTimeout(() => {
-        const utterZh = new SpeechSynthesisUtterance(chinese);
-        utterZh.rate = 1.0;
-        utterZh.pitch = 1.05;
-        const zhVoice = this.voices.find(v => v.lang.startsWith('zh'));
-        if (zhVoice) utterZh.voice = zhVoice;
-        this.synth.speak(utterZh);
-      }, 250);
+      if (!this.enabled || !this.synth) return;
+      // 英文刚一读完，立即紧跟中文，0延迟无缝衔接
+      const utterZh = new SpeechSynthesisUtterance(cleanZh);
+      utterZh.rate = 1.15; // 中文轻快利落
+      utterZh.pitch = 1.05;
+      const zhVoice = this.voices.find(v => v.lang.startsWith('zh'));
+      if (zhVoice) utterZh.voice = zhVoice;
+      this.currentUtterance = utterZh;
+      this.synth.speak(utterZh);
     };
 
+    this.currentUtterance = utterEn;
     this.synth.speak(utterEn);
   }
 
