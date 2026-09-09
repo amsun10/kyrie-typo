@@ -494,17 +494,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ================= 剑桥少儿英语 PU 教材单元点播系统 (Curriculum Selector) =================
+  function getScopeIcon(book) {
+    if (!book || book === 'all') return '🌟';
+    if (book.startsWith('苏教') || book === 'SJ_ALL') return '🏫';
+    if (book === 'KET' || book === 'KET_ALL') return '🎓';
+    return '📘';
+  }
+
+  // ================= 剑桥少儿英语 PU / 苏教版 / 剑桥 KET 教材单元点播系统 (Curriculum Selector) =================
   function setupCurriculumSelector() {
     if (!curriculumPicker || !btnCurriculumTrigger || !curriculumDropdown) return;
 
     const catalog = window.typoGame.getCurriculumCatalog();
-
-    function getScopeIcon(book) {
-      if (!book || book === 'all') return '🌟';
-      if (book.startsWith('苏教') || book === 'SJ_ALL') return '🏫';
-      return '📘';
-    }
 
     // 动态渲染分册与单元卡片
     if (currBooksContainer) {
@@ -512,12 +513,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const groups = catalog.groups || [
         { id: 'SJ', title: '🏫 苏教版小学英语 (译林版·三年级)', badge: '苏教版三年级', bookCodes: ['苏教3A', '苏教3B'] },
-        { id: 'PU', title: '📘 剑桥少儿英语 Power Up', badge: '剑桥少儿核心', bookCodes: ['PU1', 'PU2', 'PU3'] }
+        { id: 'PU', title: '📘 剑桥少儿英语 Power Up', badge: '剑桥少儿核心', bookCodes: ['PU1', 'PU2', 'PU3'] },
+        { id: 'KET', title: '🎓 剑桥 KET 考级核心词库 (A2 Key)', badge: '考级冲刺 · 598词', bookCodes: ['KET'] }
       ];
 
       groups.forEach(grp => {
         // 群组横幅
-        const tagText = grp.tag || grp.badge || (grp.id === 'SJ' ? '校内同步 · 115词' : '经典核心 · 212词');
+        const tagText = grp.tag || grp.badge || (grp.id === 'SJ' ? '校内同步 · 115词' : (grp.id === 'KET' ? '考级冲刺 · 598词' : '经典核心 · 212词'));
         const banner = document.createElement('div');
         banner.className = `curr-group-banner group-${grp.id.toLowerCase()}`;
         banner.innerHTML = `
@@ -533,21 +535,25 @@ document.addEventListener('DOMContentLoaded', () => {
           const section = document.createElement('div');
           section.className = 'curr-book-section';
 
-          // 头部：分册标题 + 全册按钮
+          // 头部：分册标题 + 全册/全库按钮
           const header = document.createElement('div');
           header.className = 'curr-book-header';
 
           const titleRow = document.createElement('div');
           titleRow.className = 'curr-book-title-row';
+
+          const isKET = code === 'KET';
+          const pillStyle = isKET ? 'style="background: rgba(245, 158, 11, 0.2); color: #FBBF24; border-color: rgba(245, 158, 11, 0.4);"' : '';
+
           titleRow.innerHTML = `
-            <span class="curr-book-pill">${code}</span>
+            <span class="curr-book-pill" ${pillStyle}>${code}</span>
             <span class="curr-book-name">${bookData.title}</span>
           `;
 
           const btnAll = document.createElement('button');
           btnAll.className = 'btn-book-all';
-          btnAll.textContent = `全册 (${bookData.count}词)`;
-          btnAll.dataset.book = code;
+          btnAll.textContent = isKET ? `全库 (${bookData.count}词)` : `全册 (${bookData.count}词)`;
+          btnAll.dataset.book = isKET ? 'KET_ALL' : code;
           btnAll.dataset.unit = 'all';
 
           header.appendChild(titleRow);
@@ -750,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (challengeScopeBadge) {
         const fInfo = window.typoGame.getFilterInfo();
-        const fIcon = (fInfo.book && (fInfo.book.startsWith('苏教') || fInfo.book === 'SJ_ALL')) ? '🏫' : (fInfo.book === 'all' ? '🌟' : '📘');
+        const fIcon = getScopeIcon(fInfo.book);
         challengeScopeBadge.textContent = `${fIcon} ${fInfo.shortTitle}`;
       }
       if (challengeDiffBadge) {
@@ -821,7 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentActiveTab === 'challenge') return;
     if (challengeStartModal) {
       const info = window.typoGame.getFilterInfo();
-      const sIcon = (info.book && (info.book.startsWith('苏教') || info.book === 'SJ_ALL')) ? '🏫' : (info.book === 'all' ? '🌟' : '📘');
+      const sIcon = getScopeIcon(info.book);
       const maxWords = Math.min(30, info.count);
       if (startModalTitle) {
         startModalTitle.innerHTML = `<span class="title-flash-icon">⚡</span> 极速挑战 · ${maxWords}词大满贯`;

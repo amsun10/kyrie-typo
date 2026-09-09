@@ -127,7 +127,7 @@ class TypoGame {
     return preset;
   }
 
-  // 动态提取教材目录（按 苏教版 / 剑桥少儿 PU 双教材体系组织）
+  // 动态提取教材目录（按 苏教版 / 剑桥少儿 PU / 剑桥 KET 三大权威体系组织）
   getCurriculumCatalog() {
     const catalog = {
       all: { count: window.WORD_DATABASE ? window.WORD_DATABASE.length : 0 },
@@ -145,6 +145,13 @@ class TypoGame {
           tag: '经典核心 · 212词',
           badge: '经典核心 · 212词',
           bookCodes: ['PU1', 'PU2', 'PU3']
+        },
+        {
+          id: 'KET',
+          title: '🎓 剑桥 KET 考级核心词库 (A2 Key)',
+          tag: '考级冲刺 · 598词',
+          badge: '考级冲刺 · 598词',
+          bookCodes: ['KET']
         }
       ],
       books: {}
@@ -162,11 +169,12 @@ class TypoGame {
         else if (b === 'PU1') bTitle = 'Power Up 1 全册';
         else if (b === 'PU2') bTitle = 'Power Up 2 全册';
         else if (b === 'PU3') bTitle = 'Power Up 3 (U1-U5)';
+        else if (b === 'KET') bTitle = '剑桥 KET 考级 12 大黄金主题';
 
         catalog.books[b] = {
           code: b,
           title: bTitle,
-          curriculum: w.curriculum || (b.startsWith('苏教') ? 'SJ' : 'PU'),
+          curriculum: w.curriculum || (b.startsWith('苏教') ? 'SJ' : (b === 'KET' ? 'KET' : 'PU')),
           count: 0,
           units: {}
         };
@@ -185,7 +193,7 @@ class TypoGame {
     return catalog;
   }
 
-  // 设定当前练习的教材范围（book: 'all' | 'SJ_ALL' | 'PU_ALL' | '苏教3A' | '苏教3B' | 'PU1'..., unit: 'all' | 1..9）
+  // 设定当前练习的教材范围（book: 'all' | 'SJ_ALL' | 'PU_ALL' | 'KET_ALL' | '苏教3A' | '苏教3B' | 'PU1' | 'KET'..., unit: 'all' | 1..12）
   setWordFilter(book = 'all', unit = 'all') {
     this.currentFilter = {
       book: book,
@@ -205,6 +213,8 @@ class TypoGame {
       list = list.filter(w => w.curriculum === 'SJ' || (w.book && w.book.startsWith('苏教')));
     } else if (this.currentFilter.book === 'PU_ALL') {
       list = list.filter(w => w.curriculum === 'PU' || (w.book && w.book.startsWith('PU')));
+    } else if (this.currentFilter.book === 'KET_ALL') {
+      list = list.filter(w => w.curriculum === 'KET' || w.book === 'KET');
     } else if (this.currentFilter.book !== 'all') {
       list = list.filter(w => w.book === this.currentFilter.book);
       if (this.currentFilter.unit !== 'all') {
@@ -221,17 +231,21 @@ class TypoGame {
     } else if (this.currentFilter.book === 'PU_ALL') {
       title = '📘 剑桥 Power Up 全套 (PU1~PU3)';
       shortTitle = 'Power Up 全套';
+    } else if (this.currentFilter.book === 'KET_ALL') {
+      title = '🎓 剑桥 KET 考级必背全套 (598词)';
+      shortTitle = '剑桥 KET 全套';
     } else if (this.currentFilter.book !== 'all') {
       const isSJ = this.currentFilter.book.startsWith('苏教');
-      const icon = isSJ ? '🏫' : '📘';
+      const isKET = this.currentFilter.book === 'KET';
+      const icon = isSJ ? '🏫' : (isKET ? '🎓' : '📘');
       if (this.currentFilter.unit !== 'all') {
         const sample = list[0];
         const unitName = sample ? sample.categoryCn : `第${this.currentFilter.unit}单元`;
         title = `${icon} ${this.currentFilter.book} · U${this.currentFilter.unit} ${unitName}`;
         shortTitle = `${this.currentFilter.book} · U${this.currentFilter.unit}`;
       } else {
-        title = `${icon} ${this.currentFilter.book} 全册精练`;
-        shortTitle = `${this.currentFilter.book} 全册`;
+        title = `${icon} ${this.currentFilter.book} 全库精练`;
+        shortTitle = `${this.currentFilter.book} 全库`;
       }
     }
 
@@ -250,6 +264,8 @@ class TypoGame {
       list = list.filter(w => w.curriculum === 'SJ' || (w.book && w.book.startsWith('苏教')));
     } else if (this.currentFilter.book === 'PU_ALL') {
       list = list.filter(w => w.curriculum === 'PU' || (w.book && w.book.startsWith('PU')));
+    } else if (this.currentFilter.book === 'KET_ALL') {
+      list = list.filter(w => w.curriculum === 'KET' || w.book === 'KET');
     } else if (this.currentFilter.book !== 'all') {
       list = list.filter(w => w.book === this.currentFilter.book);
       if (this.currentFilter.unit !== 'all') {
