@@ -5,6 +5,8 @@ class SpeechEngine {
     this.synth = window.speechSynthesis;
     this.voices = [];
     this.enabled = true;
+    this.sessionId = 0;
+    this.currentUtterance = null;
     this.initVoices();
   }
 
@@ -19,6 +21,7 @@ class SpeechEngine {
   }
 
   cancel() {
+    this.sessionId++;
     if (this.synth) {
       this.synth.cancel();
       this.currentUtterance = null;
@@ -77,30 +80,77 @@ class SpeechEngine {
     this.synth.speak(utter);
   }
 
-  // 双语紧凑连读：先读英文单词，0延迟立即轻读中文释义（绝不延后串音到下个词）
-  speakBilingual(word, chinese) {
-    if (!this.enabled || !this.synth) return;
+  // 双语连读：先读英文单词，完成后无缝衔接中文释义；全部朗读完毕后执行 onComplete 回调
+  speakBilingual(word, chinese, onComplete) {
+    if (!this.enabled || !this.synth) {
+      if (typeof onComplete === 'function') {
+        // 静音或不支持环境保持 350ms 舒适视觉停留
+        setTimeout(onComplete, 350);
+      }
+      return;
+    }
+
     this.cancel();
+    const currentSession = this.sessionId;
+
+    let finished = false;
+    let fallbackTimer = null;
+
+    const done = () => {
+      if (currentSession !== this.sessionId) return;
+      if (!finished) {
+        finished = true;
+        if (fallbackTimer) {
+          clearTimeout(fallbackTimer);
+          fallbackTimer = null;
+        }
+        if (typeof onComplete === 'function') {
+          onComplete();
+        }
+      }
+    };
+
+    // 兜底超时：正常双语朗读约 1.2~1.8s，最长设定 3.2s，防浏览器 TTS 偶发挂起
+    fallbackTimer = setTimeout(done, 3200);
 
     const utterEn = new SpeechSynthesisUtterance(word);
-    utterEn.rate = 1.05; // 轻快、标准
+    utterEn.rate = 1.05; // 自然明快
     utterEn.pitch = 1.1;
-    const enVoice = this.voices.find(v => v.lang.startsWith('en'));
+
+    const enVoice = this.voices.find(v => (v.lang.includes('en-US') || v.lang.includes('en-GB')) && (v.name.includes('Samantha') || v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Jenny'))) || this.voices.find(v => v.lang.startsWith('en'));
     if (enVoice) utterEn.voice = enVoice;
 
     // 清洗中文中的词性或说明括号（如 "你好 (日常问候)" -> "你好"），读音干净利落
     const cleanZh = (chinese || '').replace(/[\(（].*?[\)）]/g, '').trim();
 
     utterEn.onend = () => {
-      if (!this.enabled || !this.synth) return;
-      // 英文刚一读完，立即紧跟中文，0延迟无缝衔接
+      if (currentSession !== this.sessionId) return;
+      if (!this.enabled || !this.synth || !cleanZh) {
+        done();
+        return;
+      }
+
+      // 英文读完，立即紧跟中文
       const utterZh = new SpeechSynthesisUtterance(cleanZh);
       utterZh.rate = 1.15; // 中文轻快利落
       utterZh.pitch = 1.05;
-      const zhVoice = this.voices.find(v => v.lang.startsWith('zh'));
+
+      const zhVoice = this.voices.find(v => v.lang.includes('zh') && (v.name.includes('Xiaoxiao') || v.name.includes('Google') || v.name.includes('Tingting') || v.name.includes('Mei-Jia'))) || this.voices.find(v => v.lang.startsWith('zh'));
       if (zhVoice) utterZh.voice = zhVoice;
+
+      utterZh.onend = () => {
+        done();
+      };
+      utterZh.onerror = () => {
+        done();
+      };
+
       this.currentUtterance = utterZh;
       this.synth.speak(utterZh);
+    };
+
+    utterEn.onerror = () => {
+      done();
     };
 
     this.currentUtterance = utterEn;
