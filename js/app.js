@@ -1012,6 +1012,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bubblesContainer.innerHTML = '';
     const word = wordObj.word;
+    const len = word.length;
+
+    // 根据单词字符长度动态适配气泡缩微梯级，确保特别长的单词也能尽量在单行完整呈现
+    bubblesContainer.className = 'word-bubbles-container';
+    if (len >= 11) {
+      bubblesContainer.classList.add('len-xlong');
+    } else if (len >= 9) {
+      bubblesContainer.classList.add('len-long');
+    } else if (len === 8) {
+      bubblesContainer.classList.add('len-compact');
+    } else if (len === 7) {
+      bubblesContainer.classList.add('len-medium');
+    }
 
     for (let i = 0; i < word.length; i++) {
       const bubble = document.createElement('div');
