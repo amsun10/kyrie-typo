@@ -99,9 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const speedVal = document.getElementById('speedVal');
   const speedTierLbl = document.getElementById('speedTierLbl');
 
-  // 音频切换
+  // 音频与全屏切换
   const btnToggleSound = document.getElementById('btnToggleSound');
   const btnToggleSpeech = document.getElementById('btnToggleSpeech');
+  const btnToggleFullscreen = document.getElementById('btnToggleFullscreen');
 
   // 开场动画元素
   const mimimiSplash = document.getElementById('mimimiSplash');
@@ -1615,6 +1616,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const isEnabled = window.speechEngine.toggleSpeech();
     btnToggleSpeech.textContent = isEnabled ? '🗣️' : '🤫';
   });
+
+  // 全屏专注模式控制 (支持 F11、Esc 与按钮联动)
+  function toggleFullscreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      const docEl = document.documentElement;
+      if (docEl.requestFullscreen) {
+        docEl.requestFullscreen().catch(err => console.warn('全屏请求被阻止:', err));
+      } else if (docEl.webkitRequestFullscreen) {
+        docEl.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(err => console.warn('退出全屏失败:', err));
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  }
+
+  function updateFullscreenBtnState() {
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (btnToggleFullscreen) {
+      btnToggleFullscreen.textContent = isFs ? '🗗' : '⛶';
+      btnToggleFullscreen.title = isFs ? '退出全屏专注模式 (Esc / F11)' : '开启全屏专注模式 (F11)';
+      btnToggleFullscreen.classList.toggle('active', isFs);
+    }
+  }
+
+  if (btnToggleFullscreen) {
+    btnToggleFullscreen.addEventListener('click', toggleFullscreen);
+  }
+  document.addEventListener('fullscreenchange', updateFullscreenBtnState);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenBtnState);
 
   // 1. 默认应用 PC (Windows) 键盘模式
   setKeyboardLayout('pc');
