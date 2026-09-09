@@ -574,15 +574,10 @@ class TypoGame {
       this.maxCombo = this.combo;
     }
 
-    // 播放胜利和弦与发音
+    // 播放胜利和弦与纯正英文原声朗读（纯正语感，干脆爽快）
     window.soundFX.playWordSuccess(this.combo);
-    if (this.mode === 'challenge') {
-      // 极速挑战模式下争分夺秒，仅轻快干脆朗读英文单词，绝不拖泥带水！
-      window.speechEngine.speakEnglish(wordObj.word, 1.15);
-    } else {
-      // 单词探索模式下进行紧凑无缝双语连读
-      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
-    }
+    const speechRate = this.mode === 'challenge' ? 1.15 : 1.0;
+    window.speechEngine.speakEnglish(wordObj.word, speechRate);
 
     // 里程碑连击额外加持晶莹冲天琶音
     if (this.combo >= 3 && (this.combo % 3 === 0 || this.combo === 5 || this.combo === 10)) {
@@ -634,8 +629,8 @@ class TypoGame {
       this.onWordComplete(wordObj);
     }
 
-    // 延迟过渡到下一个词：探索模式给足 1350ms 听完清脆双语，挑战模式 750ms 紧凑疾速
-    const transitionDelay = this.mode === 'challenge' ? 750 : 1350;
+    // 延迟过渡到下一个词：探索模式 780ms 沉浸自然，挑战模式 600ms 疾速顺滑
+    const transitionDelay = this.mode === 'challenge' ? 600 : 780;
     setTimeout(() => {
       this.nextWord();
     }, transitionDelay);

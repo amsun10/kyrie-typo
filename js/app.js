@@ -920,13 +920,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 中文释义点击：发音朗读
-  chinesePill.addEventListener('click', () => {
-    const wordObj = window.typoGame.getCurrentWordObj();
-    if (wordObj) {
-      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
-    }
-  });
+  // 中文释义点击：按需专属朗读中文意思
+  if (chinesePill) {
+    chinesePill.title = '点击朗读中文意思';
+    chinesePill.addEventListener('click', () => {
+      const wordObj = window.typoGame.getCurrentWordObj();
+      if (wordObj) {
+        window.speechEngine.speakChinese(wordObj.chinese);
+        if (window.soundFX && window.soundFX.playKeyPop) {
+          window.soundFX.playKeyPop(3);
+        }
+      }
+    });
+  }
+
+  // 单词大 Emoji 点击：随时重听纯正英文原声
+  if (wordEmoji) {
+    wordEmoji.style.cursor = 'pointer';
+    wordEmoji.title = '点击重听英文原声发音';
+    wordEmoji.addEventListener('click', () => {
+      const wordObj = window.typoGame.getCurrentWordObj();
+      if (wordObj) {
+        window.speechEngine.speakEnglish(wordObj.word, 0.95);
+        if (window.soundFX && window.soundFX.playKeyPop) {
+          window.soundFX.playKeyPop(2);
+        }
+      }
+    });
+  }
 
   // ================= 3. 游戏引擎回调绑定 =================
   let lastTenseTickTime = 0;
