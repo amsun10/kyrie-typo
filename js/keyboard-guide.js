@@ -11,15 +11,15 @@ class KeyboardGuide {
 
     // 指法色彩与手指映射
     this.fingerColors = {
-      leftPinky: { name: "左手小拇指", color: "#FF6584", keys: ["a", "q", "z", "1", "`", "tab", "capslock", "shift"] },
-      leftRing: { name: "左手无名指", color: "#FFA45B", keys: ["s", "w", "x", "2"] },
-      leftMiddle: { name: "左手中指", color: "#10B981", keys: ["d", "e", "c", "3"] },
-      leftIndex: { name: "左手食指", color: "#38BDF8", keys: ["f", "r", "v", "g", "t", "b", "4", "5"] },
-      thumb: { name: "大拇指（左右通用）", color: "#A855F7", keys: [" "] },
-      rightIndex: { name: "右手食指", color: "#38BDF8", keys: ["j", "u", "m", "h", "y", "n", "6", "7"] },
-      rightMiddle: { name: "右手中指", color: "#10B981", keys: ["k", "i", ",", "8"] },
-      rightRing: { name: "右手无名指", color: "#FFA45B", keys: ["l", "o", ".", "9"] },
-      rightPinky: { name: "右手小拇指", color: "#FF6584", keys: [";", "p", "/", "0", "-", "=", "[", "]", "'", "delete", "return", "enter", "backspace"] }
+      leftPinky: { name: "左手小拇指", hand: "左手", fingerName: "小拇指", color: "#FF6584", keys: ["a", "q", "z", "1", "`", "tab", "capslock", "shift"] },
+      leftRing: { name: "左手无名指", hand: "左手", fingerName: "无名指", color: "#FFA45B", keys: ["s", "w", "x", "2"] },
+      leftMiddle: { name: "左手中指", hand: "左手", fingerName: "中指", color: "#10B981", keys: ["d", "e", "c", "3"] },
+      leftIndex: { name: "左手食指", hand: "左手", fingerName: "食指", color: "#38BDF8", keys: ["f", "r", "v", "g", "t", "b", "4", "5"] },
+      thumb: { name: "双手大拇指", hand: "双手", fingerName: "大拇指 (空格)", color: "#A855F7", keys: [" "] },
+      rightIndex: { name: "右手食指", hand: "右手", fingerName: "食指", color: "#38BDF8", keys: ["j", "u", "m", "h", "y", "n", "6", "7"] },
+      rightMiddle: { name: "右手中指", hand: "右手", fingerName: "中指", color: "#10B981", keys: ["k", "i", ",", "8"] },
+      rightRing: { name: "右手无名指", hand: "右手", fingerName: "无名指", color: "#FFA45B", keys: ["l", "o", ".", "9"] },
+      rightPinky: { name: "右手小拇指", hand: "右手", fingerName: "小拇指", color: "#FF6584", keys: [";", "p", "/", "0", "-", "=", "[", "]", "'", "delete", "return", "enter", "backspace"] }
     };
 
     // 手指儿童趣味介绍口诀
@@ -158,13 +158,51 @@ class KeyboardGuide {
 
   // 获取手指指导说明
   getFingerForChar(char) {
+    if (!char) return { finger: "general", name: "任意手指", hand: "单手", fingerName: "任意手指", color: "#7B61FF" };
     const lower = char.toLowerCase();
     for (const [fingerKey, data] of Object.entries(this.fingerColors)) {
       if (data.keys.includes(lower)) {
-        return { finger: fingerKey, name: data.name, color: data.color };
+        return {
+          finger: fingerKey,
+          name: data.name,
+          hand: data.hand,
+          fingerName: data.fingerName,
+          color: data.color
+        };
       }
     }
-    return { finger: "general", name: "任意手指", color: "#7B61FF" };
+    return { finger: "general", name: "任意手指", hand: "单手", fingerName: "任意手指", color: "#7B61FF" };
+  }
+
+  // 动态生成直观生动的五指矢量手掌图解 (高亮指定手指，消除指法歧义)
+  getMiniHandSvg(fingerKey) {
+    const isRight = fingerKey && fingerKey.startsWith('right');
+    const isThumb = fingerKey === 'thumb';
+
+    // 0=小拇指, 1=无名指, 2=中指, 3=食指, 4=大拇指
+    let activeIdx = -1;
+    if (fingerKey === 'leftPinky' || fingerKey === 'rightPinky') activeIdx = 0;
+    else if (fingerKey === 'leftRing' || fingerKey === 'rightRing') activeIdx = 1;
+    else if (fingerKey === 'leftMiddle' || fingerKey === 'rightMiddle') activeIdx = 2;
+    else if (fingerKey === 'leftIndex' || fingerKey === 'rightIndex') activeIdx = 3;
+    else if (isThumb) activeIdx = 4;
+
+    const f0 = activeIdx === 0 ? 'fill="#FFFFFF" class="active-finger"' : 'fill="rgba(0,0,0,0.25)"';
+    const f1 = activeIdx === 1 ? 'fill="#FFFFFF" class="active-finger"' : 'fill="rgba(0,0,0,0.25)"';
+    const f2 = activeIdx === 2 ? 'fill="#FFFFFF" class="active-finger"' : 'fill="rgba(0,0,0,0.25)"';
+    const f3 = activeIdx === 3 ? 'fill="#FFFFFF" class="active-finger"' : 'fill="rgba(0,0,0,0.25)"';
+    const f4 = activeIdx === 4 ? 'fill="#FFFFFF" class="active-finger"' : 'fill="rgba(0,0,0,0.25)"';
+
+    const transformAttr = isRight ? 'transform="scale(-1, 1)" style="transform-origin: 11px 11px;"' : '';
+
+    return `<svg class="mini-hand-svg" viewBox="0 0 22 22" ${transformAttr} aria-hidden="true">` +
+      `<rect x="2.5" y="7" width="2.6" height="8.5" rx="1.3" ${f0}/>` +
+      `<rect x="6.1" y="4" width="2.6" height="11.5" rx="1.3" ${f1}/>` +
+      `<rect x="9.7" y="2" width="2.6" height="13.5" rx="1.3" ${f2}/>` +
+      `<rect x="13.3" y="4.5" width="2.6" height="11" rx="1.3" ${f3}/>` +
+      `<rect x="16.8" y="8.5" width="2.8" height="7.5" rx="1.4" transform="rotate(24 16.8 8.5)" ${f4}/>` +
+      `<path d="M 2.5 13 C 2.5 18.5, 19.5 18.5, 19.5 13 Z" fill="rgba(0,0,0,0.2)"/>` +
+      `</svg>`;
   }
 
   // 获取功能键图鉴数据 (PC 与 Mac 自适应)

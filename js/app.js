@@ -892,15 +892,16 @@ document.addEventListener('DOMContentLoaded', () => {
     highlightTargetKeyboardKey(word[currentHitIdx]);
   }
 
-  // 更新手指推荐与键盘高亮
+  // 更新手指推荐与键盘高亮（生动矢量手掌图解 + 消除歧义）
   function updateFingerPrompt(char) {
     if (!char) {
-      fingerBadge.textContent = '🎉 完成！';
+      fingerBadge.innerHTML = '<span class="finger-finish-tag">🎉 单词完成！</span>';
       fingerBadge.style.backgroundColor = '#10B981';
       return;
     }
     const info = window.keyboardGuide.getFingerForChar(char);
-    fingerBadge.textContent = `👉 ${info.name}`;
+    const handSvg = window.keyboardGuide.getMiniHandSvg(info.finger);
+    fingerBadge.innerHTML = `<span class="finger-hand-tag">${handSvg} ${info.hand}</span><span class="finger-name-tag">${info.fingerName}</span>`;
     fingerBadge.style.backgroundColor = info.color;
   }
 
