@@ -1368,7 +1368,8 @@ body::before {
   font-weight: 800;
   color: #F8FAFC;
   box-shadow: 0 5px 0 #020617, 0 8px 14px rgba(0,0,0,0.35);
-  cursor: pointer;
+  cursor: default;
+  user-select: none;
   position: relative;
   transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
   flex: 1;

@@ -1809,34 +1809,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll(selector).forEach(el => el.classList.remove('pressed'));
   }
 
-  // 支持直接点击虚拟键盘（支持重绘后动态绑定）
+  // 防作弊机制：虚拟键盘仅供指引与雷达指示，彻底禁用鼠标点击输入
+  let lastMouseClickWarnTime = 0;
   function bindKeyElementsEvents() {
     document.querySelectorAll('.apple-key').forEach(keyEl => {
       if (keyEl._hasTypoListener) return;
       keyEl._hasTypoListener = true;
-      keyEl.addEventListener('click', () => {
-        const keyVal = keyEl.getAttribute('data-key');
-        if (!keyVal) return;
+      keyEl.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-        keyEl.classList.add('pressed');
-        setTimeout(() => keyEl.classList.remove('pressed'), 120);
-
-        if (currentActiveTab === 'tutorial') {
-          const res = window.keyboardGuide.handleKeyPress(keyVal);
-          if (res.success) {
-            window.soundFX.playKeyPop(2);
-            if (res.stepFinished) {
-              window.soundFX.playFanfare();
-              tutorialPromptBox.innerHTML = `🎉 太棒啦！你已经完成了本关卡！解锁了 <strong>${res.badge}</strong>！`;
-              btnNextStep.style.display = 'inline-block';
-              highlightTargetKeyboardKey(null);
-            } else {
-              highlightTargetKeyboardKey(res.nextKey);
-            }
-          }
-        } else {
-          if (keyVal.length === 1 && /[a-zA-Z]/.test(keyVal)) {
-            window.typoGame.handleKeyInput(keyVal);
+        // 杜绝用鼠标点击虚拟键帽作弊：不触发任何输入，弹出趣味提醒
+        const now = Date.now();
+        if (now - lastMouseClickWarnTime > 2000) {
+          lastMouseClickWarnTime = now;
+          showModeToast('⌨️', '请敲击真实键盘打字哦，鼠标点击已禁用！');
+          if (window.soundFX && window.soundFX.playKeyMiss) {
+            window.soundFX.playKeyMiss();
           }
         }
       });
