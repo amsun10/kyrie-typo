@@ -36,23 +36,55 @@ class SpeechEngine {
     return this.enabled;
   }
 
-  // 朗读英文单词
-  speakEnglish(text, rate = 1.05) {
-    if (!this.enabled || !this.synth) return;
+  // 朗读英文单词（支持完成回调与语速调节）
+  speakEnglish(text, onComplete, rate = 1.15) {
+    // 兼容历史调用 speakEnglish(text, rateNumber)
+    if (typeof onComplete === 'number') {
+      rate = onComplete;
+      onComplete = null;
+    }
+
+    if (!this.enabled || !this.synth) {
+      if (typeof onComplete === 'function') {
+        setTimeout(onComplete, 80);
+      }
+      return;
+    }
+
     this.cancel();
+    const currentSession = this.sessionId;
+    let finished = false;
+    let fallbackTimer = null;
+
+    const done = () => {
+      if (currentSession !== this.sessionId) return;
+      if (!finished) {
+        finished = true;
+        if (fallbackTimer) {
+          clearTimeout(fallbackTimer);
+          fallbackTimer = null;
+        }
+        if (typeof onComplete === 'function') {
+          onComplete();
+        }
+      }
+    };
+
+    // 兜底超时：英文单词快速朗读通常 0.3~0.7s，最长设定 1.4s 防浏览器 TTS 偶发挂起
+    fallbackTimer = setTimeout(done, 1400);
 
     const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = rate; // 自然明快
+    utter.rate = rate; // 极速挑战下更加明快利落
     utter.pitch = 1.1; // 活泼明亮的语调
 
     // 优先选择美音或英音儿童/女性友好声音
-    const enVoice = this.voices.find(v => (v.lang.includes('en-US') || v.lang.includes('en-GB')) && (v.name.includes('Samantha') || v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Jenny')));
+    const enVoice = this.voices.find(v => (v.lang.includes('en-US') || v.lang.includes('en-GB')) && (v.name.includes('Samantha') || v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Jenny'))) || this.voices.find(v => v.lang.startsWith('en'));
     if (enVoice) {
       utter.voice = enVoice;
-    } else {
-      const genericEn = this.voices.find(v => v.lang.startsWith('en'));
-      if (genericEn) utter.voice = genericEn;
     }
+
+    utter.onend = () => done();
+    utter.onerror = () => done();
 
     this.currentUtterance = utter;
     this.synth.speak(utter);

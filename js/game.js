@@ -648,12 +648,12 @@ class TypoGame {
         if (this.onWordComplete) {
           this.onWordComplete(wordObj);
         }
-        // 双语发音读完后再进入通关结算，绝不提前打断
-        window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese, () => {
+        // 极速挑战：快速读完纯英文后直接进入通关结算
+        window.speechEngine.speakEnglish(wordObj.word, () => {
           setTimeout(() => {
             this.handleChallengeVictory();
-          }, 300);
-        });
+          }, 150);
+        }, 1.25);
         return;
       }
     } else {
@@ -665,13 +665,21 @@ class TypoGame {
       this.onWordComplete(wordObj);
     }
 
-    // 双语完整朗读：先英后中，完整读完后再平稳过渡到下一个单词（彻底杜绝串音与提前换词困惑）
-    window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese, () => {
-      const breathingDelay = this.mode === 'challenge' ? 180 : 300;
-      setTimeout(() => {
-        this.nextWord();
-      }, breathingDelay);
-    });
+    if (this.mode === 'challenge') {
+      // 极速挑战专属：不读中文，快速纯英文发音读完后（留 80ms 呼吸感）直接切下一个词！
+      window.speechEngine.speakEnglish(wordObj.word, () => {
+        setTimeout(() => {
+          this.nextWord();
+        }, 80);
+      }, 1.25);
+    } else {
+      // 单词探索模式：先英后中双语完整朗读，带孩子稳健认词识意
+      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese, () => {
+        setTimeout(() => {
+          this.nextWord();
+        }, 300);
+      });
+    }
   }
 
   nextWord() {

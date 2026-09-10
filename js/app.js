@@ -1,34 +1,29 @@
 // Kyrie Typo - 核心交互、按键事件与界面渲染中枢
 
 /**
- * 动态视口自适应缩放：根据浏览器视口高度自动计算 zoom，
- * 让页面内容恰好铺满一屏，完美适配 1080P ~ 2K 屏幕。
- * 等价于浏览器 Ctrl+/- 缩放，但完全自动。
+ * 动态视口自适应缩放：
+ * 用户实测黄金视觉比例为 80% (0.80~0.82)。
+ * 在 2K 和 1080P 屏幕上锁死上限为 0.82，彻底杜绝在 2K 屏上傻大粗放；
+ * 在小屏幕/矮视口（如 13 寸笔记本开启 125% 缩放，vh 700~800px）时平滑收缩至 0.68~0.78，确保一屏完整装下且不截断键盘。
  */
 function autoFitViewport() {
-  const root = document.documentElement;
-  // 临时重置 zoom 为 1，获取真实物理视口高度
-  root.style.zoom = '1';
-  const vh = window.innerHeight;
-
-  // 基准设计高度：页面内容自然高度（用户验证 80% zoom 显示正常 → 960/0.8 ≈ 1200）
-  const designH = 1200;
-
-  // 计算缩放因子并限制安全范围
-  const zoom = Math.max(0.78, Math.min(vh / designH, 1.42));
-
-  // 应用缩放（重置和赋值在同一同步帧，浏览器只渲染最终值，零闪烁）
-  root.style.zoom = zoom;
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  // 基准设计折算高度：960px 视口对应 0.81 缩放
+  const zoom = Math.min(0.82, Math.max(0.68, vh / 1180));
+  
+  if (document.body) {
+    document.body.style.zoom = zoom;
+  }
 }
 
-// 页面加载时立即执行（尽早避免内容溢出闪现）
+// 页面加载时立即执行
 autoFitViewport();
 
 // 窗口大小改变时（拖拽、切屏、全屏）防抖重算
 let _fitTimer;
 window.addEventListener('resize', () => {
   clearTimeout(_fitTimer);
-  _fitTimer = setTimeout(autoFitViewport, 120);
+  _fitTimer = setTimeout(autoFitViewport, 100);
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -902,6 +897,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
       if (speedBadge) speedBadge.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
+      if (chinesePill) chinesePill.style.display = 'inline-flex';
       window.typoGame.startPracticeMode();
     } else if (mode === 'challenge') {
       tabChallenge.classList.add('active');
@@ -913,6 +909,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'block';
       if (speedBadge) speedBadge.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
+      if (chinesePill) chinesePill.style.display = 'none';
       // 启动挑战：装载单词与界面，但先不走秒
       window.typoGame.startChallengeMode(false);
       if (challengeProgressText) {
@@ -1041,6 +1038,12 @@ document.addEventListener('DOMContentLoaded', () => {
     wordEmoji.textContent = wordObj.emoji;
     chineseText.textContent = wordObj.chinese;
 
+    // 极速挑战模式下隐藏中文释义胶囊，纯英文沉浸打字；单词探索模式正常展示中文
+    if (chinesePill) {
+      const isChallenge = window.typoGame && window.typoGame.mode === 'challenge';
+      chinesePill.style.display = isChallenge ? 'none' : 'inline-flex';
+    }
+
     bubblesContainer.innerHTML = '';
     const word = wordObj.word;
     const len = word.length;
@@ -1118,14 +1121,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 单词大 Emoji 点击：随时重听中英文双语原声发音
+  // 单词大 Emoji 点击：随时重听发音（极速挑战模式纯英文，探索模式双语）
   if (wordEmoji) {
     wordEmoji.style.cursor = 'pointer';
-    wordEmoji.title = '点击朗读中英文发音';
+    wordEmoji.title = '点击朗读原声发音';
     wordEmoji.addEventListener('click', () => {
       const wordObj = window.typoGame.getCurrentWordObj();
       if (wordObj) {
-        window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+        if (window.typoGame && window.typoGame.mode === 'challenge') {
+          window.speechEngine.speakEnglish(wordObj.word, null, 1.2);
+        } else {
+          window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+        }
         if (window.soundFX && window.soundFX.playKeyPop) {
           window.soundFX.playKeyPop(2);
         }
