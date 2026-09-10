@@ -11,8 +11,8 @@ function autoFitViewport() {
   root.style.zoom = '1';
   const vh = window.innerHeight;
 
-  // 基准设计高度：页面内容在此高度下完美呈现（无溢出、无留白）
-  const designH = 1020;
+  // 基准设计高度：页面内容自然高度（用户验证 80% zoom 显示正常 → 960/0.8 ≈ 1200）
+  const designH = 1200;
 
   // 计算缩放因子并限制安全范围
   const zoom = Math.max(0.78, Math.min(vh / designH, 1.42));
