@@ -1,5 +1,36 @@
 // Kyrie Typo - 核心交互、按键事件与界面渲染中枢
 
+/**
+ * 动态视口自适应缩放：根据浏览器视口高度自动计算 zoom，
+ * 让页面内容恰好铺满一屏，完美适配 1080P ~ 2K 屏幕。
+ * 等价于浏览器 Ctrl+/- 缩放，但完全自动。
+ */
+function autoFitViewport() {
+  const root = document.documentElement;
+  // 临时重置 zoom 为 1，获取真实物理视口高度
+  root.style.zoom = '1';
+  const vh = window.innerHeight;
+
+  // 基准设计高度：页面内容在此高度下完美呈现（无溢出、无留白）
+  const designH = 1020;
+
+  // 计算缩放因子并限制安全范围
+  const zoom = Math.max(0.78, Math.min(vh / designH, 1.42));
+
+  // 应用缩放（重置和赋值在同一同步帧，浏览器只渲染最终值，零闪烁）
+  root.style.zoom = zoom;
+}
+
+// 页面加载时立即执行（尽早避免内容溢出闪现）
+autoFitViewport();
+
+// 窗口大小改变时（拖拽、切屏、全屏）防抖重算
+let _fitTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(_fitTimer);
+  _fitTimer = setTimeout(autoFitViewport, 120);
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   // DOM 元素引用
   const tabPractice = document.getElementById('tabPractice');
