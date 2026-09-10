@@ -902,7 +902,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
       if (speedBadge) speedBadge.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
-      if (chinesePill) chinesePill.style.display = 'inline-flex';
       window.typoGame.startPracticeMode();
     } else if (mode === 'challenge') {
       tabChallenge.classList.add('active');
@@ -914,7 +913,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'block';
       if (speedBadge) speedBadge.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
-      if (chinesePill) chinesePill.style.display = 'none';
       // 启动挑战：装载单词与界面，但先不走秒
       window.typoGame.startChallengeMode(false);
       if (challengeProgressText) {
@@ -1042,12 +1040,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     wordEmoji.textContent = wordObj.emoji;
     chineseText.textContent = wordObj.chinese;
-
-    // 极速挑战模式下隐藏中文释义胶囊，纯英文沉浸打字；单词探索模式正常展示中文
-    if (chinesePill) {
-      const isChallenge = window.typoGame && window.typoGame.mode === 'challenge';
-      chinesePill.style.display = isChallenge ? 'none' : 'inline-flex';
-    }
 
     bubblesContainer.innerHTML = '';
     const word = wordObj.word;
