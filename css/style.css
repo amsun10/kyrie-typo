@@ -996,6 +996,20 @@ body::before {
   display: inline-block;
   animation: floatEmoji 3.2s ease-in-out infinite;
   filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45));
+  transition: transform 0.2s ease;
+}
+
+/* 敲完单词瞬间：Emoji 萌趣果冻欢跃弹跳庆祝 */
+.word-emoji-badge.emoji-celebrate {
+  animation: emojiJellyCelebrate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+@keyframes emojiJellyCelebrate {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.36) translateY(-16px) rotate(-8deg); filter: drop-shadow(0 16px 28px rgba(251, 191, 36, 0.7)); }
+  60% { transform: scale(1.15) translateY(-6px) rotate(6deg); }
+  85% { transform: scale(1.22) translateY(-2px) rotate(-2deg); }
+  100% { transform: scale(1) translateY(0) rotate(0deg); }
 }
 
 /* 超大字母拼写气泡组：长词自适应缩微阶梯，尽量保持单行完整呈现 */
@@ -1122,6 +1136,57 @@ body::before {
   animation: gentleShake 0.35s ease-in-out;
 }
 
+/* 敲击完成时字母气泡爆炸消散动效 */
+.letter-bubble.exploding {
+  animation: bubbleExplode 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+  pointer-events: none;
+}
+
+@keyframes bubbleExplode {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+  35% {
+    transform: scale(1.26) translateY(-8px);
+    opacity: 0.95;
+    filter: brightness(1.8) drop-shadow(0 0 16px rgba(251, 191, 36, 0.9));
+  }
+  100% {
+    transform: scale(0.15) translateY(10px) rotate(12deg);
+    opacity: 0;
+    filter: blur(6px) brightness(2.2);
+  }
+}
+
+/* 新单词入场弹入动效 */
+.letter-bubble.pop-in {
+  animation: bubblePopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+@keyframes bubblePopIn {
+  0% {
+    transform: scale(0.4) translateY(14px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 单词爆炸全屏粒子 Canvas */
+.word-explosion-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
 /* 中文常用意思提示栏（深色发光翡翠绿药丸，放大更醒目） */
 .chinese-definition-pill {
   margin-top: 10px;
@@ -1166,6 +1231,7 @@ body::before {
   font-size: 1.05rem;
   font-weight: 700;
   color: #CBD5E1;
+  transition: opacity 0.2s ease;
 }
 
 .finger-badge {

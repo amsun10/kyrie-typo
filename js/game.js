@@ -673,12 +673,11 @@ class TypoGame {
         }, 80);
       }, 1.25);
     } else {
-      // 单词探索模式：先英后中双语完整朗读，带孩子稳健认词识意
-      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese, () => {
-        setTimeout(() => {
-          this.nextWord();
-        }, 300);
-      });
+      // 单词探索模式：后台自然双语原声朗读，界面在 220ms 极速视觉过渡后直接切入新词（行云流水心流）
+      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+      setTimeout(() => {
+        this.nextWord();
+      }, 220);
     }
   }
 

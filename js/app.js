@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chinesePill = document.getElementById('chinesePill');
   const chineseText = document.getElementById('chineseText');
   const fingerBadge = document.getElementById('fingerBadge');
+  const fingerTipBar = document.getElementById('fingerTipBar');
 
   const scoreVal = document.getElementById('scoreVal');
   const comboBadge = document.getElementById('comboBadge');
@@ -1029,6 +1030,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ================= 2. 单词与字母气泡渲染 =================
   function renderWord(wordObj, currentHitIdx) {
+    if (wordEmoji) {
+      wordEmoji.classList.remove('emoji-celebrate');
+    }
+
     if (puBadge) {
       if (wordObj && wordObj.book) {
         const isSJ = wordObj.book.startsWith('苏教');
@@ -1060,7 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (let i = 0; i < word.length; i++) {
       const bubble = document.createElement('div');
-      bubble.className = 'letter-bubble';
+      bubble.className = 'letter-bubble pop-in';
       bubble.id = `bubble-${i}`;
       bubble.textContent = word[i];
 
@@ -1138,9 +1143,182 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ================= 2.5 单词字母爆炸与炫彩礼花粒子系统 =================
+  let explosionCanvas = null;
+  let explosionCtx = null;
+  let activeExplosionParticles = [];
+  let explosionAnimId = null;
+
+  function initExplosionCanvas() {
+    if (explosionCanvas) return;
+    explosionCanvas = document.createElement('canvas');
+    explosionCanvas.className = 'word-explosion-canvas';
+    explosionCanvas.id = 'wordExplosionCanvas';
+    document.body.appendChild(explosionCanvas);
+    explosionCtx = explosionCanvas.getContext('2d');
+
+    const resize = () => {
+      if (explosionCanvas) {
+        explosionCanvas.width = window.innerWidth;
+        explosionCanvas.height = window.innerHeight;
+      }
+    };
+    resize();
+    window.addEventListener('resize', resize);
+  }
+
+  // 绘制 4 边晶莹星光 (Diamond Star)
+  function drawSparkleStar(ctx, x, y, r, rotation, color, alpha) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.globalAlpha = Math.max(0, alpha);
+    ctx.fillStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    for (let i = 0; i < 4; i++) {
+      const a = (i * Math.PI) / 2;
+      ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+      ctx.lineTo(Math.cos(a + Math.PI / 4) * (r * 0.35), Math.sin(a + Math.PI / 4) * (r * 0.35));
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 绘制翻转彩纸碎屑 (Confetti Ribbon)
+  function drawConfettiRibbon(ctx, x, y, w, h, tilt, rotation, color, alpha) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.globalAlpha = Math.max(0, alpha);
+    ctx.fillStyle = color;
+    ctx.fillRect(-w / 2, (-h / 2) * Math.cos(tilt), w, h * Math.cos(tilt));
+    ctx.restore();
+  }
+
+  // 绘制发光圆球果冻粒子 (Glow Dot)
+  function drawGlowDot(ctx, x, y, r, color, alpha) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, alpha);
+    ctx.fillStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function triggerWordExplosion() {
+    initExplosionCanvas();
+    if (!explosionCtx) return;
+
+    // 播放专属 Q 弹破裂与魔法星光合成音效
+    if (window.soundFX && window.soundFX.playWordExplosion) {
+      window.soundFX.playWordExplosion();
+    }
+
+    const bubbles = bubblesContainer ? bubblesContainer.querySelectorAll('.letter-bubble') : [];
+    if (!bubbles.length) return;
+
+    const colors = ['#FBBF24', '#FB7185', '#38BDF8', '#34D399', '#A78BFA', '#F472B6', '#FFFFFF'];
+
+    bubbles.forEach((b) => {
+      // 触发 CSS 气泡破裂消散
+      b.classList.add('exploding');
+
+      const rect = b.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      // 每个字母中心喷射 16 颗炫彩微粒
+      const count = 16;
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.7;
+        const speed = 4.5 + Math.random() * 8;
+        const type = Math.random() < 0.45 ? 'star' : (Math.random() < 0.75 ? 'confetti' : 'dot');
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        activeExplosionParticles.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (1.8 + Math.random() * 2.2), // 初始轻微向上喷发
+          gravity: 0.22,
+          drag: 0.965,
+          size: 5 + Math.random() * 8,
+          rotation: Math.random() * Math.PI * 2,
+          vr: (Math.random() - 0.5) * 0.25,
+          tilt: Math.random() * Math.PI,
+          vtilt: 0.08 + Math.random() * 0.12,
+          alpha: 1.0,
+          decay: 0.016 + Math.random() * 0.014, // 约 45~65 帧内平滑消散
+          type,
+          color
+        });
+      }
+    });
+
+    if (!explosionAnimId) {
+      runExplosionLoop();
+    }
+  }
+
+  function runExplosionLoop() {
+    if (!explosionCtx || !explosionCanvas) return;
+
+    explosionCtx.clearRect(0, 0, explosionCanvas.width, explosionCanvas.height);
+
+    for (let i = activeExplosionParticles.length - 1; i >= 0; i--) {
+      const p = activeExplosionParticles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= p.drag;
+      p.vy = p.vy * p.drag + p.gravity;
+      p.rotation += p.vr;
+      p.tilt += p.vtilt;
+      p.alpha -= p.decay;
+
+      if (p.alpha <= 0.01) {
+        activeExplosionParticles.splice(i, 1);
+        continue;
+      }
+
+      if (p.type === 'star') {
+        drawSparkleStar(explosionCtx, p.x, p.y, p.size * 1.5, p.rotation, p.color, p.alpha);
+      } else if (p.type === 'confetti') {
+        drawConfettiRibbon(explosionCtx, p.x, p.y, p.size * 1.4, p.size * 0.8, p.tilt, p.rotation, p.color, p.alpha);
+      } else {
+        drawGlowDot(explosionCtx, p.x, p.y, p.size * 0.8, p.color, p.alpha);
+      }
+    }
+
+    if (activeExplosionParticles.length > 0) {
+      explosionAnimId = requestAnimationFrame(runExplosionLoop);
+    } else {
+      explosionCtx.clearRect(0, 0, explosionCanvas.width, explosionCanvas.height);
+      explosionAnimId = null;
+    }
+  }
+
   // ================= 3. 游戏引擎回调绑定 =================
   let lastTenseTickTime = 0;
   let tenseBeatIndex = 0;
+
+  window.typoGame.onWordComplete = (wordObj) => {
+    // 单词探索模式专属：敲完全部字母瞬间引爆炫彩星光礼花，同时大 Emoji 萌趣果冻欢跃弹跳
+    if (window.typoGame && window.typoGame.mode === 'practice') {
+      triggerWordExplosion();
+
+      if (wordEmoji) {
+        wordEmoji.classList.remove('emoji-celebrate');
+        void wordEmoji.offsetWidth; // 触发 reflow 重启关键帧
+        wordEmoji.classList.add('emoji-celebrate');
+      }
+    }
+  };
 
   window.typoGame.onWordChange = (wordObj, charIdx) => {
     lastTenseTickTime = 0;

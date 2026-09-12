@@ -103,6 +103,67 @@ class SoundFX {
     osc.stop(this.ctx.currentTime + 0.16);
   }
 
+  // 2.1 字母爆炸与星光喷射专属音效（清脆 Q 弹爆破 + 晶莹魔法星光）
+  playWordExplosion() {
+    if (this.muted) return;
+    this.resume();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+
+    // 1. 清脆 Q 弹的“啵/砰！”破裂打击音
+    const popOsc = this.ctx.createOscillator();
+    const popGain = this.ctx.createGain();
+    popOsc.type = 'sine';
+    popOsc.frequency.setValueAtTime(720, t);
+    popOsc.frequency.exponentialRampToValueAtTime(80, t + 0.09);
+    popGain.gain.setValueAtTime(0.35, t);
+    popGain.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
+    popOsc.connect(popGain);
+    popGain.connect(this.ctx.destination);
+    popOsc.start(t);
+    popOsc.stop(t + 0.12);
+
+    // 2. 模拟爆破微气压扩散（轻柔短噪波，增添弹性打击感）
+    try {
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.06);
+      const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+      }
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = noiseBuffer;
+      const noiseFilter = this.ctx.createBiquadFilter();
+      noiseFilter.type = 'bandpass';
+      noiseFilter.frequency.setValueAtTime(1600, t);
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.18, t);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(this.ctx.destination);
+      noise.start(t);
+      noise.stop(t + 0.07);
+    } catch (e) {}
+
+    // 3. 晶莹可爱的魔法星光小琶音 (Sparkle Chimes)
+    const sparkles = [1046.50, 1318.51, 1567.98, 2093.00, 2637.02];
+    sparkles.forEach((freq, idx) => {
+      const st = t + 0.025 + idx * 0.032;
+      const sOsc = this.ctx.createOscillator();
+      const sGain = this.ctx.createGain();
+      sOsc.type = 'sine';
+      sOsc.frequency.setValueAtTime(freq, st);
+      sGain.gain.setValueAtTime(0.14, st);
+      sGain.gain.exponentialRampToValueAtTime(0.001, st + 0.18);
+      sOsc.connect(sGain);
+      sGain.connect(this.ctx.destination);
+      sOsc.start(st);
+      sOsc.stop(st + 0.19);
+    });
+  }
+
   // 3. 单词敲击完成：胜利华丽和弦（随连击数呈现鲜明的音调五级递进！）
   playWordSuccess(combo = 0) {
     if (this.muted) return;
