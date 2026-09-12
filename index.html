@@ -196,6 +196,20 @@
 
         <div class="word-emoji-badge" id="wordEmoji">🐱</div>
         
+        <!-- 首词启动准备卡片（回车起跑 + 容错直打） -->
+        <div class="ready-enter-card" id="readyEnterCard" style="display: none;">
+          <div class="ready-enter-halo"></div>
+          <span class="ready-enter-icon">🚀</span>
+          <div class="ready-enter-text-group">
+            <div class="ready-enter-title">准备好啦？敲击 <kbd class="ready-enter-key">Enter ↵</kbd> 开始！</div>
+            <div class="ready-enter-subtitle">右手小指轻敲回车键，或直接点击开启冒险</div>
+          </div>
+          <button type="button" class="btn-ready-enter-go" id="btnReadyEnterGo">
+            <span>Let's Go!</span>
+            <span class="btn-go-arrow">➔</span>
+          </button>
+        </div>
+
         <!-- 超大 Q 弹字母容器 -->
         <div class="word-bubbles-container" id="bubblesContainer">
           <!-- 由 JS 动态渲染超大气泡字母 -->

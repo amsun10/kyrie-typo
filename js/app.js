@@ -270,6 +270,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!mimimiSplash || mimimiSplash.classList.contains('hidden')) return;
     window.soundFX.playSimpleIntro();
     closeMimimiSplash();
+    if (window.typoGame && window.typoGame.mode === 'practice' && typeof showReadyEnterPrompt === 'function') {
+      showReadyEnterPrompt();
+    }
   }
 
   // 保存勇士名字并启程
@@ -709,6 +712,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 统一切换处理
     function applyCurriculumFilter(book, unit) {
+      if (window.typoGame && window.typoGame.mode === 'practice') {
+        isAwaitingStart = true;
+      }
       const info = window.typoGame.setWordFilter(book, unit);
       const sIcon = getScopeIcon(info.book);
 
@@ -903,6 +909,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
       if (speedBadge) speedBadge.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
+      isAwaitingStart = true;
       window.typoGame.startPracticeMode();
     } else if (mode === 'challenge') {
       tabChallenge.classList.add('active');
@@ -1028,8 +1035,108 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ================= 2. 单词与字母气泡渲染 =================
+  // ================= 2. 单词与字母气泡渲染与首词回车起跑 =================
+  const readyEnterCard = document.getElementById('readyEnterCard');
+  const btnReadyEnterGo = document.getElementById('btnReadyEnterGo');
+  let isAwaitingStart = false;
+  let wordSpeechTimer = null;
+
+  // 展示首词「敲 Enter 开始 / Let's Go!」准备卡片并指引右手小指回车
+  function showReadyEnterPrompt() {
+    isAwaitingStart = true;
+    if (wordSpeechTimer) {
+      clearTimeout(wordSpeechTimer);
+      wordSpeechTimer = null;
+    }
+    if (window.speechEngine) {
+      window.speechEngine.cancel();
+    }
+
+    if (readyEnterCard) {
+      readyEnterCard.style.display = 'flex';
+      readyEnterCard.classList.remove('lets-go-burst');
+    }
+    if (bubblesContainer) {
+      bubblesContainer.style.display = 'none';
+      bubblesContainer.innerHTML = '';
+    }
+
+    // 虚拟键盘高亮 Enter 键并启动呼吸脉冲
+    highlightTargetKeyboardKey('Enter');
+    const enterKeyEl = document.querySelector('.apple-key[data-key="Enter"]');
+    if (enterKeyEl) {
+      enterKeyEl.classList.add('ready-target-enter');
+    }
+
+    // 手指栏提示右手小拇指敲击回车
+    updateFingerPrompt('enter');
+  }
+
+  // 敲击 Enter 键或点击卡片激活首词冒险
+  function startTypingSession(directKey = null) {
+    if (!isAwaitingStart) return;
+    isAwaitingStart = false;
+
+    if (readyEnterCard) {
+      readyEnterCard.classList.add('lets-go-burst');
+    }
+
+    // 播放轻快欢腾的起跑和弦
+    if (window.soundFX && window.soundFX.playSimpleIntro) {
+      window.soundFX.playSimpleIntro();
+    }
+
+    setTimeout(() => {
+      if (readyEnterCard) {
+        readyEnterCard.style.display = 'none';
+        readyEnterCard.classList.remove('lets-go-burst');
+      }
+      document.querySelectorAll('.apple-key.ready-target-enter').forEach(el => el.classList.remove('ready-target-enter'));
+
+      if (bubblesContainer) {
+        bubblesContainer.style.display = 'flex';
+      }
+
+      const wordObj = window.typoGame ? window.typoGame.getCurrentWordObj() : null;
+      if (!wordObj) return;
+
+      // 渲染首词气泡并触发 80ms 英文原声朗读
+      renderWord(wordObj, 0);
+
+      // 如果是通过敲中首字母穿透触发的，顺畅执行首字母按键！
+      if (directKey) {
+        setTimeout(() => {
+          if (window.typoGame) {
+            window.typoGame.handleKeyInput(directKey);
+          }
+        }, 80);
+      }
+    }, 220);
+  }
+
+  // 点击准备卡片或 Let's Go 按钮随时起跑
+  if (readyEnterCard) {
+    readyEnterCard.addEventListener('click', (e) => {
+      e.stopPropagation();
+      startTypingSession();
+    });
+  }
+  if (btnReadyEnterGo) {
+    btnReadyEnterGo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      startTypingSession();
+    });
+  }
+
   function renderWord(wordObj, currentHitIdx) {
+    if (wordSpeechTimer) {
+      clearTimeout(wordSpeechTimer);
+      wordSpeechTimer = null;
+    }
+    if (window.speechEngine) {
+      window.speechEngine.cancel();
+    }
+
     if (wordEmoji) {
       wordEmoji.classList.remove('emoji-celebrate');
     }
@@ -1044,11 +1151,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    wordEmoji.textContent = wordObj.emoji;
-    chineseText.textContent = wordObj.chinese;
+    wordEmoji.textContent = wordObj ? wordObj.emoji : '';
+    chineseText.textContent = wordObj ? wordObj.chinese : '';
 
-    bubblesContainer.innerHTML = '';
-    const word = wordObj.word;
+    // 若当前处于等待回车启动状态（单词探索模式首词）
+    if (isAwaitingStart && window.typoGame && window.typoGame.mode === 'practice') {
+      showReadyEnterPrompt();
+      return;
+    }
+
+    if (readyEnterCard) {
+      readyEnterCard.style.display = 'none';
+    }
+    document.querySelectorAll('.apple-key.ready-target-enter').forEach(el => el.classList.remove('ready-target-enter'));
+
+    if (bubblesContainer) {
+      bubblesContainer.style.display = 'flex';
+      bubblesContainer.innerHTML = '';
+    }
+    const word = (wordObj && wordObj.word) ? wordObj.word : '';
     const len = word.length;
 
     // 根据单词字符长度动态适配气泡缩微梯级，确保特别长的单词也能尽量在单行完整呈现
@@ -1079,6 +1200,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateFingerPrompt(word[currentHitIdx]);
     highlightTargetKeyboardKey(word[currentHitIdx]);
+
+    // 新词登场核心音画同步：微延时 80ms 伴随气泡 pop-in 弹性展开，立即朗读新词纯英文原声发音
+    if (word) {
+      const wordToSpeak = word;
+      wordSpeechTimer = setTimeout(() => {
+        if (window.speechEngine) {
+          window.speechEngine.speakEnglish(wordToSpeak, null, 1.15);
+        }
+      }, 80);
+    }
   }
 
   // 更新手指推荐与键盘高亮（生动矢量手掌图解 + 消除歧义）
@@ -1110,13 +1241,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 中文释义点击：播放中英文双语原声发音
+  // 中文释义点击：播放中文释义发音
   if (chinesePill) {
-    chinesePill.title = '点击朗读中英文发音';
+    chinesePill.title = '点击朗读中文释义';
     chinesePill.addEventListener('click', () => {
       const wordObj = window.typoGame.getCurrentWordObj();
-      if (wordObj) {
-        window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+      if (wordObj && wordObj.chinese) {
+        if (wordSpeechTimer) {
+          clearTimeout(wordSpeechTimer);
+          wordSpeechTimer = null;
+        }
+        window.speechEngine.speakChinese(wordObj.chinese);
         if (window.soundFX && window.soundFX.playKeyPop) {
           window.soundFX.playKeyPop(3);
         }
@@ -1124,18 +1259,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 单词大 Emoji 点击：随时重听发音（极速挑战模式纯英文，探索模式双语）
+  // 单词大 Emoji 点击：随时重听英文原声发音
   if (wordEmoji) {
     wordEmoji.style.cursor = 'pointer';
-    wordEmoji.title = '点击朗读原声发音';
+    wordEmoji.title = '点击重听英文发音';
     wordEmoji.addEventListener('click', () => {
       const wordObj = window.typoGame.getCurrentWordObj();
-      if (wordObj) {
-        if (window.typoGame && window.typoGame.mode === 'challenge') {
-          window.speechEngine.speakEnglish(wordObj.word, null, 1.2);
-        } else {
-          window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
+      if (wordObj && wordObj.word) {
+        if (wordSpeechTimer) {
+          clearTimeout(wordSpeechTimer);
+          wordSpeechTimer = null;
         }
+        window.speechEngine.speakEnglish(wordObj.word, null, 1.15);
         if (window.soundFX && window.soundFX.playKeyPop) {
           window.soundFX.playKeyPop(2);
         }
@@ -2016,6 +2151,32 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       // 单词探索或极速挑战模式
+      if (isAwaitingStart && window.typoGame && window.typoGame.mode === 'practice') {
+        if (key === 'Enter') {
+          e.preventDefault();
+          startTypingSession();
+          return;
+        }
+        if (key.length === 1 && /[a-zA-Z]/.test(key)) {
+          const wordObj = window.typoGame.getCurrentWordObj();
+          if (wordObj && wordObj.word && key.toLowerCase() === wordObj.word[0].toLowerCase()) {
+            // 首字母盲敲穿透触发：顺畅起跑并击中第一颗字母
+            e.preventDefault();
+            startTypingSession(key);
+            return;
+          } else {
+            // 误敲其他字母：柔和提示右手小指敲击 Enter
+            e.preventDefault();
+            if (window.soundFX && window.soundFX.playKeyWrong) {
+              window.soundFX.playKeyWrong();
+            }
+            showModeToast('⌨️', '请敲击 Enter (回车) 开启冒险哦！');
+            return;
+          }
+        }
+        return;
+      }
+
       if (key.length === 1 && /[a-zA-Z]/.test(key)) {
         window.typoGame.handleKeyInput(key);
       }

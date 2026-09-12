@@ -648,12 +648,10 @@ class TypoGame {
         if (this.onWordComplete) {
           this.onWordComplete(wordObj);
         }
-        // 极速挑战：快速读完纯英文后直接进入通关结算
-        window.speechEngine.speakEnglish(wordObj.word, () => {
-          setTimeout(() => {
-            this.handleChallengeVictory();
-          }, 150);
-        }, 1.25);
+        // 极速挑战通关：留 220ms 绽放完爆炸礼花后进入结算
+        setTimeout(() => {
+          this.handleChallengeVictory();
+        }, 220);
         return;
       }
     } else {
@@ -665,20 +663,10 @@ class TypoGame {
       this.onWordComplete(wordObj);
     }
 
-    if (this.mode === 'challenge') {
-      // 极速挑战专属：不读中文，快速纯英文发音读完后（留 80ms 呼吸感）直接切下一个词！
-      window.speechEngine.speakEnglish(wordObj.word, () => {
-        setTimeout(() => {
-          this.nextWord();
-        }, 80);
-      }, 1.25);
-    } else {
-      // 单词探索模式：后台自然双语原声朗读，界面在 220ms 极速视觉过渡后直接切入新词（行云流水心流）
-      window.speechEngine.speakBilingual(wordObj.word, wordObj.chinese);
-      setTimeout(() => {
-        this.nextWord();
-      }, 220);
-    }
+    // 单词探索与极速挑战统一：打完单词引爆七彩星光，220ms 极速切词（发音前移至新词登场时，打完专心享受爆炸打击感）
+    setTimeout(() => {
+      this.nextWord();
+    }, 220);
   }
 
   nextWord() {
