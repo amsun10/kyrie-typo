@@ -11,19 +11,11 @@ function autoFitViewport() {
   root.style.zoom = '1';
   const vh = window.innerHeight;
 
-  // 动态测量页面实际内容自然高度（包括 header 与 main-stage 完整内容）
-  const header = document.querySelector('.header-bar');
-  const mainStage = document.querySelector('.main-stage');
-  let naturalH = 1180;
-  if (mainStage) {
-    const headerH = header ? header.offsetHeight : 60;
-    naturalH = Math.max(1180, headerH + mainStage.scrollHeight + 20);
-  } else if (document.body) {
-    naturalH = Math.max(1180, document.body.scrollHeight);
-  }
+  // 基准设计高度：1200px。在自适应基准上整体微调增加 5%（* 1.05），使视觉更精致紧凑
+  const designH = 1200;
 
-  // 计算缩放因子并限制安全范围（下限 0.5 支持 1024×768 等小屏幕，上限 1.42 支持 2K/4K 大屏）
-  const zoom = Math.max(0.5, Math.min(vh / naturalH, 1.42));
+  // 计算缩放因子并在原基础上微增 5%（下限 0.55 支持小屏，上限 1.25 防过大）
+  const zoom = Math.max(0.55, Math.min((vh / designH) * 1.05, 1.25));
 
   // 应用缩放（重置和赋值在同一同步帧，浏览器只渲染最终值，零闪烁）
   root.style.zoom = zoom;
