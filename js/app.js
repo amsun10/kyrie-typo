@@ -7,15 +7,23 @@
  */
 function autoFitViewport() {
   const root = document.documentElement;
-  // 临时重置 zoom 为 1，获取真实物理视口高度
+  // 临时重置 zoom 为 1，获取真实物理视口高度与实际自然高度
   root.style.zoom = '1';
   const vh = window.innerHeight;
 
-  // 基准设计高度：页面内容自然高度（用户验证 80% zoom 显示正常 → 960/0.8 ≈ 1200）
-  const designH = 1200;
+  // 动态测量页面实际内容自然高度（包括 header 与 main-stage 完整内容）
+  const header = document.querySelector('.header-bar');
+  const mainStage = document.querySelector('.main-stage');
+  let naturalH = 1180;
+  if (mainStage) {
+    const headerH = header ? header.offsetHeight : 60;
+    naturalH = Math.max(1180, headerH + mainStage.scrollHeight + 20);
+  } else if (document.body) {
+    naturalH = Math.max(1180, document.body.scrollHeight);
+  }
 
-  // 计算缩放因子并限制安全范围（下限 0.55 支持 1024×768，上限 1.42 支持 2K）
-  const zoom = Math.max(0.55, Math.min(vh / designH, 1.42));
+  // 计算缩放因子并限制安全范围（下限 0.5 支持 1024×768 等小屏幕，上限 1.42 支持 2K/4K 大屏）
+  const zoom = Math.max(0.5, Math.min(vh / naturalH, 1.42));
 
   // 应用缩放（重置和赋值在同一同步帧，浏览器只渲染最终值，零闪烁）
   root.style.zoom = zoom;
@@ -943,6 +951,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'inline-flex';
       switchGuideSubTab(window.keyboardGuide.activeGuideTab || 'posture');
     }
+    autoFitViewport();
   }
 
   // 极速挑战三阶难度控制体系
@@ -1532,6 +1541,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       highlightTargetKeyboardKey(null);
     }
+    autoFitViewport();
   }
 
   if (btnGuidePosture) btnGuidePosture.addEventListener('click', () => { window.soundFX.playTabSwitch(); switchGuideSubTab('posture'); });
@@ -1664,6 +1674,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnNextStep) {
     btnNextStep.addEventListener('click', () => {
+      if (window.soundFX) window.soundFX.playTabSwitch();
       if (window.keyboardGuide.currentStep < window.keyboardGuide.totalSteps) {
         window.keyboardGuide.goToStep(window.keyboardGuide.currentStep + 1);
         renderTutorialStep();
@@ -1780,6 +1791,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (window.keyboardGuide.activeGuideTab === 'quest') {
+        // 若当前关卡已完成且“闯入下一关”按钮可见，支持按 Enter 回车键（或空格）直接进入下一关
+        if (btnNextStep && btnNextStep.style.display !== 'none') {
+          if (key === 'Enter' || key === ' ' || e.code === 'Space') {
+            e.preventDefault();
+            btnNextStep.click();
+            return;
+          }
+        }
+
+        // 若已通关展出荣誉证书，按 Enter 重新开始挑战
+        if (graduationCert && graduationCert.style.display === 'flex' && key === 'Enter') {
+          if (btnReplayQuest) {
+            e.preventDefault();
+            btnReplayQuest.click();
+            return;
+          }
+        }
+
         const res = window.keyboardGuide.handleKeyPress(key);
         if (res.success) {
           window.soundFX.playKeyPop(2);
