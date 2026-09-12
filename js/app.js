@@ -469,6 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (puBadge) puBadge.style.display = 'none';
     if (bubblesContainer) bubblesContainer.style.display = 'none';
     if (readyEnterCard) readyEnterCard.style.display = 'none';
+    if (fingerTipBar) fingerTipBar.style.display = 'none';
     if (wordSpeechTimer) {
       clearTimeout(wordSpeechTimer);
       wordSpeechTimer = null;
@@ -1100,6 +1101,13 @@ document.addEventListener('DOMContentLoaded', () => {
       bubblesContainer.style.display = 'flex';
     }
 
+    if (fingerTipBar) {
+      fingerTipBar.style.display = 'flex';
+      fingerTipBar.classList.remove('pop-in');
+      void fingerTipBar.offsetWidth;
+      fingerTipBar.classList.add('pop-in');
+    }
+
     // 重新构建字母气泡并触发 80ms 纯英文发音
     renderWord(wordObj, 0);
   }
@@ -1115,13 +1123,16 @@ document.addEventListener('DOMContentLoaded', () => {
       window.speechEngine.cancel();
     }
 
-    // 单词探索就绪舱全面净化：隐藏所有无关散碎元素
+    // 单词探索就绪舱全面净化：隐藏所有无关散碎元素及指法栏
     if (wordEmoji) wordEmoji.style.display = 'none';
     if (chinesePill) chinesePill.style.display = 'none';
     if (puBadge) puBadge.style.display = 'none';
     if (bubblesContainer) {
       bubblesContainer.style.display = 'none';
       bubblesContainer.innerHTML = '';
+    }
+    if (fingerTipBar) {
+      fingerTipBar.style.display = 'none';
     }
 
     if (readyEnterCard) {
@@ -1135,9 +1146,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (enterKeyEl) {
       enterKeyEl.classList.add('ready-target-enter');
     }
-
-    // 手指栏提示右手小拇指敲击回车
-    updateFingerPrompt('enter');
   }
 
   // 敲击 Enter 键或点击卡片激活首词冒险
@@ -1210,6 +1218,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (chinesePill) chinesePill.style.display = 'none';
       if (puBadge) puBadge.style.display = 'none';
       if (bubblesContainer) bubblesContainer.style.display = 'none';
+      if (fingerTipBar) fingerTipBar.style.display = 'none';
       return;
     }
 
@@ -1218,6 +1227,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (challengeCountdownOverlay) {
       challengeCountdownOverlay.style.display = 'none';
+    }
+    if (fingerTipBar) {
+      fingerTipBar.style.display = 'flex';
     }
     document.querySelectorAll('.apple-key.ready-target-enter').forEach(el => el.classList.remove('ready-target-enter'));
 
