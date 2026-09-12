@@ -339,7 +339,7 @@ class TypoGame {
     }
 
     if (this.onScoreChange) this.onScoreChange(0);
-    if (this.onComboChange) this.onComboChange(0);
+    if (this.onComboChange) this.onComboChange(0, 0, false);
     if (this.onLivesChange) this.onLivesChange(this.lives, this.maxLives);
     if (this.onTimerTick) this.onTimerTick(0, 1);
   }
@@ -468,7 +468,7 @@ class TypoGame {
 
     this.combo = 0;
     this.lives -= 1;
-    if (this.onComboChange) this.onComboChange(this.combo);
+    if (this.onComboChange) this.onComboChange(this.combo, this.maxCombo, false);
     if (this.onLivesChange) this.onLivesChange(this.lives, this.maxLives);
 
     // 扣心音效（温和可爱的微水滴滑音，绝不挫败）
@@ -588,7 +588,7 @@ class TypoGame {
     // 敲错字母断连击（探索模式与挑战模式通用）
     if (this.combo > 0) {
       this.combo = 0;
-      if (this.onComboChange) this.onComboChange(this.combo);
+      if (this.onComboChange) this.onComboChange(this.combo, this.maxCombo, false);
     }
 
     if (this.onLetterMiss) {
@@ -603,10 +603,12 @@ class TypoGame {
       this.fastestWord = wordObj.word;
     }
 
-    // 连击数立即自增
+    // 连击数立即自增并追踪本局最高记录
     this.combo++;
+    let isNewRecord = false;
     if (this.combo > this.maxCombo) {
       this.maxCombo = this.combo;
+      isNewRecord = true;
     }
 
     // 播放胜利和弦
@@ -641,7 +643,7 @@ class TypoGame {
       this.score += earned;
 
       if (this.onScoreChange) this.onScoreChange(this.score, earned);
-      if (this.onComboChange) this.onComboChange(this.combo);
+      if (this.onComboChange) this.onComboChange(this.combo, this.maxCombo, isNewRecord);
 
       // 检查是否已达成 30 词通关大满贯！
       if (this.challengeWordsCompleted >= this.maxChallengeWords) {
@@ -656,7 +658,7 @@ class TypoGame {
       }
     } else {
       // 单词探索模式连击计数与音效激励
-      if (this.onComboChange) this.onComboChange(this.combo);
+      if (this.onComboChange) this.onComboChange(this.combo, this.maxCombo, isNewRecord);
     }
 
     if (this.onWordComplete) {

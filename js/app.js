@@ -133,6 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const speedVal = document.getElementById('speedVal');
   const speedTierLbl = document.getElementById('speedTierLbl');
 
+  // 最高连击数据胶囊元素
+  const maxComboBadge = document.getElementById('maxComboBadge');
+  const maxComboVal = document.getElementById('maxComboVal');
+  const maxComboLbl = document.getElementById('maxComboLbl');
+  let maxComboRecordTimer = null;
+
   // 音频与全屏切换
   const btnToggleSound = document.getElementById('btnToggleSound');
   const btnToggleSpeech = document.getElementById('btnToggleSpeech');
@@ -928,6 +934,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tutorialHudContent) tutorialHudContent.style.display = 'none';
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
       if (speedBadge) speedBadge.style.display = 'flex';
+      if (maxComboBadge) maxComboBadge.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
       isAwaitingStart = true;
       window.typoGame.startPracticeMode();
@@ -940,6 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tutorialHudContent) tutorialHudContent.style.display = 'none';
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'block';
       if (speedBadge) speedBadge.style.display = 'flex';
+      if (maxComboBadge) maxComboBadge.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
       // 启动挑战：装载单词与界面，但先不走秒
       window.typoGame.startChallengeMode(false);
@@ -968,6 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tutorialHudContent) tutorialHudContent.style.display = 'flex';
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
       if (speedBadge) speedBadge.style.display = 'none';
+      if (maxComboBadge) maxComboBadge.style.display = 'none';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'inline-flex';
       switchGuideSubTab(window.keyboardGuide.activeGuideTab || 'posture');
     }
@@ -1624,26 +1633,64 @@ document.addEventListener('DOMContentLoaded', () => {
     scoreVal.textContent = score;
   };
 
-  window.typoGame.onComboChange = (combo) => {
-    if (!comboBadge) return;
-    if (combo >= 2) {
-      comboBadge.style.display = 'inline-flex';
-      if (combo >= 12) {
-        comboBadge.textContent = `👑 ${combo} Combo! 狂热超神`;
-      } else if (combo >= 8) {
-        comboBadge.textContent = `🚀 ${combo} Combo! 势不可挡`;
-      } else if (combo >= 5) {
-        comboBadge.textContent = `⚡ ${combo} Combo! 极速疾风`;
-      } else if (combo >= 3) {
-        comboBadge.textContent = `🔥 ${combo} Combo! 渐入佳境`;
+  window.typoGame.onComboChange = (combo, maxCombo = 0, isNewRecord = false) => {
+    // 1. 单词卡片内当前连击徽章 (Combo >= 2 时浮现)
+    if (comboBadge) {
+      if (combo >= 2) {
+        comboBadge.style.display = 'inline-flex';
+        if (combo >= 12) {
+          comboBadge.textContent = `👑 ${combo} Combo! 狂热超神`;
+        } else if (combo >= 8) {
+          comboBadge.textContent = `🚀 ${combo} Combo! 势不可挡`;
+        } else if (combo >= 5) {
+          comboBadge.textContent = `⚡ ${combo} Combo! 极速疾风`;
+        } else if (combo >= 3) {
+          comboBadge.textContent = `🔥 ${combo} Combo! 渐入佳境`;
+        } else {
+          comboBadge.textContent = `🔥 ${combo} Combo!`;
+        }
+        comboBadge.classList.remove('combo-pop');
+        void comboBadge.offsetWidth;
+        comboBadge.classList.add('combo-pop');
       } else {
-        comboBadge.textContent = `🔥 ${combo} Combo!`;
+        comboBadge.style.display = 'none';
       }
-      comboBadge.classList.remove('combo-pop');
-      void comboBadge.offsetWidth;
-      comboBadge.classList.add('combo-pop');
-    } else {
-      comboBadge.style.display = 'none';
+    }
+
+    // 2. 键盘控制台「最高连击」专属数据胶囊
+    if (maxComboVal) {
+      maxComboVal.textContent = maxCombo;
+    }
+    if (maxComboBadge && isNewRecord && maxCombo >= 2) {
+      maxComboBadge.classList.remove('combo-record-burst');
+      void maxComboBadge.offsetWidth;
+      maxComboBadge.classList.add('combo-record-burst');
+
+      if (maxComboLbl) {
+        if (maxComboRecordTimer) clearTimeout(maxComboRecordTimer);
+        if (maxCombo >= 12) {
+          maxComboLbl.textContent = '👑 封神新纪录！';
+          maxComboLbl.style.color = '#F59E0B';
+        } else if (maxCombo >= 8) {
+          maxComboLbl.textContent = '🚀 刷新巅峰！';
+          maxComboLbl.style.color = '#FBBF24';
+        } else if (maxCombo >= 5) {
+          maxComboLbl.textContent = '⚡ 突破极限！';
+          maxComboLbl.style.color = '#FDE047';
+        } else {
+          maxComboLbl.textContent = '🎉 创纪录啦！';
+          maxComboLbl.style.color = '#FCD34D';
+        }
+        maxComboRecordTimer = setTimeout(() => {
+          if (maxComboLbl) {
+            maxComboLbl.textContent = '最佳连击 · 保持手感';
+            maxComboLbl.style.color = '#FCD34D';
+          }
+        }, 1600);
+      }
+    } else if (maxCombo === 0 && maxComboLbl) {
+      maxComboLbl.textContent = '最佳连击 · 保持手感';
+      maxComboLbl.style.color = '#FCD34D';
     }
   };
 

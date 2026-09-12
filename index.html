@@ -530,8 +530,20 @@
           <button class="kbd-type-btn" id="btnLayoutMac" data-layout="mac">🍎 Mac (苹果)</button>
         </div>
 
-        <!-- 键盘右侧动态状态舱 (打字模式展示Q版测速，启蒙模式展示指法联动) -->
+        <!-- 键盘右侧动态状态舱 (打字模式展示最高连击与Q版测速，启蒙模式展示指法联动) -->
         <div class="kbd-deck-status" id="kbdDeckStatus">
+          <!-- 实时最高连击记录胶囊 (炽热烈焰风) -->
+          <div class="max-combo-badge" id="maxComboBadge" title="本局最佳连击记录">
+            <span class="max-combo-flame-icon" id="maxComboFlameIcon">🔥</span>
+            <div class="max-combo-meta">
+              <div class="max-combo-num-row">
+                <span class="max-combo-val" id="maxComboVal">0</span>
+                <span class="max-combo-unit">MAX</span>
+              </div>
+              <span class="max-combo-tier-lbl" id="maxComboLbl">最佳连击 · 保持手感</span>
+            </div>
+          </div>
+
           <!-- 打字模式：Q版实时测速与动物段位 -->
           <div class="typing-speed-badge" id="speedBadge" title="实时打字速度与手速段位">
             <span class="speed-animal-icon" id="speedAnimalIcon">🐢</span>
