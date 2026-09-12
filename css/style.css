@@ -1012,44 +1012,59 @@ body::before {
   100% { transform: scale(1) translateY(0) rotate(0deg); }
 }
 
-/* ================= 首词启动准备卡片（回车起跑 + 容错直打） ================= */
+/* ================= 单词卡片核心：就绪舱与破晓弹入 ================= */
+.word-emoji-badge.pop-in,
+.chinese-definition-pill.pop-in,
+.pu-badge.pop-in {
+  animation: elementPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+@keyframes elementPopIn {
+  0% { transform: scale(0.65); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 单词探索：首词垂直居中沉浸就绪舱 */
 .ready-enter-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 16px 28px;
-  margin: 14px 0;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.88) 0%, rgba(15, 23, 42, 0.96) 100%);
-  backdrop-filter: blur(18px);
+  text-align: center;
+  gap: 14px;
+  padding: 34px 28px 28px;
+  margin: 10px 0;
+  width: 100%;
+  max-width: 680px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.82) 0%, rgba(15, 23, 42, 0.94) 100%);
+  backdrop-filter: blur(20px);
   border: 2px solid rgba(129, 140, 248, 0.45);
-  border-radius: 26px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 28px rgba(99, 102, 241, 0.25);
+  border-radius: 28px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5), 0 0 32px rgba(99, 102, 241, 0.22);
   cursor: pointer;
   user-select: none;
   position: relative;
   overflow: hidden;
-  max-width: 100%;
   box-sizing: border-box;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: readyCardPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .ready-enter-card:hover {
   transform: translateY(-2px) scale(1.02);
   border-color: #FBBF24;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), 0 0 32px rgba(251, 191, 36, 0.35);
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.6), 0 0 36px rgba(251, 191, 36, 0.35);
 }
 
 .ready-enter-halo {
   position: absolute;
-  top: -60%;
-  left: -60%;
-  width: 220%;
-  height: 220%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, transparent 65%);
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.16) 0%, transparent 65%);
   pointer-events: none;
-  animation: readyHaloRotate 10s linear infinite;
+  animation: readyHaloRotate 12s linear infinite;
 }
 
 @keyframes readyHaloRotate {
@@ -1057,11 +1072,23 @@ body::before {
   100% { transform: rotate(360deg); }
 }
 
+.ready-enter-icon-wrap {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, rgba(30, 41, 59, 0.4) 100%);
+  border: 2px solid rgba(251, 191, 36, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.3);
+  margin-bottom: 2px;
+}
+
 .ready-enter-icon {
-  font-size: 2.8rem;
-  animation: readyRocketFloat 2s ease-in-out infinite;
-  filter: drop-shadow(0 6px 14px rgba(245, 158, 11, 0.55));
-  flex-shrink: 0;
+  font-size: 3.4rem;
+  animation: readyRocketFloat 2.2s ease-in-out infinite;
+  filter: drop-shadow(0 6px 14px rgba(245, 158, 11, 0.6));
 }
 
 @keyframes readyRocketFloat {
@@ -1069,20 +1096,14 @@ body::before {
   50% { transform: translateY(-5px) rotate(8deg); }
 }
 
-.ready-enter-text-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-
 .ready-enter-title {
-  font-size: 1.28rem;
+  font-size: 1.5rem;
   font-weight: 900;
   color: #F8FAFC;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
   letter-spacing: 0.5px;
 }
 
@@ -1090,50 +1111,51 @@ body::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 3px 12px;
+  padding: 4px 14px;
   background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
   color: #FFFFFF;
-  border-radius: 9px;
+  border-radius: 10px;
   font-family: inherit;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 900;
-  box-shadow: 0 3px 0 #0369A1, 0 0 14px rgba(56, 189, 248, 0.55);
+  box-shadow: 0 3px 0 #0369A1, 0 0 16px rgba(56, 189, 248, 0.6);
   animation: readyKeyPulse 1.8s ease-in-out infinite;
 }
 
 @keyframes readyKeyPulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 3px 0 #0369A1, 0 0 14px rgba(56, 189, 248, 0.55); }
-  50% { transform: scale(1.08); box-shadow: 0 4px 0 #0369A1, 0 0 22px rgba(56, 189, 248, 0.9); }
+  0%, 100% { transform: scale(1); box-shadow: 0 3px 0 #0369A1, 0 0 16px rgba(56, 189, 248, 0.6); }
+  50% { transform: scale(1.08); box-shadow: 0 4px 0 #0369A1, 0 0 24px rgba(56, 189, 248, 0.95); }
 }
 
 .ready-enter-subtitle {
-  font-size: 0.92rem;
+  font-size: 1.02rem;
   font-weight: 700;
   color: #94A3B8;
+  letter-spacing: 0.3px;
 }
 
 .btn-ready-enter-go {
-  padding: 10px 22px;
+  margin-top: 6px;
+  padding: 12px 36px;
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: #FFFFFF;
   border: none;
-  border-radius: 14px;
-  font-size: 1.12rem;
+  border-radius: 999px;
+  font-size: 1.22rem;
   font-weight: 900;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
+  gap: 10px;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  letter-spacing: 0.5px;
 }
 
 .btn-ready-enter-go:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
   background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.65);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.7);
 }
 
 .ready-enter-card.lets-go-burst {
@@ -1150,6 +1172,82 @@ body::before {
 @keyframes readyCardPopIn {
   0% { transform: scale(0.85) translateY(12px); opacity: 0; }
   100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* 极速挑战：3, 2, 1 纯净发令全息大舞台 */
+.challenge-countdown-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 38px 28px 30px;
+  margin: 10px 0;
+  width: 100%;
+  max-width: 680px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(245, 158, 11, 0.45);
+  border-radius: 28px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55), 0 0 32px rgba(245, 158, 11, 0.25);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  animation: readyCardPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.countdown-badge-box {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.countdown-pulse-ring {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px dashed rgba(251, 191, 36, 0.6);
+  animation: spinCountdownRing 6s linear infinite;
+}
+
+@keyframes spinCountdownRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.countdown-num-art {
+  font-size: 5.2rem;
+  font-weight: 900;
+  color: #FDE047;
+  text-shadow: 0 0 24px rgba(253, 224, 71, 0.85), 0 4px 10px rgba(0,0,0,0.5);
+  line-height: 1;
+  animation: countdownPop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.countdown-num-art.num-go {
+  font-size: 3.8rem;
+  color: #34D399;
+  text-shadow: 0 0 30px rgba(52, 211, 153, 0.9), 0 4px 10px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+
+@keyframes countdownPop {
+  0% { transform: scale(0.65); opacity: 0; }
+  35% { transform: scale(1.15); opacity: 1; }
+  75% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.85; }
+}
+
+.countdown-sub-tip {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #CBD5E1;
+  letter-spacing: 0.5px;
 }
 
 /* 虚拟键盘 Enter 键脉冲呼吸高亮 */

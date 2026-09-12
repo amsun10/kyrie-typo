@@ -463,6 +463,20 @@ document.addEventListener('DOMContentLoaded', () => {
     isCountdownActive = true;
     challengeCountdownOverlay.style.display = 'flex';
 
+    // 挑战倒计时全面净化：卡片内彻底隐藏 Emoji、释义胶囊、教材标签与字母气泡，杜绝提前发音
+    if (wordEmoji) wordEmoji.style.display = 'none';
+    if (chinesePill) chinesePill.style.display = 'none';
+    if (puBadge) puBadge.style.display = 'none';
+    if (bubblesContainer) bubblesContainer.style.display = 'none';
+    if (readyEnterCard) readyEnterCard.style.display = 'none';
+    if (wordSpeechTimer) {
+      clearTimeout(wordSpeechTimer);
+      wordSpeechTimer = null;
+    }
+    if (window.speechEngine) {
+      window.speechEngine.cancel();
+    }
+
     // Step 1: "3"
     countdownNum.textContent = '3';
     countdownNum.className = 'countdown-num-art';
@@ -498,11 +512,16 @@ document.addEventListener('DOMContentLoaded', () => {
             window.soundFX.playCountdownPip('GO');
           }
 
-          // Step 5: 正式启动挑战走秒 (3.6s)
+          // Step 5: 正式启动挑战走秒与破晓协同亮相 (3.6s)
           countdownTimerId = setTimeout(() => {
             challengeCountdownOverlay.style.display = 'none';
             isCountdownActive = false;
             countdownTimerId = null;
+
+            const wordObj = window.typoGame ? window.typoGame.getCurrentWordObj() : null;
+            if (wordObj) {
+              revealWordElementsWithPopIn(wordObj);
+            }
             if (typeof onComplete === 'function') onComplete();
           }, 600);
 
@@ -1041,6 +1060,50 @@ document.addEventListener('DOMContentLoaded', () => {
   let isAwaitingStart = false;
   let wordSpeechTimer = null;
 
+  // 单词卡片各要素破晓协同弹入与发音
+  function revealWordElementsWithPopIn(wordObj) {
+    if (readyEnterCard) readyEnterCard.style.display = 'none';
+    if (challengeCountdownOverlay) challengeCountdownOverlay.style.display = 'none';
+
+    document.querySelectorAll('.apple-key.ready-target-enter').forEach(el => el.classList.remove('ready-target-enter'));
+
+    if (puBadge) {
+      if (wordObj && wordObj.book) {
+        const isSJ = wordObj.book.startsWith('苏教');
+        puBadge.style.display = 'inline-flex';
+        puBadge.textContent = `${isSJ ? '🏫' : '📘'} ${wordObj.book} · U${wordObj.unit || 1} ${wordObj.categoryCn || ''}`;
+        puBadge.classList.remove('pop-in');
+        void puBadge.offsetWidth;
+        puBadge.classList.add('pop-in');
+      } else {
+        puBadge.style.display = 'none';
+      }
+    }
+
+    if (wordEmoji) {
+      wordEmoji.style.display = 'inline-block';
+      wordEmoji.textContent = wordObj ? wordObj.emoji : '';
+      wordEmoji.classList.remove('pop-in', 'emoji-celebrate');
+      void wordEmoji.offsetWidth;
+      wordEmoji.classList.add('pop-in');
+    }
+
+    if (chinesePill) {
+      chinesePill.style.display = 'flex';
+      if (chineseText) chineseText.textContent = wordObj ? wordObj.chinese : '';
+      chinesePill.classList.remove('pop-in');
+      void chinesePill.offsetWidth;
+      chinesePill.classList.add('pop-in');
+    }
+
+    if (bubblesContainer) {
+      bubblesContainer.style.display = 'flex';
+    }
+
+    // 重新构建字母气泡并触发 80ms 纯英文发音
+    renderWord(wordObj, 0);
+  }
+
   // 展示首词「敲 Enter 开始 / Let's Go!」准备卡片并指引右手小指回车
   function showReadyEnterPrompt() {
     isAwaitingStart = true;
@@ -1052,13 +1115,18 @@ document.addEventListener('DOMContentLoaded', () => {
       window.speechEngine.cancel();
     }
 
-    if (readyEnterCard) {
-      readyEnterCard.style.display = 'flex';
-      readyEnterCard.classList.remove('lets-go-burst');
-    }
+    // 单词探索就绪舱全面净化：隐藏所有无关散碎元素
+    if (wordEmoji) wordEmoji.style.display = 'none';
+    if (chinesePill) chinesePill.style.display = 'none';
+    if (puBadge) puBadge.style.display = 'none';
     if (bubblesContainer) {
       bubblesContainer.style.display = 'none';
       bubblesContainer.innerHTML = '';
+    }
+
+    if (readyEnterCard) {
+      readyEnterCard.style.display = 'flex';
+      readyEnterCard.classList.remove('lets-go-burst');
     }
 
     // 虚拟键盘高亮 Enter 键并启动呼吸脉冲
@@ -1087,21 +1155,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setTimeout(() => {
-      if (readyEnterCard) {
-        readyEnterCard.style.display = 'none';
-        readyEnterCard.classList.remove('lets-go-burst');
-      }
-      document.querySelectorAll('.apple-key.ready-target-enter').forEach(el => el.classList.remove('ready-target-enter'));
-
-      if (bubblesContainer) {
-        bubblesContainer.style.display = 'flex';
-      }
-
       const wordObj = window.typoGame ? window.typoGame.getCurrentWordObj() : null;
-      if (!wordObj) return;
-
-      // 渲染首词气泡并触发 80ms 英文原声朗读
-      renderWord(wordObj, 0);
+      if (wordObj) {
+        revealWordElementsWithPopIn(wordObj);
+      }
 
       // 如果是通过敲中首字母穿透触发的，顺畅执行首字母按键！
       if (directKey) {
@@ -1141,6 +1198,29 @@ document.addEventListener('DOMContentLoaded', () => {
       wordEmoji.classList.remove('emoji-celebrate');
     }
 
+    // 若当前处于等待回车启动状态（单词探索模式首词）
+    if (isAwaitingStart && window.typoGame && window.typoGame.mode === 'practice') {
+      showReadyEnterPrompt();
+      return;
+    }
+
+    // 若当前处于极速挑战 3-2-1 倒计时状态
+    if (isCountdownActive && window.typoGame && window.typoGame.mode === 'challenge') {
+      if (wordEmoji) wordEmoji.style.display = 'none';
+      if (chinesePill) chinesePill.style.display = 'none';
+      if (puBadge) puBadge.style.display = 'none';
+      if (bubblesContainer) bubblesContainer.style.display = 'none';
+      return;
+    }
+
+    if (readyEnterCard) {
+      readyEnterCard.style.display = 'none';
+    }
+    if (challengeCountdownOverlay) {
+      challengeCountdownOverlay.style.display = 'none';
+    }
+    document.querySelectorAll('.apple-key.ready-target-enter').forEach(el => el.classList.remove('ready-target-enter'));
+
     if (puBadge) {
       if (wordObj && wordObj.book) {
         const isSJ = wordObj.book.startsWith('苏教');
@@ -1151,19 +1231,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    wordEmoji.textContent = wordObj ? wordObj.emoji : '';
-    chineseText.textContent = wordObj ? wordObj.chinese : '';
-
-    // 若当前处于等待回车启动状态（单词探索模式首词）
-    if (isAwaitingStart && window.typoGame && window.typoGame.mode === 'practice') {
-      showReadyEnterPrompt();
-      return;
+    if (wordEmoji) {
+      wordEmoji.style.display = 'inline-block';
+      wordEmoji.textContent = wordObj ? wordObj.emoji : '';
     }
 
-    if (readyEnterCard) {
-      readyEnterCard.style.display = 'none';
+    if (chinesePill) {
+      chinesePill.style.display = 'flex';
+      chineseText.textContent = wordObj ? wordObj.chinese : '';
     }
-    document.querySelectorAll('.apple-key.ready-target-enter').forEach(el => el.classList.remove('ready-target-enter'));
 
     if (bubblesContainer) {
       bubblesContainer.style.display = 'flex';
