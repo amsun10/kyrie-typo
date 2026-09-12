@@ -1643,77 +1643,77 @@ body::before {
   color: #E0E7FF;
 }
 
-/* ================= 炽热烈焰风：实时最高连击记录胶囊 ================= */
-.max-combo-badge {
+/* ================= 一体化双舱数据仪表盘（苹果智能座舱质感） ================= */
+.dual-cockpit-dashboard {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.93) 100%);
+  border: 2px solid #4338CA;
+  padding: 0 6px;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 16px rgba(79, 70, 229, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: border-color 0.25s, box-shadow 0.25s;
+  cursor: default;
+  user-select: none;
+  transform: none !important; /* 外框永远稳固，杜绝任何外形形变重叠 */
+}
+
+.dual-cockpit-dashboard:hover {
+  border-color: #6366F1;
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.38);
+}
+
+/* 晶透微光细分隔线 */
+.cockpit-divider {
+  width: 1px;
+  height: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.22) 50%, rgba(255, 255, 255, 0.02) 100%);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+/* 舱室通用单元 */
+.cockpit-cell {
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 50px;
+  height: 100%;
   box-sizing: border-box;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-  border: 2px solid #F59E0B;
-  padding: 4px 18px;
+  padding: 4px 14px;
+  position: relative;
   border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 16px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  cursor: default;
-  user-select: none;
+  transition: background 0.3s ease;
 }
 
-.max-combo-badge:hover {
-  border-color: #FBBF24;
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
-  transform: translateY(-2px) scale(1.03);
-}
-
-.max-combo-badge.combo-record-burst {
-  animation: maxComboBurst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border-color: #FBBF24;
-}
-
-@keyframes maxComboBurst {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
-  }
-  35% {
-    transform: scale(1.14);
-    box-shadow: 0 0 32px rgba(251, 191, 36, 0.8), inset 0 0 12px rgba(251, 191, 36, 0.4);
-  }
-  65% {
-    transform: scale(0.96);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 16px rgba(245, 158, 11, 0.28);
-  }
-}
-
-.max-combo-flame-icon {
-  font-size: 1.85rem;
-  display: inline-block;
-  line-height: 1;
-  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
-  animation: flameFlicker 2s ease-in-out infinite alternate;
-}
-
-@keyframes flameFlicker {
-  0% { transform: scale(1) rotate(-2deg); }
-  100% { transform: scale(1.08) rotate(3deg); }
-}
-
-.max-combo-meta {
+.cockpit-meta {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0px;
 }
 
-.max-combo-num-row {
+.cockpit-num-row {
   display: flex;
   align-items: baseline;
   gap: 4px;
   line-height: 1.1;
+}
+
+/* --- 左舱：最高连击峰值 (炽热金橙) --- */
+.max-combo-flame-icon {
+  font-size: 1.85rem;
+  display: inline-block;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
+  animation: flameFlicker 2.2s ease-in-out infinite alternate;
+  transform-origin: center bottom;
+}
+
+@keyframes flameFlicker {
+  0% { transform: scale(1) rotate(-2deg); }
+  100% { transform: scale(1.08) rotate(3deg); }
 }
 
 .max-combo-val {
@@ -1723,6 +1723,8 @@ body::before {
   text-shadow: 0 0 14px rgba(251, 191, 36, 0.6);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.5px;
+  display: inline-block;
+  transform-origin: center center;
 }
 
 .max-combo-unit {
@@ -1742,58 +1744,44 @@ body::before {
   white-space: nowrap;
 }
 
-/* Q 版打字测速仪表盘（超级 Q 萌动感） */
-.typing-speed-badge {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 50px;
-  box-sizing: border-box;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-  border: 2px solid #4F46E5;
-  padding: 4px 20px;
-  border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 16px rgba(79, 70, 229, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  cursor: default;
-  user-select: none;
+/* 破纪录高能内舱微动效 (仅火苗跃起 + 数字弹动 + 柔和内辉，外框 100% 稳固) */
+.cockpit-cell-combo.combo-record-burst {
+  animation: cellGlowAmber 0.8s ease-out;
 }
 
-.typing-speed-badge:hover {
-  border-color: #818CF8;
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.45);
-  transform: translateY(-2px) scale(1.03);
+.cockpit-cell-combo.combo-record-burst .max-combo-flame-icon {
+  animation: flameHop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.typing-speed-badge.speed-bounce {
-  animation: badgeSquash 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+.cockpit-cell-combo.combo-record-burst .max-combo-val {
+  animation: numPopGold 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes badgeSquash {
+@keyframes cellGlowAmber {
+  0% { background: transparent; }
+  30% { background: radial-gradient(circle at 45% 50%, rgba(245, 158, 11, 0.24) 0%, transparent 80%); }
+  100% { background: transparent; }
+}
+
+@keyframes flameHop {
+  0% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5)); }
+  35% { transform: scale(1.32) translateY(-3px) rotate(-6deg); filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.95)); }
+  70% { transform: scale(0.95) translateY(1px) rotate(2deg); }
+  100% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5)); }
+}
+
+@keyframes numPopGold {
   0% { transform: scale(1); }
-  35% { transform: scale(1.12, 0.88); }
-  65% { transform: scale(0.92, 1.08); }
+  40% { transform: scale(1.22); color: #FFFBEB; text-shadow: 0 0 18px rgba(251, 191, 36, 0.95); }
   100% { transform: scale(1); }
 }
 
+/* --- 右舱：Q版打字测速与动物段位 (清爽蓝紫) --- */
 .speed-animal-icon {
   font-size: 1.95rem;
   display: inline-block;
   line-height: 1;
-}
-
-.speed-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0px;
-}
-
-.speed-num-row {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  line-height: 1.1;
+  transform-origin: center bottom;
 }
 
 .speed-val {
@@ -1803,6 +1791,8 @@ body::before {
   text-shadow: 0 0 14px rgba(251, 191, 36, 0.55);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.5px;
+  display: inline-block;
+  transform-origin: center center;
 }
 
 .speed-unit {
@@ -1818,6 +1808,29 @@ body::before {
   letter-spacing: 0.2px;
   line-height: 1.1;
   transition: color 0.3s;
+  white-space: nowrap;
+}
+
+/* 手速刷新灵动内舱微动效 (仅小动物轻弹 + WPM 数字轻弹，外框绝不动) */
+.cockpit-cell-speed.speed-bounce .speed-animal-icon {
+  animation: animalHop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cockpit-cell-speed.speed-bounce .speed-val {
+  animation: numPopCyan 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes animalHop {
+  0% { transform: scale(1) translateY(0); }
+  35% { transform: scale(1.22) translateY(-3px); }
+  70% { transform: scale(0.94) translateY(1px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+@keyframes numPopCyan {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.16); text-shadow: 0 0 16px rgba(56, 189, 248, 0.85); }
+  100% { transform: scale(1); }
 }
 
 .keyboard-section {
@@ -4388,11 +4401,9 @@ body::before {
   .zen-ambient-bar { width: 80px; }
   .kbd-toolbar { padding: 5px 10px; width: 96%; gap: 8px; }
   .kbd-type-btn { padding: 5px 12px; font-size: 0.86rem; }
-  .tutorial-deck-pill { padding: 4px 10px; font-size: 0.78rem; }
-  .max-combo-badge,
-  .typing-speed-badge { padding: 4px 12px; gap: 8px; }
-  .max-combo-tier-lbl,
-  .speed-tier-lbl { font-size: 0.72rem; }
+  .dual-cockpit-dashboard { height: 48px; padding: 0 4px; }
+  .cockpit-cell { padding: 4px 8px; gap: 6px; }
+  .cockpit-tier-lbl { font-size: 0.72rem; }
 }
 
 /* ================= 视口高度自适应 ================= */

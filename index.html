@@ -532,27 +532,33 @@
 
         <!-- 键盘右侧动态状态舱 (打字模式展示最高连击与Q版测速，启蒙模式展示指法联动) -->
         <div class="kbd-deck-status" id="kbdDeckStatus">
-          <!-- 实时最高连击记录胶囊 (炽热烈焰风) -->
-          <div class="max-combo-badge" id="maxComboBadge" title="本局最佳连击记录">
-            <span class="max-combo-flame-icon" id="maxComboFlameIcon">🔥</span>
-            <div class="max-combo-meta">
-              <div class="max-combo-num-row">
-                <span class="max-combo-val" id="maxComboVal">0</span>
-                <span class="max-combo-unit">MAX</span>
+          <!-- 一体化双舱数据仪表盘 (左舱最高连击 + 右舱手速段位) -->
+          <div class="dual-cockpit-dashboard" id="dualCockpitDashboard">
+            <!-- 左舱：最高连击峰值 -->
+            <div class="cockpit-cell cockpit-cell-combo" id="maxComboBadge" title="本局最佳连击记录">
+              <span class="cockpit-icon max-combo-flame-icon" id="maxComboFlameIcon">🔥</span>
+              <div class="cockpit-meta">
+                <div class="cockpit-num-row">
+                  <span class="cockpit-val max-combo-val" id="maxComboVal">0</span>
+                  <span class="cockpit-unit max-combo-unit">MAX</span>
+                </div>
+                <span class="cockpit-tier-lbl max-combo-tier-lbl" id="maxComboLbl">最佳连击 · 保持手感</span>
               </div>
-              <span class="max-combo-tier-lbl" id="maxComboLbl">最佳连击 · 保持手感</span>
             </div>
-          </div>
 
-          <!-- 打字模式：Q版实时测速与动物段位 -->
-          <div class="typing-speed-badge" id="speedBadge" title="实时打字速度与手速段位">
-            <span class="speed-animal-icon" id="speedAnimalIcon">🐢</span>
-            <div class="speed-meta">
-              <div class="speed-num-row">
-                <span class="speed-val" id="speedVal">0</span>
-                <span class="speed-unit">WPM</span>
+            <!-- 中间晶透微光细分隔线 -->
+            <div class="cockpit-divider" aria-hidden="true"></div>
+
+            <!-- 右舱：Q版打字测速与动物段位 -->
+            <div class="cockpit-cell cockpit-cell-speed" id="speedBadge" title="实时打字速度与手速段位">
+              <span class="cockpit-icon speed-animal-icon" id="speedAnimalIcon">🐢</span>
+              <div class="cockpit-meta">
+                <div class="cockpit-num-row">
+                  <span class="cockpit-val speed-val" id="speedVal">0</span>
+                  <span class="cockpit-unit speed-unit">WPM</span>
+                </div>
+                <span class="cockpit-tier-lbl speed-tier-lbl" id="speedTierLbl">稳步小乌龟 · 准备就绪</span>
               </div>
-              <span class="speed-tier-lbl" id="speedTierLbl">稳步小乌龟 · 准备就绪</span>
             </div>
           </div>
 

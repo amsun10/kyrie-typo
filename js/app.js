@@ -127,13 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnClearScores = document.getElementById('btnClearScores');
   let lastPlayedRecordId = null;
 
-  // 打字手速仪表盘元素
+  // 一体化双舱仪表盘元素
+  const dualCockpitDashboard = document.getElementById('dualCockpitDashboard');
   const speedBadge = document.getElementById('speedBadge');
   const speedAnimalIcon = document.getElementById('speedAnimalIcon');
   const speedVal = document.getElementById('speedVal');
   const speedTierLbl = document.getElementById('speedTierLbl');
 
-  // 最高连击数据胶囊元素
   const maxComboBadge = document.getElementById('maxComboBadge');
   const maxComboVal = document.getElementById('maxComboVal');
   const maxComboLbl = document.getElementById('maxComboLbl');
@@ -933,8 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (practiceHudContent) practiceHudContent.style.display = 'flex';
       if (tutorialHudContent) tutorialHudContent.style.display = 'none';
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
-      if (speedBadge) speedBadge.style.display = 'flex';
-      if (maxComboBadge) maxComboBadge.style.display = 'flex';
+      if (dualCockpitDashboard) dualCockpitDashboard.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
       isAwaitingStart = true;
       window.typoGame.startPracticeMode();
@@ -946,8 +945,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (practiceHudContent) practiceHudContent.style.display = 'none';
       if (tutorialHudContent) tutorialHudContent.style.display = 'none';
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'block';
-      if (speedBadge) speedBadge.style.display = 'flex';
-      if (maxComboBadge) maxComboBadge.style.display = 'flex';
+      if (dualCockpitDashboard) dualCockpitDashboard.style.display = 'flex';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'none';
       // 启动挑战：装载单词与界面，但先不走秒
       window.typoGame.startChallengeMode(false);
@@ -975,8 +973,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (practiceHudContent) practiceHudContent.style.display = 'none';
       if (tutorialHudContent) tutorialHudContent.style.display = 'flex';
       if (consoleTimerTrack) consoleTimerTrack.style.display = 'none';
-      if (speedBadge) speedBadge.style.display = 'none';
-      if (maxComboBadge) maxComboBadge.style.display = 'none';
+      if (dualCockpitDashboard) dualCockpitDashboard.style.display = 'none';
       if (tutorialDeckPill) tutorialDeckPill.style.display = 'inline-flex';
       switchGuideSubTab(window.keyboardGuide.activeGuideTab || 'posture');
     }
