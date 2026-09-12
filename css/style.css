@@ -1398,19 +1398,20 @@ body::before {
   }
 }
 
-/* 已敲中字母：清爽荧光绿开心果冻 */
+/* 已敲中字母：清爽荧光绿，瞬间干脆落定基线，0ms 拖拽、不缩放、不横向膨胀挤占邻字 */
 .letter-bubble.hit {
   background: #064E3B;
   border-color: #10B981;
   color: #A7F3D0;
-  box-shadow: 0 6px 0 #022C22, 0 0 16px rgba(16, 185, 129, 0.4);
-  transform: translateY(2px) scale(0.96);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 0 #022C22, 0 0 16px rgba(16, 185, 129, 0.4);
+  transform: none !important;
+  transition: background-color 0.1s ease, border-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease;
+  z-index: 1;
 }
 
-/* 敲击瞬间的果冻果汁感 */
+/* 敲击瞬间清脆高光反馈（纯亮度脉冲，不产生任何物理形变与邻近字挤压） */
 .letter-bubble.squish {
-  animation: jellySquish 0.25s ease-out;
+  animation: crispHitPunch 0.18s ease-out;
 }
 
 /* 敲错时轻微晃动提示 */
@@ -4072,10 +4073,9 @@ body::before {
   50% { transform: translateY(-13px) scale(1.11); }
 }
 
-@keyframes jellySquish {
-  0% { transform: scale(1.2, 0.8); }
-  50% { transform: scale(0.9, 1.15); }
-  100% { transform: scale(1, 1); }
+@keyframes crispHitPunch {
+  0% { filter: brightness(1.4) drop-shadow(0 0 8px rgba(16, 185, 129, 0.7)); }
+  100% { filter: brightness(1); }
 }
 
 @keyframes gentleShake {
