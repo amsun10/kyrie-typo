@@ -14,8 +14,8 @@ function autoFitViewport() {
   // 基准设计高度：页面内容自然高度（用户验证 80% zoom 显示正常 → 960/0.8 ≈ 1200）
   const designH = 1200;
 
-  // 计算缩放因子并限制安全范围
-  const zoom = Math.max(0.78, Math.min(vh / designH, 1.42));
+  // 计算缩放因子并限制安全范围（下限 0.55 支持 1024×768，上限 1.42 支持 2K）
+  const zoom = Math.max(0.55, Math.min(vh / designH, 1.42));
 
   // 应用缩放（重置和赋值在同一同步帧，浏览器只渲染最终值，零闪烁）
   root.style.zoom = zoom;
