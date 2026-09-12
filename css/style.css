@@ -1358,23 +1358,44 @@ body::before {
 /* 长词激活跳动动画轻幅适配，防止横向密集碰撞 */
 .word-bubbles-container.len-long .letter-bubble.active,
 .word-bubbles-container.len-xlong .letter-bubble.active {
-  transform: translateY(-6px) scale(1.05);
-  animation: activeBounceSmall 1.2s infinite ease-in-out;
+  transform: translateY(-5px) scale(1.05);
+  animation: activeBreatheSmall 1.6s infinite ease-in-out alternate;
+  z-index: 2;
 }
 
-@keyframes activeBounceSmall {
-  0%, 100% { transform: translateY(-6px) scale(1.05); }
-  50% { transform: translateY(-2px) scale(1.02); }
+@keyframes activeBreatheSmall {
+  0% {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 0 #451A03, 0 0 16px rgba(251, 191, 36, 0.4);
+  }
+  100% {
+    transform: translateY(-7px) scale(1.06);
+    box-shadow: 0 8px 0 #451A03, 0 0 22px rgba(251, 191, 36, 0.6);
+  }
 }
 
-/* 当前待击打字母：暖黄色荧光 Q 弹放大并呼吸跳动 */
+/* 当前待击打字母：暖黄色荧光 Q 弹放大并优雅微澜呼吸 */
 .letter-bubble.active {
   background: #78350F;
   border-color: #FBBF24;
   color: #FEF08A;
   box-shadow: 0 8px 0 #451A03, 0 0 24px rgba(251, 191, 36, 0.5);
-  transform: translateY(-8px) scale(1.08);
-  animation: activeBounce 1.2s infinite ease-in-out;
+  transform: translateY(-6px) scale(1.08);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  animation: activeBreathe 1.6s infinite ease-in-out alternate;
+  z-index: 2;
+}
+
+@keyframes activeBreathe {
+  0% {
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 0 8px 0 #451A03, 0 0 20px rgba(251, 191, 36, 0.45);
+  }
+  100% {
+    transform: translateY(-8px) scale(1.09);
+    box-shadow: 0 8px 0 #451A03, 0 0 28px rgba(251, 191, 36, 0.65);
+  }
 }
 
 /* 已敲中字母：清爽荧光绿开心果冻 */
@@ -1384,6 +1405,7 @@ body::before {
   color: #A7F3D0;
   box-shadow: 0 6px 0 #022C22, 0 0 16px rgba(16, 185, 129, 0.4);
   transform: translateY(2px) scale(0.96);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* 敲击瞬间的果冻果汁感 */
@@ -1420,7 +1442,41 @@ body::before {
   }
 }
 
-/* 新单词入场弹入动效 */
+/* 新单词待敲首字母专属一步到位流体弹入（One-Shot Fluid Pop-In）：直接入位到 1.08 激活态，绝无二次硬跳 */
+.letter-bubble.pop-in.active {
+  animation: activeBubblePopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards,
+             activeBreathe 1.6s ease-in-out 0.35s infinite alternate;
+}
+
+.word-bubbles-container.len-long .letter-bubble.pop-in.active,
+.word-bubbles-container.len-xlong .letter-bubble.pop-in.active {
+  animation: activeBubblePopInSmall 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards,
+             activeBreatheSmall 1.6s ease-in-out 0.35s infinite alternate;
+}
+
+@keyframes activeBubblePopIn {
+  0% {
+    transform: scale(0.4) translateY(14px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.08) translateY(-6px);
+    opacity: 1;
+  }
+}
+
+@keyframes activeBubblePopInSmall {
+  0% {
+    transform: scale(0.4) translateY(14px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.05) translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* 新单词普通非激活字母入场弹入动效 (入位到标准 scale(1) translateY(0)) */
 .letter-bubble.pop-in {
   animation: bubblePopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
